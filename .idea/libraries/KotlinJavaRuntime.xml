@@ -1,0 +1,19 @@
+<component name="libraryTable">
+  <library name="KotlinJavaRuntime">
+    <CLASSES>
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-reflect.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-test.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib-jdk7.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib-jdk8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib-sources.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-reflect-sources.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-test-sources.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib-jdk7-sources.jar!/" />
+      <root url="jar://$APPLICATION_PLUGINS_DIR$/Kotlin/kotlinc/lib/kotlin-stdlib-jdk8-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
