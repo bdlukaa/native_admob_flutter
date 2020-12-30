@@ -2,18 +2,16 @@
 
 Easy-to-make native ads in flutter.
 
-## Platform support
-
-- [x] Android
-- [ ] iOS
-
-Google only supports native ads on mobile. Web and desktop are out of reach
-
 ## ⚠️WARNING⚠️
 - This is NOT production ready. You may find some issues
 - Hot reload is NOT supported while building your layouts, neither changing them dynamically
 
 # Platform setup
+
+- [x] Android
+- [ ] iOS
+
+Google only supports native ads on mobile. Web and desktop are out of reach
 
 ## Android
 Add your ADMOB App ID ([How to find it?](https://support.google.com/admob/answer/7356431)) in `AndroidManifest.xml`.
