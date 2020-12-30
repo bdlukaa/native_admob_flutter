@@ -34,8 +34,7 @@ Change `minSdkVersion` to `20`. It's the minimum sdk version required by flutter
 ```groovy
 android {
     defaultConfig {
-        minSdkVersion 19 // if using Hybrid composition.
-        minSdkVersion 20 // if using Virtual display.
+        minSdkVersion 20
     }
 }
 ```
