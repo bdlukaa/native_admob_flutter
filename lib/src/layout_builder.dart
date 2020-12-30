@@ -14,10 +14,13 @@ typedef AdLayoutBuilder = AdLinearLayout Function(
   AdButtonView button,
 );
 
+/// Expands the view to fit the parent size. Same as `double.infinity`
 const double MATCH_PARENT = -1;
+/// Wrap the content to its own size
 const double WRAP_CONTENT = -2;
 
 class AdView {
+  /// The radius of the view
   final AdBorderRadius borderRadius;
 
   /// The padding applied to the view. Default to none

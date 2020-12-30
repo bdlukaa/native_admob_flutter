@@ -52,7 +52,6 @@ class NativeAdController {
 
   /// Channel to communicate with controller
   MethodChannel _channel;
-  String _adUnitID;
 
   /// Creates a new native ad controller
   NativeAdController() {

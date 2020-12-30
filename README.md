@@ -13,6 +13,33 @@ Google only supports native ads on mobile. Web and desktop are out of reach
 - This is NOT production ready. You may find some issues
 - Hot reload is NOT supported while building your layouts, neither changing them dynamically
 
+# Platform setup
+
+## Android
+Add your ADMOB App ID ([How to find it?](https://support.google.com/admob/answer/7356431)) in `AndroidManifest.xml`.
+
+```xml
+<manifest>
+  <application>
+    <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+    <meta-data
+      android:name="com.google.android.gms.ads.APPLICATION_ID"
+      android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy">
+  </application>
+</manifest>
+```
+
+Change `minSdkVersion` to `20`. It's the minimum sdk version required by flutter to use a PlatformView. [Learn more](https://flutter.dev/docs/development/platform-integration/platform-views#on-the-platform-side)
+
+```groovy
+android {
+    defaultConfig {
+        minSdkVersion 19 // if using Hybrid composition.
+        minSdkVersion 20 // if using Virtual display.
+    }
+}
+```
+
 # Initialize
 
 Before creating any native ads, you must initalize the admob. It can be initialized only once:
