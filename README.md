@@ -9,7 +9,7 @@ Easy-to-make native ads in flutter.
 
 Google only supports native ads on mobile. Web and desktop are out of reach
 
-## Notes
+## ⚠️WARNING⚠️
 - This is NOT production ready. You may find some issues
 - Hot reload is NOT supported while building your layouts, neither changing them dynamically
 
@@ -44,7 +44,7 @@ Learn how to create your own native ads unit ids [here](https://support.google.c
 ## When to request ads
 Applications displaying native ads are free to request them in advance of when they'll actually be displayed. In many cases, this is the recommended practice. An app displaying a list of items with native ads mixed in, for example, can load native ads for the whole list, knowing that some will be shown only after the user scrolls the view and some may not be displayed at all.
 
-⭐ Note: While prefetching ads is a great technique, it's important that publishers not keep old ads around too long without displaying them. Any ad objects that have been held for longer than an hour without being displayed should be discarded and replaced with new ads from a new request.
+⭐Note⭐: While prefetching ads is a great technique, it's important that publishers not keep old ads around too long without displaying them. Any ad objects that have been held for longer than an hour without being displayed should be discarded and replaced with new ads from a new request.
 
 # Creating an ad
 
@@ -58,7 +58,8 @@ NativeAd(
 )
 ```
 
-This library provides a default layout builder: `adBannerLayoutBuilder`. It'll render a default layout built by me :)
+This library provides a default layout builder: `adBannerLayoutBuilder`:
+![A native ad screenshot](screenshots/default_banner_screenshot.png)
 
 ## Creating a layout builder
 
@@ -98,6 +99,8 @@ AdLayoutBuilder myCustomLayoutBuilder = (ratingBar, media, icon, headline,
   );
 };
 ```
+
+🔴IMPORTANT❗🔴: You can NOT use flutter widgets to build your layouts
 
 To use it in your NativeAd, pass it as an argument to `layoutBuilder`:
 
@@ -159,12 +162,17 @@ NativeAd(
 | Price          | AdTextView      | Cost of the app.                                                          |        No        |        Recommended        |
 | Advertiser     | AdTextView      | Text that identifies the advertiser (e.g., advertiser or brand name).     |        No        |        Recommended        |
 
-Learn more [here](https://support.google.com/admob/answer/6240809)
+[Learn more](https://support.google.com/admob/answer/6240809)
+
+More screenshots
+![](screenshots/full_native_ad_screenshot.png)
+![](screenshots/banner_native_ad_screenshot.png)
+
+The code for these can be found in [example](example/)
 
 ## Using controller and listening to events
 
 ```dart
-
 // Init the controller
 final controller = NativeAdController();
 
@@ -197,13 +205,20 @@ void initState() {
 }
 
 // Use the controller in the NativeAd
-NativeAd(controller: controller)
+Widget build(BuildContext context) {
+  return NativeAd(controller: controller);
+}
 
 // Dispose the controller. 
-// You can't use the controller again once it's diposed
+// You can't use the it again once it's disposed
 @override
 void dispose() {
   super.dispose();
   controller.dispose();
 }
 ```
+
+# TODO:
+- [iOS support](https://developers.google.com/admob/ios/native/start)
+- Add button press effect
+- Support hot reload

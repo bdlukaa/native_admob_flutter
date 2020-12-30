@@ -37,7 +37,7 @@ class NativeAd extends StatefulWidget {
   /// The widget used when the ad is loading.
   final Widget loading;
 
-  /// The height of the ad
+  /// The height of the ad. If this is null, the widget will expand
   final double height;
 
   /// The width of the ad

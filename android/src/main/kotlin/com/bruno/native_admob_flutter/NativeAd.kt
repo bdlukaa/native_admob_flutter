@@ -1,13 +1,10 @@
 package com.bruno.native_admob_flutter
 
-import android.R.attr.*
 import android.content.Context
-import android.content.res.ColorStateList
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.*
-import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.view.*
 import android.widget.*
@@ -17,8 +14,6 @@ import com.google.android.gms.ads.formats.*
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
-import java.util.*
-
 
 class NativeViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -69,13 +64,13 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                 view = TextView(context)
                 (data["textSize"] as? Double?)?.toFloat()?.also { (view as TextView).textSize = it }
                 (data["textColor"] as? String)?.let { (view as TextView).setTextColor(Color.parseColor(it)) }
-                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                     (data["letterSpacing"] as? Double)?.let { (view as TextView).letterSpacing = it.toFloat() }
                 }
                 (data["maxLines"] as? Int?)?.also { (view as TextView).maxLines = it }
                 (data["minLines"] as? Int?)?.also { (view as TextView).minLines = it }
                 (data["bold"] as? Boolean)?.let {
-                    if (it) (view as TextView).setTypeface((view as TextView).typeface, Typeface.BOLD);
+                    if (it) (view as TextView).setTypeface((view as TextView).typeface, Typeface.BOLD)
                 }
                 (data["text"] as? String)?.let { (view as TextView).text = it }
             }
@@ -105,6 +100,11 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                 bottomLeft, bottomLeft)
 
         (data["backgroundColor"] as? String)?.let { shape.setColor(Color.parseColor(it)) }
+
+        (data["borderWidth"] as? Double)?.let {
+            val color: String = (data["borderColor"] as? String?) ?: "#FFFFFF"
+            shape.setStroke(it.toInt().dp(), Color.parseColor(color))
+        }
 //        (data["backgroundColor"] as? String)?.let { view.setBackgroundColor(Color.parseColor(it)) }
 
         view.background = shape

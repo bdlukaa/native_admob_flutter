@@ -30,18 +30,24 @@ class AdView {
   /// Some colors may not be supported
   final Color backgroundColor;
 
+  /// View border
+  final BorderSide border;
+
   /// The width of the view
   final double width;
 
   /// The height of the view
   final double height;
 
+  /// The type of the view. Do not change this manually
   final String viewType;
 
+  /// The id of the view. Used to recognize
   String id;
 
   AdView({
     @required this.viewType,
+    this.border,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
     this.borderRadius,
@@ -77,6 +83,9 @@ class AdView {
       'topLeftRadius': borderRadius?.topLeft,
       'bottomRightRadius': borderRadius?.bottomRight,
       'bottomLeftRadius': borderRadius?.bottomLeft,
+      // border
+      'borderWidth' : border?.width ?? 0,
+      'borderColor': border?.color?.toHex(),
       // color
       'backgroundColor': backgroundColor?.toHex(),
       // screen bounds
@@ -102,6 +111,7 @@ class AdLinearLayout extends AdView {
     double width,
     double height,
     AdBorderRadius borderRadius,
+    BorderSide border,
   })  : assert(orientation != null),
         super(
           id: 'linear_layout',
@@ -112,6 +122,7 @@ class AdLinearLayout extends AdView {
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
+          border: border,
         );
 
   Map<String, dynamic> toJson() {
@@ -151,6 +162,7 @@ class AdTextView extends AdView {
     double width,
     double height,
     AdBorderRadius borderRadius,
+    BorderSide border,
     this.minLines,
     this.maxLines,
     this.lineSpacing,
@@ -164,6 +176,7 @@ class AdTextView extends AdView {
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
+          border: border,
         );
 
   Map<String, dynamic> toJson() {
@@ -192,17 +205,18 @@ class AdImageView extends AdView {
     EdgeInsets padding,
     EdgeInsets margin,
     Color backgroundColor,
-    double width,
-    double height,
+    double size,
     AdBorderRadius borderRadius,
+    BorderSide border,
   }) : super(
           viewType: 'image_view',
           padding: padding,
           margin: margin,
           backgroundColor: backgroundColor,
-          width: width ?? height ?? 40,
-          height: height ?? width ?? 40,
+          width: size ?? 40,
+          height: size ?? 40,
           borderRadius: borderRadius,
+          border: border,
         );
 }
 
@@ -214,6 +228,7 @@ class AdMediaView extends AdView {
     double width,
     double height,
     AdBorderRadius borderRadius,
+    BorderSide border,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -222,6 +237,7 @@ class AdMediaView extends AdView {
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
+          border: border,
         );
 }
 
@@ -233,6 +249,7 @@ class AdRatingBarView extends AdView {
     double width,
     double height,
     AdBorderRadius borderRadius,
+    BorderSide border,
   }) : super(
           viewType: 'rating_bar',
           padding: padding,
@@ -241,6 +258,7 @@ class AdRatingBarView extends AdView {
           width: width ?? WRAP_CONTENT,
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
+          border: border,
         );
 }
 
@@ -253,6 +271,7 @@ class AdButtonView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     Color backgroundColor,
+    BorderSide border,
     // text
     int minLines,
     int maxLines,
@@ -267,6 +286,7 @@ class AdButtonView extends AdView {
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
+          border: border,
         );
 
 }
