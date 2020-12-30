@@ -37,6 +37,11 @@ android {
 }
 ```
 
+## iOS
+
+iOS is currently not supported (I don't have an Apple environment :/).
+Feel free to [create a pull request](https://github.com/bdlukaa/native_admob_flutter/pulls) with the implementation for it :)
+
 # Initialize
 
 Before creating any native ads, you must initalize the admob. It can be initialized only once:
@@ -246,3 +251,5 @@ void dispose() {
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - Add button press effect
 - Support hot reload
+- Add gradient support
+- [Add elevation support](https://developer.android.com/training/material/shadows-clipping)

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'layout_builder.dart';
+import 'layout_builder/layout_builder.dart';
 import 'utils.dart';
 import 'controller.dart';
 
@@ -17,15 +17,34 @@ class NativeAd extends StatefulWidget {
   /// Hot reload does NOT work while building an ad layout
   final AdLayoutBuilder buildLayout;
 
+  /// The rating bar.
   final AdRatingBarView ratingBar;
+
+  /// The full media view
   final AdMediaView media;
+
+  /// The icon view
   final AdImageView icon;
+
+  /// The ad headline
   final AdTextView headline;
+
+  /// The ad advertiser
   final AdTextView advertiser;
+
+  /// The ad body
   final AdTextView body;
+
+  /// The app price
   final AdTextView price;
+
+  /// The store
   final AdTextView store;
-  final AdTextView attribuition;
+
+  /// The ad attribution
+  final AdTextView attribution;
+
+  /// The ad button
   final AdButtonView button;
 
   /// The ad controller
@@ -47,7 +66,7 @@ class NativeAd extends StatefulWidget {
     Key key,
     @required this.buildLayout,
     this.advertiser,
-    this.attribuition,
+    this.attribution,
     this.body,
     this.button,
     this.headline,
@@ -102,7 +121,8 @@ class _NativeAdState extends State<NativeAd>
       'The current platform does not support native ads. The platform that support it are Android and iOS',
     );
 
-    assert(Platform.isAndroid, 'Android is the only supported platform for now');
+    assert(
+        Platform.isAndroid, 'Android is the only supported platform for now');
 
     if (state == AdEvent.loading) return widget.loading ?? SizedBox();
 
@@ -119,12 +139,12 @@ class _NativeAdState extends State<NativeAd>
         creationParamsCodec: StandardMessageCodec(),
         creationParams: layout,
       );
-    // } else if (Platform.isIOS) {
-    //   w = UiKitView(
-    //     viewType: _viewType,
-    //     creationParamsCodec: StandardMessageCodec(),
-    //     creationParams: layout,
-    //   );
+      // } else if (Platform.isIOS) {
+      //   w = UiKitView(
+      //     viewType: _viewType,
+      //     creationParamsCodec: StandardMessageCodec(),
+      //     creationParams: layout,
+      //   );
     } else {
       return SizedBox();
     }
@@ -143,28 +163,30 @@ class _NativeAdState extends State<NativeAd>
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           maxLines: 1,
         );
-    final advertiser = widget.advertiser ?? AdTextView(
-    );
+    final advertiser = widget.advertiser ?? AdTextView();
     BorderRadius.vertical();
-    final attribuition = widget.attribuition ?? AdTextView(
-      width: WRAP_CONTENT,
-      height: WRAP_CONTENT,
-      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
-      backgroundColor: Colors.yellow,
-      text: 'Ad',
-      margin: EdgeInsets.only(right: 2),
-      maxLines: 1,
-      borderRadius: AdBorderRadius.all(10),
-    );
+    final attribution = widget.attribution ??
+        AdTextView(
+          width: WRAP_CONTENT,
+          height: WRAP_CONTENT,
+          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+          backgroundColor: Colors.yellow,
+          text: 'Ad',
+          margin: EdgeInsets.only(right: 2),
+          maxLines: 1,
+          borderRadius: AdBorderRadius.all(10),
+        );
     final body = widget.body ?? AdTextView();
-    final button = widget.button ?? AdButtonView(
-      backgroundColor: Colors.yellow,
-      margin: EdgeInsets.all(6),
-      borderRadius: AdBorderRadius.vertical(bottom: 10),
-    );
-    final icon = widget.icon ?? AdImageView(
-      margin: EdgeInsets.only(right: 4),
-    );
+    final button = widget.button ??
+        AdButtonView(
+          backgroundColor: Colors.yellow,
+          margin: EdgeInsets.all(6),
+          borderRadius: AdBorderRadius.vertical(bottom: 10),
+        );
+    final icon = widget.icon ??
+        AdImageView(
+          margin: EdgeInsets.only(right: 4),
+        );
     final media = widget.media ?? AdMediaView();
     final price = widget.price ?? AdTextView();
     final ratingBar = widget.ratingBar ?? AdRatingBarView();
@@ -172,7 +194,7 @@ class _NativeAdState extends State<NativeAd>
 
     // define the layout ids
     advertiser.id = 'advertiser';
-    attribuition.id = 'attribuition';
+    attribution.id = 'attribution';
     body.id = 'body';
     button.id = 'button';
     headline.id = 'headline';
@@ -193,7 +215,7 @@ class _NativeAdState extends State<NativeAd>
           body,
           price,
           store,
-          attribuition,
+          attribution,
           button,
         )
         ?.toJson();

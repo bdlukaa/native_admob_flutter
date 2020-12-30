@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
-import 'utils.dart';
+import '../utils.dart';
+
+part 'text.dart';
+part 'linear_layout.dart';
 
 typedef AdLayoutBuilder = AdLinearLayout Function(
   AdRatingBarView ratingBar,
@@ -10,13 +13,14 @@ typedef AdLayoutBuilder = AdLinearLayout Function(
   AdTextView body,
   AdTextView price,
   AdTextView store,
-  AdTextView attribuition,
+  AdTextView attribution,
   AdButtonView button,
 );
 
 /// Expands the view to fit the parent size. Same as `double.infinity`
 const double MATCH_PARENT = -1;
-/// Wrap the content to its own size
+
+/// Wrap the content to fit its own size
 const double WRAP_CONTENT = -2;
 
 class AdView {
@@ -86,120 +90,14 @@ class AdView {
       'topLeftRadius': borderRadius?.topLeft,
       'bottomRightRadius': borderRadius?.bottomRight,
       'bottomLeftRadius': borderRadius?.bottomLeft,
-      // border
-      'borderWidth' : border?.width ?? 0,
+      // decoration
+      'borderWidth': border?.width ?? 0,
       'borderColor': border?.color?.toHex(),
-      // color
       'backgroundColor': backgroundColor?.toHex(),
       // screen bounds
       'width': width,
       'height': height,
     };
-  }
-}
-
-const String HORIZONTAL = 'horizontal';
-const String VERTICAL = 'vertical';
-
-class AdLinearLayout extends AdView {
-  final String orientation;
-  final List<AdView> children;
-
-  AdLinearLayout({
-    this.orientation = VERTICAL,
-    @required this.children,
-    EdgeInsets padding,
-    EdgeInsets margin,
-    Color backgroundColor,
-    double width,
-    double height,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-  })  : assert(orientation != null),
-        super(
-          id: 'linear_layout',
-          viewType: 'linear_layout',
-          padding: padding,
-          margin: margin,
-          backgroundColor: backgroundColor,
-          width: width ?? MATCH_PARENT,
-          height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-        );
-
-  Map<String, dynamic> toJson() {
-    final json = super.toJson();
-    List<Map<String, dynamic>> childrenData = [];
-    for (final child in children) childrenData.add(child.toJson());
-    json.addAll({
-      'children': childrenData,
-      'orientation': orientation ?? 'vertical',
-    });
-    return json;
-  }
-}
-
-class AdTextView extends AdView {
-  /// The style applied to the text view.
-  ///
-  /// Accepted values:
-  /// - color
-  /// - fontSize
-  /// - fontWeight (only FontWeight.bold)
-  /// - letterSpacing
-  final TextStyle style;
-
-  /// The text applied to the text view.
-  final String text;
-
-  final int minLines;
-  final int maxLines;
-  final double lineSpacing;
-
-  AdTextView({
-    this.style,
-    EdgeInsets padding,
-    EdgeInsets margin,
-    Color backgroundColor,
-    double width,
-    double height,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-    this.minLines,
-    this.maxLines,
-    this.lineSpacing,
-    this.text,
-  })  : 
-        super(
-          viewType: 'text_view',
-          padding: padding,
-          margin: margin,
-          backgroundColor: backgroundColor,
-          width: width ?? MATCH_PARENT,
-          height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-        );
-
-  Map<String, dynamic> toJson() {
-    final json = super.toJson();
-    final style = this.style ??
-        TextStyle(
-          fontSize: 14,
-          color: Color(0xFF000000), // black
-        );
-    json.addAll({
-      'textColor': style.color?.toHex(),
-      'textSize': style.fontSize,
-      'text': text,
-      'letterSpacing': style.letterSpacing,
-      'lineSpacing': lineSpacing,
-      'minLines': minLines,
-      'maxLines': maxLines,
-      'bold': style.fontWeight == FontWeight.bold,
-    });
-    return json;
   }
 }
 
@@ -211,6 +109,8 @@ class AdImageView extends AdView {
     double size,
     AdBorderRadius borderRadius,
     BorderSide border,
+    double elevation,
+    Color elevationColor,
   }) : super(
           viewType: 'image_view',
           padding: padding,
@@ -232,6 +132,8 @@ class AdMediaView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
+    double elevation,
+    Color elevationColor,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -245,6 +147,8 @@ class AdMediaView extends AdView {
 }
 
 class AdRatingBarView extends AdView {
+  final double stepSize;
+
   AdRatingBarView({
     EdgeInsets padding,
     EdgeInsets margin,
@@ -253,6 +157,10 @@ class AdRatingBarView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
+    double elevation,
+    Color elevationColor,
+    // rating
+    this.stepSize,
   }) : super(
           viewType: 'rating_bar',
           padding: padding,
@@ -263,33 +171,10 @@ class AdRatingBarView extends AdView {
           borderRadius: borderRadius,
           border: border,
         );
-}
 
-class AdButtonView extends AdView {
-
-  AdButtonView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    double width,
-    double height,
-    AdBorderRadius borderRadius,
-    Color backgroundColor,
-    BorderSide border,
-    // text
-    int minLines,
-    int maxLines,
-    double lineSpacing,
-    TextStyle textStyle,
-    String text,
-  }) : super(
-          viewType: 'button_view',
-          padding: padding,
-          margin: margin,
-          backgroundColor: backgroundColor,
-          width: width ?? MATCH_PARENT,
-          height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-        );
-
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({'stepSize': stepSize});
+    return json;
+  }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'layout_builder.dart';
+import 'layout_builder/layout_builder.dart';
 
 AdLayoutBuilder adBannerLayoutBuilder = (ratingBar, media, icon, headline,
     advertiser, body, price, store, attribuition, button) {
@@ -24,7 +24,7 @@ AdLayoutBuilder adBannerLayoutBuilder = (ratingBar, media, icon, headline,
             ],
           ),
         ],
-        width: WRAP_CONTENT,
+        width: MATCH_PARENT,
         orientation: HORIZONTAL,
         margin: EdgeInsets.all(6),
       ),

@@ -112,8 +112,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         val layoutParams = view.layoutParams ?: LinearLayout.LayoutParams(-1, -1, 0f)
         val marginParams = (layoutParams as? ViewGroup.MarginLayoutParams)
                 ?: ViewGroup.MarginLayoutParams(context, null)
-        (data["height"] as? Double)?.let { marginParams.height = it.toInt().dp() }
-        (data["width"] as? Double)?.let { marginParams.width = it.toInt().dp() }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             (data["marginRight"] as? Double)?.let { marginParams.rightMargin = it.toInt().dp() }
@@ -130,6 +128,9 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         val paddingBottom = ((data["paddingBottom"] as? Double) ?: 0.0).toInt().dp()
 
         view.setPadding(paddingLeft, paddingTop, paddingRight, paddingBottom)
+
+        (data["height"] as? Double)?.let { marginParams.height = it.toInt().dp() }
+        (data["width"] as? Double)?.let { marginParams.width = it.toInt().dp() }
 
         when (data["id"] as String) {
             "advertiser" -> adAdvertiser = view as TextView
