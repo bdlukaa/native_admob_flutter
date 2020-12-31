@@ -16,7 +16,6 @@ class AdTextView extends AdView {
 
   AdTextView({
     String viewType = 'text_view',
-    this.style,
     EdgeInsets padding,
     EdgeInsets margin,
     Color backgroundColor,
@@ -24,8 +23,9 @@ class AdTextView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    AdGradient gradient,
+    // text
+    this.style,
     this.minLines,
     this.maxLines,
     this.text,
@@ -42,15 +42,12 @@ class AdTextView extends AdView {
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    final style = this.style ??
-        TextStyle(
-          fontSize: 14,
-          color: Color(0xFF000000), // black
-        );
+    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.white);
     json.addAll({
       'textColor': style.color?.toHex(),
       'textSize': style.fontSize,
@@ -65,6 +62,8 @@ class AdTextView extends AdView {
 }
 
 class AdButtonView extends AdView {
+  final Color pressColor;
+
   AdButtonView({
     EdgeInsets padding,
     EdgeInsets margin,
@@ -73,8 +72,8 @@ class AdButtonView extends AdView {
     AdBorderRadius borderRadius,
     Color backgroundColor,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    this.pressColor,
+    AdGradient gradient,
     // text
     int minLines,
     int maxLines,
@@ -89,5 +88,12 @@ class AdButtonView extends AdView {
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
+
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({'pressColor': pressColor?.toHex()});
+    return json;
+  }
 }

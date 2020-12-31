@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+
+import '../gradient/gradient.dart';
 import '../utils.dart';
 
 part 'text.dart';
 part 'linear_layout.dart';
 
 typedef AdLayoutBuilder = AdLinearLayout Function(
+  BuildContext context,
   AdRatingBarView ratingBar,
   AdMediaView media,
   AdImageView icon,
@@ -49,6 +52,8 @@ class AdView {
   /// The type of the view. Do not change this manually
   final String viewType;
 
+  final AdGradient gradient;
+
   /// The id of the view. Used to recognize
   String id;
 
@@ -62,6 +67,7 @@ class AdView {
     this.width,
     this.height,
     this.id,
+    this.gradient,
   });
 
   Map<String, dynamic> toJson() {
@@ -94,6 +100,7 @@ class AdView {
       'borderWidth': border?.width ?? 0,
       'borderColor': border?.color?.toHex(),
       'backgroundColor': backgroundColor?.toHex(),
+      'gradient': gradient?.toJson(),
       // screen bounds
       'width': width,
       'height': height,
@@ -109,8 +116,7 @@ class AdImageView extends AdView {
     double size,
     AdBorderRadius borderRadius,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    AdGradient gradient,
   }) : super(
           viewType: 'image_view',
           padding: padding,
@@ -120,6 +126,7 @@ class AdImageView extends AdView {
           height: size ?? 40,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
 }
 
@@ -132,8 +139,7 @@ class AdMediaView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    AdGradient gradient,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -143,6 +149,7 @@ class AdMediaView extends AdView {
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
 }
 
@@ -157,8 +164,7 @@ class AdRatingBarView extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    AdGradient gradient,
     // rating
     this.stepSize,
   }) : super(
@@ -170,6 +176,7 @@ class AdRatingBarView extends AdView {
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
 
   Map<String, dynamic> toJson() {

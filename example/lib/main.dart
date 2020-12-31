@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Column(
+      body: ListView(
         children: [
           // Create a native ad with the default style
           NativeAd(
@@ -49,63 +49,61 @@ class _MyHomePageState extends State<MyHomePage> {
             error: Text('error'),
           ),
 
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
-                colors: [Colors.blue[300], Colors.blue[900]],
-              ),
-            ),
-            child: NativeAd(
-              height: 100,
-              buildLayout: secondBuilder,
-              loading: Text('loading'),
-              error: Text('error'),
-              icon: AdImageView(size: 80),
-              headline: AdTextView(
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              media: AdMediaView(height: 80, width: 120),
-            ),
+          NativeAd(
+            height: 100,
+            buildLayout: secondBuilder,
+            loading: Text('loading'),
+            error: Text('error'),
+            icon: AdImageView(size: 80),
+            headline: AdTextView(
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            media: AdMediaView(height: 80, width: 120),
           ),
 
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment(0, 0),
-                end: Alignment(1, 1),
-                colors: [Colors.indigo[300], Colors.indigo[900]],
-              ),
+          NativeAd(
+            height: 300,
+            buildLayout: fullBuilder,
+            loading: Text('loading'),
+            error: Text('error'),
+            icon: AdImageView(size: 40),
+            headline: AdTextView(
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              maxLines: 1,
             ),
-            child: NativeAd(
-              height: 300,
-              buildLayout: fullBuilder,
-              loading: Text('loading'),
-              error: Text('error'),
-              icon: AdImageView(size: 40),
-              headline: AdTextView(
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              media: AdMediaView(
-                height: 180,
-                width: MATCH_PARENT,
-              ),
+            media: AdMediaView(
+              height: 180,
+              width: MATCH_PARENT,
             ),
-          )
+            attribution: AdTextView(
+              width: WRAP_CONTENT,
+              height: WRAP_CONTENT,
+              padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+              margin: EdgeInsets.only(right: 2),
+              maxLines: 1,
+              borderRadius: AdBorderRadius.all(10),
+              text: 'Anúncio',
+              border: BorderSide(color: Colors.white, width: 1),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+            ),
+          ),
         ],
       ),
     );
   }
 }
 
-AdLayoutBuilder fullBuilder = (ratingBar, media, icon, headline, advertiser,
+AdLayoutBuilder fullBuilder = (context, ratingBar, media, icon, headline, advertiser,
     body, price, store, attribuition, button) {
   return AdLinearLayout(
-    margin: EdgeInsets.all(10),
-    borderRadius: AdBorderRadius.all(10),
+    padding: EdgeInsets.all(10),
     // The first linear layout width needs to be extended to the
     // parents height, otherwise the children won't fit good
     width: MATCH_PARENT,
+    gradient: AdLinearGradient(
+      colors: [Colors.indigo[300], Colors.indigo[800]],
+      orientation: AdGradientOrientation.tl_br,
+    ),
     children: [
       media,
       AdLinearLayout(
@@ -130,15 +128,19 @@ AdLayoutBuilder fullBuilder = (ratingBar, media, icon, headline, advertiser,
   );
 };
 
-AdLayoutBuilder secondBuilder = (ratingBar, media, icon, headline, advertiser,
+AdLayoutBuilder secondBuilder = (context, ratingBar, media, icon, headline, advertiser,
     body, price, store, attribuition, button) {
   return AdLinearLayout(
-    margin: EdgeInsets.all(10),
-    borderRadius: AdBorderRadius.all(10),
+    padding: EdgeInsets.all(10),
     // The first linear layout width needs to be extended to the
     // parents height, otherwise the children won't fit good
     width: MATCH_PARENT,
     orientation: HORIZONTAL,
+    gradient: AdRadialGradient(
+      colors: [Colors.blue[300], Colors.blue[900]],
+      center: Alignment(0.5, 0.5),
+      radius: 1000,
+    ),
     children: [
       icon,
       AdLinearLayout(

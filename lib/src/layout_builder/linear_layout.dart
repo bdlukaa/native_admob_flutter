@@ -19,8 +19,7 @@ class AdLinearLayout extends AdView {
     double height,
     AdBorderRadius borderRadius,
     BorderSide border,
-    double elevation,
-    Color elevationColor,
+    AdGradient gradient,
     this.gravity,
   })  : assert(orientation != null),
         super(
@@ -33,6 +32,7 @@ class AdLinearLayout extends AdView {
           height: height ?? WRAP_CONTENT,
           borderRadius: borderRadius,
           border: border,
+          gradient: gradient,
         );
 
   Map<String, dynamic> toJson() {
@@ -55,6 +55,6 @@ enum LayoutGravity {
 
 }
 
-String _layoutGravityName(LayoutGravity g) {
-  return g?.toString()?.replaceAll('LayoutGravity.', '');
-}
+// String _layoutGravityName(LayoutGravity g) {
+//   return g?.toString()?.replaceAll('LayoutGravity.', '');
+// }

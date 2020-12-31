@@ -5,6 +5,7 @@ import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.*
+import android.graphics.drawable.GradientDrawable.*
 import android.os.Build
 import android.view.*
 import android.widget.*
@@ -85,10 +86,50 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             "rating_bar" -> view = RatingBar(context)
             "button_view" -> {
                 view = Button(context)
+//                val foreground = GradientDrawable()
+//                (data["pressColor"] as? String)?.let { foreground.setColor(Color.parseColor(it)) }
+//                view.isClickable = true
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+//                    view.foreground = foreground
+//                }
             }
         }
 
-        val shape = GradientDrawable()
+        var shape = GradientDrawable()
+
+        (data["gradient"] as? Map<String, Any>)?.let { data ->
+
+            val orientation: Orientation = when (data["orientation"]) {
+                "top_bottom" -> Orientation.TOP_BOTTOM
+                "tr_bl" -> Orientation.TR_BL
+                "right_left" -> Orientation.RIGHT_LEFT
+                "br_tl" -> Orientation.BR_TL
+                "bottom_top" -> Orientation.BOTTOM_TOP
+                "bl_tr" -> Orientation.BL_TR
+                "left_right" -> Orientation.LEFT_RIGHT
+                "tl_br" -> Orientation.TL_BR
+                else -> Orientation.LEFT_RIGHT
+            }
+
+            val colors: List<Int> = (data["colors"] as List<String>).map { Color.parseColor(it) };
+
+            shape = GradientDrawable(orientation, colors.toIntArray())
+
+            when (data["type"]) {
+                "linear" -> {} // Already implemented it above
+                "radial" -> {
+                    shape.gradientType = RADIAL_GRADIENT
+                    shape.gradientRadius = (data["radialGradientRadius"] as Double).toFloat()
+                    shape.setGradientCenter(
+                        (data["radialGradientCenterX"] as Double).toFloat(),
+                        (data["radialGradientCenterX"] as Double).toFloat()
+                    )
+                }
+                else -> {}
+            }
+        }
+
+        // radius
         val topRight = ((data["topRightRadius"] as? Double) ?: 0.0).toFloat()
         val topLeft = ((data["topLeftRadius"] as? Double) ?: 0.0).toFloat()
         val bottomRight = ((data["bottomRightRadius"] as? Double) ?: 0.0).toFloat()

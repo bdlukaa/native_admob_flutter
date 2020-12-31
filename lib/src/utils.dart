@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'layout_builder/layout_builder.dart';
 
-AdLayoutBuilder adBannerLayoutBuilder = (ratingBar, media, icon, headline,
+AdLayoutBuilder adBannerLayoutBuilder = (context, ratingBar, media, icon, headline,
     advertiser, body, price, store, attribuition, button) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),

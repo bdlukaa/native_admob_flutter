@@ -57,9 +57,17 @@ class NativeAd extends StatefulWidget {
   final Widget loading;
 
   /// The height of the ad. If this is null, the widget will expand
+  ///
+  /// Ad views that have a width or height smaller than 32 will be
+  /// demonetized in the future.
+  /// Please make sure the ad view has sufficiently large area.
   final double height;
 
-  /// The width of the ad
+  /// The width of the ad. If this is null, the widget will expand
+  ///
+  /// Ad views that have a width or height smaller than 32 will be
+  /// demonetized in the future.
+  /// Please make sure the ad view has sufficiently large area.
   final double width;
 
   NativeAd({
@@ -149,6 +157,24 @@ class _NativeAdState extends State<NativeAd>
       return SizedBox();
     }
 
+    if (widget.height != null)
+      assert(
+        widget.height > 32,
+        '''
+        Ad views that have a width or height smaller than 32 will be demonetized in the future. 
+        Please make sure the ad view has sufficiently large area.
+        ''',
+      );
+
+    if (widget.width != null)
+      assert(
+        widget.height > 32,
+        '''
+        Ad views that have a width or height smaller than 32 will be demonetized in the future. 
+        Please make sure the ad view has sufficiently large area.
+        ''',
+      );
+
     return SizedBox(
       height: widget.height,
       width: widget.width,
@@ -180,6 +206,7 @@ class _NativeAdState extends State<NativeAd>
     final button = widget.button ??
         AdButtonView(
           backgroundColor: Colors.yellow,
+          pressColor: Colors.yellowAccent,
           margin: EdgeInsets.all(6),
           borderRadius: AdBorderRadius.vertical(bottom: 10),
         );
@@ -207,6 +234,7 @@ class _NativeAdState extends State<NativeAd>
     // build the layout
     final layout = (widget.buildLayout ?? adBannerLayoutBuilder)
         .call(
+          context,
           ratingBar,
           media,
           icon,

@@ -251,5 +251,4 @@ void dispose() {
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - Add button press effect
 - Support hot reload
-- Add gradient support
 - [Add elevation support](https://developer.android.com/training/material/shadows-clipping)
