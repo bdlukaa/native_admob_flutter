@@ -7,7 +7,6 @@ part 'text.dart';
 part 'linear_layout.dart';
 
 typedef AdLayoutBuilder = AdLinearLayout Function(
-  BuildContext context,
   AdRatingBarView ratingBar,
   AdMediaView media,
   AdImageView icon,

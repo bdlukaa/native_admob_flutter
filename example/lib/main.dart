@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-AdLayoutBuilder fullBuilder = (context, ratingBar, media, icon, headline, advertiser,
+AdLayoutBuilder fullBuilder = (ratingBar, media, icon, headline, advertiser,
     body, price, store, attribuition, button) {
   return AdLinearLayout(
     padding: EdgeInsets.all(10),
@@ -128,7 +128,7 @@ AdLayoutBuilder fullBuilder = (context, ratingBar, media, icon, headline, advert
   );
 };
 
-AdLayoutBuilder secondBuilder = (context, ratingBar, media, icon, headline, advertiser,
+AdLayoutBuilder secondBuilder = (ratingBar, media, icon, headline, advertiser,
     body, price, store, attribuition, button) {
   return AdLinearLayout(
     padding: EdgeInsets.all(10),

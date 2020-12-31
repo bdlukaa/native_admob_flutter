@@ -234,7 +234,6 @@ class _NativeAdState extends State<NativeAd>
     // build the layout
     final layout = (widget.buildLayout ?? adBannerLayoutBuilder)
         .call(
-          context,
           ratingBar,
           media,
           icon,
