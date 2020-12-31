@@ -1,6 +1,7 @@
-## 0.0.2+1
+## 0.0.3
 
 - Remove context from builder
+- Changing the layout during runtime is now supported 🥳🥳🎉
 
 ## 0.0.2
 

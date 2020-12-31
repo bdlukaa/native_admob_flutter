@@ -261,6 +261,3 @@ void dispose() {
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - Add button press effect
 - [Add elevation support](https://developer.android.com/training/material/shadows-clipping)
-
-## Known issues:
-- Images in hot reload may vanish
