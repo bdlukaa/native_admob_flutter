@@ -1,3 +1,8 @@
+## 0.0.4
+
+- Button text style is customizable
+- Fixed `Colors.transparent` color bug
+
 ## 0.0.3+1
 
 - Added layout gravity
