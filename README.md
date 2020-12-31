@@ -6,6 +6,21 @@ Easy-to-make native ads in flutter.
 - This is NOT production ready. You may find some issues
 - iOS is NOT supported
 
+## Installation
+
+From pub (latest stable release):
+```yaml
+dependencies:
+  native_admob_flutter: 0.0.3+1
+```
+
+From github (latest pre-release):
+```yaml
+dependencies:
+  native_admob_flutter:
+    url: https://github.com/bdlukaa/native_admob_flutter
+```
+
 # Platform setup
 
 - [x] Android
@@ -104,7 +119,8 @@ This library provides a default layout builder: `adBannerLayoutBuilder`:
 You can use each provided view only once. `headline` and `attribuition` are required to be in the view by google
 
 ```dart
-AdLayoutBuilder myCustomLayoutBuilder = (ratingBar, media, icon, headline,
+// ⭐Note⭐: The function must be a getter, otherwise hot reload will not work
+AdLayoutBuilder get myCustomLayoutBuilder => (ratingBar, media, icon, headline,
     advertiser, body, price, store, attribuition, button) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),

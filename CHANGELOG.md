@@ -1,3 +1,8 @@
+## 0.0.3+1
+
+- Added layout gravity
+- Changed examples to support hot reload
+
 ## 0.0.3
 
 - Remove context from builder

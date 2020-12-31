@@ -3,7 +3,7 @@ import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NativeAds.initialize();
+  await NativeAds.initialize();
   runApp(MyApp());
 }
 
@@ -56,7 +56,11 @@ class _MyHomePageState extends State<MyHomePage> {
             error: Text('error'),
             icon: AdImageView(size: 80),
             headline: AdTextView(
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
+            ),
             media: AdMediaView(height: 80, width: 120),
           ),
 
@@ -67,7 +71,11 @@ class _MyHomePageState extends State<MyHomePage> {
             error: Text('error'),
             icon: AdImageView(size: 40),
             headline: AdTextView(
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
               maxLines: 1,
             ),
             media: AdMediaView(
@@ -78,11 +86,11 @@ class _MyHomePageState extends State<MyHomePage> {
               width: WRAP_CONTENT,
               height: WRAP_CONTENT,
               padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
-              margin: EdgeInsets.only(right: 2),
+              margin: EdgeInsets.only(right: 4),
               maxLines: 1,
               borderRadius: AdBorderRadius.all(10),
               text: 'Anúncio',
-              border: BorderSide(color: Colors.white, width: 1),
+              border: BorderSide(color: Colors.green, width: 1),
               style:
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
@@ -93,68 +101,71 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-AdLayoutBuilder fullBuilder = (ratingBar, media, icon, headline, advertiser,
-    body, price, store, attribuition, button) {
-  return AdLinearLayout(
-    padding: EdgeInsets.all(10),
-    // The first linear layout width needs to be extended to the
-    // parents height, otherwise the children won't fit good
-    width: MATCH_PARENT,
-    gradient: AdLinearGradient(
-      colors: [Colors.indigo[300], Colors.indigo[800]],
-      orientation: AdGradientOrientation.tl_br,
-    ),
-    children: [
-      media,
-      AdLinearLayout(
+AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
+        advertiser, body, price, store, attribuition, button) {
+      return AdLinearLayout(
+        padding: EdgeInsets.all(10),
+        // The first linear layout width needs to be extended to the
+        // parents height, otherwise the children won't fit good
+        width: MATCH_PARENT,
+        gradient: AdLinearGradient(
+          colors: [Colors.indigo[300], Colors.indigo[700]],
+          orientation: AdGradientOrientation.tl_br,
+        ),
         children: [
-          icon,
-          AdLinearLayout(children: [
-            headline,
-            AdLinearLayout(
-              children: [attribuition, advertiser],
-              orientation: HORIZONTAL,
-              width: WRAP_CONTENT,
-            ),
-          ], margin: EdgeInsets.only(left: 4)),
-        ],
-        width: WRAP_CONTENT,
-        orientation: HORIZONTAL,
-        margin: EdgeInsets.all(6),
-      ),
-      button,
-    ],
-    // backgroundColor: Colors.blue,
-  );
-};
-
-AdLayoutBuilder secondBuilder = (ratingBar, media, icon, headline, advertiser,
-    body, price, store, attribuition, button) {
-  return AdLinearLayout(
-    padding: EdgeInsets.all(10),
-    // The first linear layout width needs to be extended to the
-    // parents height, otherwise the children won't fit good
-    width: MATCH_PARENT,
-    orientation: HORIZONTAL,
-    gradient: AdRadialGradient(
-      colors: [Colors.blue[300], Colors.blue[900]],
-      center: Alignment(0.5, 0.5),
-      radius: 1000,
-    ),
-    children: [
-      icon,
-      AdLinearLayout(
-        children: [
-          headline,
+          media,
           AdLinearLayout(
-            children: [attribuition, advertiser, ratingBar],
-            orientation: HORIZONTAL,
+            children: [
+              icon,
+              AdLinearLayout(children: [
+                headline,
+                AdLinearLayout(
+                  children: [attribuition, advertiser],
+                  orientation: HORIZONTAL,
+                  width: WRAP_CONTENT,
+                ),
+              ], margin: EdgeInsets.only(left: 4)),
+            ],
             width: WRAP_CONTENT,
-            height: 25,
+            orientation: HORIZONTAL,
+            margin: EdgeInsets.all(6),
+          ),
+          AdLinearLayout(
+            children: [button],
+            // gravity: LayoutGravity.center_horizontal,
           ),
         ],
-        margin: EdgeInsets.all(6),
-      ),
-    ],
-  );
-};
+        // backgroundColor: Colors.blue,
+      );
+    };
+
+AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
+        advertiser, body, price, store, attribution, button) {
+      return AdLinearLayout(
+        padding: EdgeInsets.all(10),
+        // The first linear layout width needs to be extended to the
+        // parents height, otherwise the children won't fit good
+        width: MATCH_PARENT,
+        orientation: HORIZONTAL,
+        gradient: AdRadialGradient(
+          colors: [Colors.blue[300], Colors.blue[900]],
+          center: Alignment(0.5, 0.5),
+          radius: 1000,
+        ),
+        children: [
+          icon,
+          AdLinearLayout(
+            children: [
+              headline,
+              AdLinearLayout(
+                children: [attribution, advertiser, ratingBar],
+                orientation: HORIZONTAL,
+                width: WRAP_CONTENT,
+                height: 25,
+              ),
+            ],
+            margin: EdgeInsets.all(4),
+          ),
+        ],
+      );
+    };

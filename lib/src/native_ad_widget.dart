@@ -112,7 +112,13 @@ class _NativeAdState extends State<NativeAd>
   @override
   void didUpdateWidget(NativeAd oldWidget) {
     super.didUpdateWidget(oldWidget);
-    controller.requestAdUIUpdate(layout);
+    if (layout(oldWidget) != layout(widget)) {
+      controller.requestAdUIUpdate(AdLinearLayout(children: []).toJson());
+      controller.requestAdUIUpdate(layout(widget));
+      // controller.requestAdUIUpdate(
+      //     AdLinearLayout(children: [AdTextView(text: 'you know')..id = 'text'])
+      //         .toJson());
+    }
   }
 
   @override
@@ -158,11 +164,14 @@ class _NativeAdState extends State<NativeAd>
 
     Widget w;
 
+    final params = layout(widget);
+    params.addAll({'controllerId': controller.id});
+
     if (Platform.isAndroid) {
       w = AndroidView(
         viewType: _viewType,
         creationParamsCodec: StandardMessageCodec(),
-        creationParams: layout,
+        creationParams: params,
       );
       // } else if (Platform.isIOS) {
       //   w = UiKitView(
@@ -199,15 +208,15 @@ class _NativeAdState extends State<NativeAd>
     );
   }
 
-  Map<String, dynamic> get layout {
+  Map<String, dynamic> layout(NativeAd widget) {
     // default the layout views
     final headline = widget.headline ??
         AdTextView(
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           maxLines: 1,
         );
     final advertiser = widget.advertiser ?? AdTextView();
-    BorderRadius.vertical();
     final attribution = widget.attribution ??
         AdTextView(
           width: WRAP_CONTENT,
@@ -263,10 +272,8 @@ class _NativeAdState extends State<NativeAd>
           button,
         )
         ?.toJson();
-
-    layout.addAll({'controllerId': controller.id});
-
     assert(layout != null, 'The layout must not return null');
+
     return layout;
   }
 

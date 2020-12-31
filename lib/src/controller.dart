@@ -115,7 +115,7 @@ class NativeAdController {
     final id = unitId ?? NativeAds.nativeAdUnitId;
     assert(id != null, 'The ad unit id can NOT be null');
     _channel.invokeMethod('loadAd', {
-      'unitId': id,
+      'unitId': id ?? NativeAds.testAdUnitId,
       // "numberAds": numberAds,
     });
   }

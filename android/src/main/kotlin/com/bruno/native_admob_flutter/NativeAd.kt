@@ -55,7 +55,18 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                     VERTICAL
                 else HORIZONTAL
 
-                view.gravity = Gravity.TOP
+                (data["gravity"] as? String).let {
+                    (view as LinearLayout).gravity = when(it!!) {
+                        "center" -> Gravity.CENTER
+                        "center_horizontal" -> Gravity.CENTER_HORIZONTAL
+                        "center_vertical" -> Gravity.CENTER_VERTICAL
+                        "left" -> Gravity.LEFT
+                        "right" -> Gravity.RIGHT
+                        "top" -> Gravity.TOP
+                        "bottom" -> Gravity.BOTTOM
+                        else -> Gravity.TOP
+                    }
+                }
 
                 if (data["children"] != null)
                     for (child in data["children"] as List<*>)

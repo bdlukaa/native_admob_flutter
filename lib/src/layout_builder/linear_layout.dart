@@ -38,11 +38,11 @@ class AdLinearLayout extends AdView {
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     List<Map<String, dynamic>> childrenData = [];
-    for (final child in children) childrenData.add(child.toJson());
+    for (final child in children) if (child != null) childrenData.add(child.toJson());
     json.addAll({
       'children': childrenData,
       'orientation': orientation ?? 'vertical',
-      // 'gravity': _layoutGravityName(gravity ?? LayoutGravity.TOP),
+      'gravity': _layoutGravityName(gravity ?? LayoutGravity.top),
     });
     return json;
   }
@@ -50,11 +50,11 @@ class AdLinearLayout extends AdView {
 
 enum LayoutGravity {
 
-  CENTER, CENTER_HORIZONTAL, CENTER_VERTICAL,
-  LEFT, RIGHT, TOP, BOTTOM
+  center, center_horizontal, center_vertical,
+  left, right, top, bottom
 
 }
 
-// String _layoutGravityName(LayoutGravity g) {
-//   return g?.toString()?.replaceAll('LayoutGravity.', '');
-// }
+String _layoutGravityName(LayoutGravity g) {
+  return g?.toString()?.replaceAll('LayoutGravity.', '')?.toLowerCase();
+}
