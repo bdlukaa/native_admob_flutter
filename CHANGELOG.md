@@ -1,3 +1,7 @@
+## 0.0.2+1
+
+- Remove context from builder
+
 ## 0.0.2
 
 - Add Linear and Radial Gradient

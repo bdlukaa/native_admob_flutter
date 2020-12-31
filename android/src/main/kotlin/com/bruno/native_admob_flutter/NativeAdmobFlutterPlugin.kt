@@ -36,14 +36,17 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
         when (call.method) {
             "initialize" -> {
                 MobileAds.initialize(context)
+                result.success(null)
                 println("Initializing mobile ads")
             }
             "initController" -> {
                 NativeAdmobControllerManager.createController(call.argument<String>("id")!!, messenger, context)
+                result.success(null)
                 println("controller created")
             }
             "disposeController" -> {
                 NativeAdmobControllerManager.removeController(call.argument<String>("id")!!)
+                result.success(null)
                 println("controller disposed")
             }
             "setTestDeviceIds" -> {

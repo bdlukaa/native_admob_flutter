@@ -1,7 +1,13 @@
 part of 'gradient.dart';
 
-// Creates a LinearGradient
 class AdLinearGradient extends AdGradient {
+  /// Creates a LinearGradient.
+  ///
+  /// Uses a [GradientDrawable](https://developer.android.com/reference/android/graphics/drawable/GradientDrawable)
+  /// on Android
+  ///
+  /// - You must specify at least two colors.
+  /// - The default orientation is `left_right` (left to right)
   const AdLinearGradient({
     AdGradientOrientation orientation,
     @required List<Color> colors,

@@ -14,7 +14,7 @@ class AdGradient {
 
   final String type;
 
-  /// The colors of the gradients
+  /// The colors of the gradients. There must be at least two colors
   final List<Color> colors;
 
   /// The orientation of the gradient. Default to `left to right`
@@ -23,7 +23,12 @@ class AdGradient {
   /// The radius used by [AdRadialGradient]
   final double radialGradientRadius;
 
-  /// The center point of the gadient used by [AdRadialGradient]
+  /// The center point of the gadient used by [AdRadialGradient].
+  /// 
+  /// The top-left point is `Alignment(0, 0)` and the
+  /// bottom-right point is `Alignment(1, 1)`
+  /// 
+  /// The default center point is `Alignment(0.5, 0.5)`
   final Alignment gradientCenter;
 
   const AdGradient({

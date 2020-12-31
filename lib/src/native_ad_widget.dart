@@ -17,37 +17,37 @@ class NativeAd extends StatefulWidget {
   /// Hot reload does NOT work while building an ad layout
   final AdLayoutBuilder buildLayout;
 
-  /// The rating bar.
+  /// The rating bar. This isn't always inclued in the request
   final AdRatingBarView ratingBar;
 
-  /// The full media view
+  /// The full media view. This is always included in the request
   final AdMediaView media;
 
-  /// The icon view
+  /// The icon view. This isn't always inclued in the request
   final AdImageView icon;
 
-  /// The ad headline
+  /// The ad headline. This is always inclued in the request
   final AdTextView headline;
 
-  /// The ad advertiser
+  /// The ad advertiser. This isn't always inclued in the request
   final AdTextView advertiser;
 
-  /// The ad body
+  /// The ad body. This isn't always inclued in the request
   final AdTextView body;
 
-  /// The app price
+  /// The app price. This isn't always inclued in the request
   final AdTextView price;
 
-  /// The store
+  /// The store. This isn't always inclued in the request
   final AdTextView store;
 
-  /// The ad attribution
+  /// The ad attribution. This is always inclued in the request
   final AdTextView attribution;
 
-  /// The ad button
+  /// The ad button. This isn't always inclued in the request
   final AdButtonView button;
 
-  /// The ad controller
+  /// The ad controller. If not specified, uses a default controller
   final NativeAdController controller;
 
   /// The widget used in case an error shows up
@@ -58,16 +58,24 @@ class NativeAd extends StatefulWidget {
 
   /// The height of the ad. If this is null, the widget will expand
   ///
+  /// 🔴IMPORTANT❗🔴:
   /// Ad views that have a width or height smaller than 32 will be
   /// demonetized in the future.
   /// Please make sure the ad view has sufficiently large area.
+  ///
+  /// Usage inside of a Column requires an Expanded or a defined height.
+  /// Usage inside of a ListView requires a defined height.
   final double height;
 
   /// The width of the ad. If this is null, the widget will expand
   ///
+  /// 🔴IMPORTANT❗🔴:
   /// Ad views that have a width or height smaller than 32 will be
   /// demonetized in the future.
   /// Please make sure the ad view has sufficiently large area.
+  ///
+  /// Usage inside of a Row requires an Expanded or a defined width.
+  /// Usage inside of a ListView requires a defined width.
   final double width;
 
   NativeAd({
@@ -102,6 +110,12 @@ class _NativeAdState extends State<NativeAd>
   AdEvent state = AdEvent.loading;
 
   @override
+  void didUpdateWidget(NativeAd oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    controller.requestAdUIUpdate(layout);
+  }
+
+  @override
   void initState() {
     super.initState();
     controller = widget.controller ?? NativeAdController();
@@ -121,12 +135,18 @@ class _NativeAdState extends State<NativeAd>
   }
 
   @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     // Google Native ads are only supported in Android and iOS
     assert(
       Platform.isAndroid || Platform.isIOS,
-      'The current platform does not support native ads. The platform that support it are Android and iOS',
+      'The current platform does not support native ads. The platforms that support it are Android and iOS',
     );
 
     assert(
@@ -135,9 +155,6 @@ class _NativeAdState extends State<NativeAd>
     if (state == AdEvent.loading) return widget.loading ?? SizedBox();
 
     if (state == AdEvent.loadFailed) return widget.error ?? SizedBox();
-
-    final layout = this.layout;
-    layout.addAll({'controllerId': controller.id});
 
     Widget w;
 
@@ -186,7 +203,7 @@ class _NativeAdState extends State<NativeAd>
     // default the layout views
     final headline = widget.headline ??
         AdTextView(
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
           maxLines: 1,
         );
     final advertiser = widget.advertiser ?? AdTextView();
@@ -246,6 +263,10 @@ class _NativeAdState extends State<NativeAd>
           button,
         )
         ?.toJson();
+
+    layout.addAll({'controllerId': controller.id});
+
+    assert(layout != null, 'The layout must not return null');
     return layout;
   }
 

@@ -4,7 +4,7 @@ Easy-to-make native ads in flutter.
 
 ## ⚠️WARNING⚠️
 - This is NOT production ready. You may find some issues
-- Hot reload is NOT supported while building your layouts, neither changing them dynamically
+- iOS is NOT supported
 
 # Platform setup
 
@@ -47,11 +47,20 @@ Feel free to [create a pull request](https://github.com/bdlukaa/native_admob_flu
 Before creating any native ads, you must initalize the admob. It can be initialized only once:
 
 ```dart
+import 'package:flutter/foundation.dart';
+
+String get admobAppId {
+  /// Always test with test ads
+  if (kDebugMode)
+    return 'ca-app-pub-3940256099942544/2247696110';
+  else return 'your-admob-app-id';
+}
+
 void main() async {
   // Add this line if you will initialize it before runApp
   WidgetsFlutterBinding.ensureInitialized();
   // default admob app id: ca-app-pub-3940256099942544/2247696110
-  /* await */ NativeAds.initialize('your-admob-app-id');
+  /* await */ NativeAds.initialize(admobAppId);
   runApp(MyApp());
 }
 ```
@@ -222,7 +231,7 @@ void initState() {
           print('loadFailed $errorCode');
           break;
         case AdEvent.impression:
-          print('add rendered');
+          print('ad rendered');
           break;
         case AdEvent.clicked;
           print('clicked');
@@ -234,6 +243,7 @@ void initState() {
 }
 
 // Use the controller in the NativeAd
+@override
 Widget build(BuildContext context) {
   return NativeAd(controller: controller);
 }
@@ -242,13 +252,15 @@ Widget build(BuildContext context) {
 // You can't use the it again once it's disposed
 @override
 void dispose() {
-  super.dispose();
   controller.dispose();
+  super.dispose();
 }
 ```
 
 # TODO:
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - Add button press effect
-- Support hot reload
 - [Add elevation support](https://developer.android.com/training/material/shadows-clipping)
+
+## Known issues:
+- Images in hot reload may vanish

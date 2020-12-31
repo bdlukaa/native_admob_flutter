@@ -17,6 +17,7 @@ class NativeAdmobController(
 
     /// New native ad when loaded
     var nativeAdChanged: ((UnifiedNativeAd?) -> Unit)? = null
+    var nativeAdUpdateRequested: ((Map<String, Any?>, UnifiedNativeAd?) -> Unit)? = null
     var nativeAd: UnifiedNativeAd? = null
 //        set(value) {
 //            field = value
@@ -32,8 +33,17 @@ class NativeAdmobController(
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "loadAd" -> {
-                val unitId = call.argument<String>("unitId") ?: return
+                val unitId = call.argument<String>("unitId")
+                if (unitId == null) {
+                    result.error("no_unit_id", "An unit id is necessary", null)
+                    return
+                }
                 loadAd(unitId)
+                result.success(null)
+            }
+            "updateUI" -> {
+                val data = call.argument<Map<String, Any?>>("layout") ?: return
+                nativeAdUpdateRequested?.let { it(data, nativeAd) }
                 result.success(null)
             }
             "setNonPersonalizedAds" -> {

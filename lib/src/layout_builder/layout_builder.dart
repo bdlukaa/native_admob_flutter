@@ -6,6 +6,7 @@ import '../utils.dart';
 part 'text.dart';
 part 'linear_layout.dart';
 
+/// The layout builder. It must return an AdLinearLayout and can't return null
 typedef AdLayoutBuilder = AdLinearLayout Function(
   AdRatingBarView ratingBar,
   AdMediaView media,

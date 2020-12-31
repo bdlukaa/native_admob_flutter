@@ -47,7 +47,7 @@ class AdTextView extends AdView {
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.white);
+    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.black);
     json.addAll({
       'textColor': style.color?.toHex(),
       'textSize': style.fontSize,

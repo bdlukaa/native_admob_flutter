@@ -116,16 +116,18 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             shape = GradientDrawable(orientation, colors.toIntArray())
 
             when (data["type"]) {
-                "linear" -> {} // Already implemented it above
+                "linear" -> {
+                } // Already implemented it above
                 "radial" -> {
                     shape.gradientType = RADIAL_GRADIENT
                     shape.gradientRadius = (data["radialGradientRadius"] as Double).toFloat()
                     shape.setGradientCenter(
-                        (data["radialGradientCenterX"] as Double).toFloat(),
-                        (data["radialGradientCenterX"] as Double).toFloat()
+                            (data["radialGradientCenterX"] as Double).toFloat(),
+                            (data["radialGradientCenterX"] as Double).toFloat()
                     )
                 }
-                else -> {}
+                else -> {
+                }
             }
         }
 
@@ -175,7 +177,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
         when (data["id"] as String) {
             "advertiser" -> adAdvertiser = view as TextView
-            "attribuition" -> adAttribution = view as TextView
+            "attribution" -> adAttribution = view as TextView
             "body" -> adBody = view as TextView
             "button" -> callToAction = view as Button
             "headline" -> adHeadline = view as TextView
@@ -201,6 +203,27 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         val view: View = build(data!!, context)
         adView.addView(view)
 
+        define()
+
+        (data["controllerId"] as? String)?.let { id ->
+            val controller = NativeAdmobControllerManager.getController(id)
+            controller?.nativeAdChanged = { setNativeAd(it) }
+            controller?.nativeAdUpdateRequested = { layout: Map<String, Any?>, ad: UnifiedNativeAd? ->
+                adView.removeAllViews()
+                adView.addView(build(layout, context))
+                define()
+                setNativeAd(ad)
+            }
+            this.controller = controller
+        }
+
+        controller?.nativeAd?.let {
+            setNativeAd(it)
+        }
+
+    }
+
+    private fun define() {
         // The MediaView will display a video asset if one is present in the ad, and the
         // first image asset otherwise.
         adView.mediaView = adMedia
@@ -214,24 +237,10 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         adView.starRatingView = ratingBar
         adView.storeView = adStore
         adView.advertiserView = adAdvertiser
-
-        (data["controllerId"] as? String)?.let { id ->
-            val controller = NativeAdmobControllerManager.getController(id)
-            controller?.nativeAdChanged = { setNativeAd(it) }
-            this.controller = controller
-            println("controller attached $id")
-        }
-
-        controller?.nativeAd?.let {
-            setNativeAd(it)
-        }
-
     }
 
     private fun setNativeAd(nativeAd: UnifiedNativeAd?) {
         if (nativeAd == null) return
-
-        println("setting native ad")
 
         // Some assets are guaranteed to be in every UnifiedNativeAd.
         adMedia?.setMediaContent(nativeAd.mediaContent)
@@ -263,8 +272,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
         // Assign native ad object to the native view.
         adView.setNativeAd(nativeAd)
-
-        println("native ad set")
     }
 
     override fun getView(): View {

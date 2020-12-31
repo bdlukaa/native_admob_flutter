@@ -5,9 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../native_admob_flutter.dart';
 
-enum AdEvent {
-  impression, clicked, loadFailed, loaded, loading, undefined
-}
+enum AdEvent { impression, clicked, loadFailed, loaded, loading, undefined }
 
 class NativeAdController {
   final _key = UniqueKey();
@@ -18,7 +16,7 @@ class NativeAdController {
   final _onEvent = StreamController<Map<AdEvent, dynamic>>.broadcast();
 
   /// Listen to the events the controller throws
-  /// 
+  ///
   /// Usage:
   /// ```dart
   /// controller.onEvent.listen((e) {
@@ -68,13 +66,13 @@ class NativeAdController {
   }
 
   /// Dispose the controller. Once disposed, the controller can not be used anymore
-  /// 
+  ///
   /// Usage:
   /// ```dart
   /// @override
   /// void dispose() {
   ///   super.dispose();
-  ///   controller.dispose();
+  ///   controller?.dispose();
   /// }
   /// ```
   void dispose() {
@@ -106,12 +104,24 @@ class NativeAdController {
     }
   }
 
-  /// Load the ad
+  /// Load the ad.
+  ///
+  /// If [unitId] is not specified, uses [NativeAds.nativeAdUnitId]
   void load([String unitId]) {
-    _channel.invokeMethod("loadAd", {
-      "unitId": unitId ?? NativeAds.nativeAdUnitId,
+    assert(
+      NativeAds.isInitialized,
+      'You MUST initialize the ADMOB before requesting any ads',
+    );
+    final id = unitId ?? NativeAds.nativeAdUnitId;
+    assert(id != null, 'The ad unit id can NOT be null');
+    _channel.invokeMethod('loadAd', {
+      'unitId': id,
       // "numberAds": numberAds,
     });
   }
 
+  /// Request the UI to update when changes happen
+  void requestAdUIUpdate(Map<String, dynamic> layout) {
+    _channel.invokeMethod('updateUI', {'layout': layout});
+  }
 }
