@@ -4,17 +4,24 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.Typeface
-import android.graphics.drawable.*
-import android.graphics.drawable.GradientDrawable.*
+import android.graphics.drawable.GradientDrawable
+import android.graphics.drawable.GradientDrawable.Orientation
+import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
 import android.os.Build
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
-import com.google.android.gms.ads.formats.*
+import com.google.android.gms.ads.formats.MediaView
+import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
+
 
 class NativeViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -56,7 +63,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                 else HORIZONTAL
 
                 (data["gravity"] as? String).let {
-                    (view as LinearLayout).gravity = when(it!!) {
+                    (view as LinearLayout).gravity = when (it!!) {
                         "center" -> Gravity.CENTER
                         "center_horizontal" -> Gravity.CENTER_HORIZONTAL
                         "center_vertical" -> Gravity.CENTER_VERTICAL
@@ -74,17 +81,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             }
             "text_view" -> {
                 view = TextView(context)
-                (data["textSize"] as? Double?)?.toFloat()?.also { (view as TextView).textSize = it }
-                (data["textColor"] as? String)?.let { (view as TextView).setTextColor(Color.parseColor(it)) }
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    (data["letterSpacing"] as? Double)?.let { (view as TextView).letterSpacing = it.toFloat() }
-                }
-                (data["maxLines"] as? Int?)?.also { (view as TextView).maxLines = it }
-                (data["minLines"] as? Int?)?.also { (view as TextView).minLines = it }
-                (data["bold"] as? Boolean)?.let {
-                    if (it) (view as TextView).setTypeface((view as TextView).typeface, Typeface.BOLD)
-                }
-                (data["text"] as? String)?.let { (view as TextView).text = it }
+                view.applyText(data)
             }
             "image_view" -> {
                 view = ImageView(context)
@@ -97,12 +94,9 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             "rating_bar" -> view = RatingBar(context)
             "button_view" -> {
                 view = Button(context)
-//                val foreground = GradientDrawable()
-//                (data["pressColor"] as? String)?.let { foreground.setColor(Color.parseColor(it)) }
-//                view.isClickable = true
-//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-//                    view.foreground = foreground
-//                }
+                view.isClickable = true
+                view.isLongClickable = true
+                view.applyText(data)
             }
         }
 
@@ -159,8 +153,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             val color: String = (data["borderColor"] as? String?) ?: "#FFFFFF"
             shape.setStroke(it.toInt().dp(), Color.parseColor(color))
         }
-//        (data["backgroundColor"] as? String)?.let { view.setBackgroundColor(Color.parseColor(it)) }
-
         view.background = shape
 
         val layoutParams = view.layoutParams ?: LinearLayout.LayoutParams(-1, -1, 0f)
@@ -299,4 +291,19 @@ fun Int.dp(): Int {
     if (this == -1 || this == -2) return this
     val density = Resources.getSystem().displayMetrics.density
     return (this * density).toInt()
+}
+
+fun TextView.applyText(data: Map<*, *>) {
+    val view = this
+    (data["textSize"] as? Double?)?.toFloat()?.also { view.textSize = it }
+    (data["textColor"] as? String)?.let { view.setTextColor(Color.parseColor(it)) }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        (data["letterSpacing"] as? Double)?.let { view.letterSpacing = it.toFloat() }
+    }
+    (data["maxLines"] as? Int?)?.let { view.maxLines = it }
+    (data["minLines"] as? Int?)?.let { view.minLines = it }
+    (data["bold"] as? Boolean)?.let {
+        if (it) view.setTypeface(view.typeface, Typeface.BOLD)
+    }
+    (data["text"] as? String)?.let { view.text = it }
 }

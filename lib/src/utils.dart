@@ -36,6 +36,7 @@ AdLayoutBuilder get adBannerLayoutBuilder => (ratingBar, media, icon, headline,
 
 extension colorExtension on Color {
   String toHex([bool hashtag = true]) {
+    if (this == Colors.transparent) return '#00ff0000';
     String hex = '';
     if (hashtag) hex = '#$hex';
     hex = '$hex${value.toRadixString(16)}';

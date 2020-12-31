@@ -47,7 +47,7 @@ class AdTextView extends AdView {
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.black);
+    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.white);
     json.addAll({
       'textColor': style.color?.toHex(),
       'textSize': style.fontSize,
@@ -61,7 +61,7 @@ class AdTextView extends AdView {
   }
 }
 
-class AdButtonView extends AdView {
+class AdButtonView extends AdTextView {
   final Color pressColor;
 
   AdButtonView({
@@ -89,6 +89,15 @@ class AdButtonView extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          maxLines: maxLines,
+          minLines: minLines,
+          style: textStyle ??
+              TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                // fontWeight: FontWeight.bold,
+              ),
+          text: text,
         );
 
   Map<String, dynamic> toJson() {

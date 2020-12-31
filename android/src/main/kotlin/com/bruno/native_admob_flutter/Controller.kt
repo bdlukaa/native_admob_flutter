@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 
 class NativeAdmobController(
         val id: String,
-        private val channel: MethodChannel,
+        val channel: MethodChannel,
         private val context: Context
 ) : MethodChannel.MethodCallHandler {
 
@@ -54,6 +54,10 @@ class NativeAdmobController(
             }
             else -> result.notImplemented()
         }
+    }
+
+    fun undefined() {
+        channel?.invokeMethod("undefined", null)
     }
 
     private fun loadAd(unitId: String) {

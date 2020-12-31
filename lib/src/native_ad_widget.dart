@@ -13,8 +13,6 @@ class NativeAd extends StatefulWidget {
   /// How the views should be presented to the user.
   ///
   /// Use [adBannerLayoutBuilder] as a default banner layout
-  ///
-  /// Hot reload does NOT work while building an ad layout
   final AdLayoutBuilder buildLayout;
 
   /// The rating bar. This isn't always inclued in the request
@@ -113,11 +111,7 @@ class _NativeAdState extends State<NativeAd>
   void didUpdateWidget(NativeAd oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (layout(oldWidget) != layout(widget)) {
-      controller.requestAdUIUpdate(AdLinearLayout(children: []).toJson());
       controller.requestAdUIUpdate(layout(widget));
-      // controller.requestAdUIUpdate(
-      //     AdLinearLayout(children: [AdTextView(text: 'you know')..id = 'text'])
-      //         .toJson());
     }
   }
 
@@ -133,6 +127,9 @@ class _NativeAdState extends State<NativeAd>
         case AdEvent.loaded:
         case AdEvent.loadFailed:
           setState(() => state = event);
+          break;
+        case AdEvent.undefined:
+          setState(() {});
           break;
         default:
           break;
@@ -223,6 +220,7 @@ class _NativeAdState extends State<NativeAd>
           height: WRAP_CONTENT,
           padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
           backgroundColor: Colors.yellow,
+          style: TextStyle(color: Colors.black),
           text: 'Ad',
           margin: EdgeInsets.only(right: 2),
           maxLines: 1,
@@ -232,9 +230,9 @@ class _NativeAdState extends State<NativeAd>
     final button = widget.button ??
         AdButtonView(
           backgroundColor: Colors.yellow,
-          pressColor: Colors.yellowAccent,
+          pressColor: Colors.red,
           margin: EdgeInsets.all(6),
-          borderRadius: AdBorderRadius.vertical(bottom: 10),
+          // borderRadius: AdBorderRadius.vertical(bottom: 10),
         );
     final icon = widget.icon ??
         AdImageView(

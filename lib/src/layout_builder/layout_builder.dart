@@ -37,10 +37,9 @@ class AdView {
   final EdgeInsets margin;
 
   /// The background color applied to the view.
-  /// Some colors may not be supported
   final Color backgroundColor;
 
-  /// View border
+  /// The border of the view
   final BorderSide border;
 
   /// The width of the view
@@ -52,9 +51,12 @@ class AdView {
   /// The type of the view. Do not change this manually
   final String viewType;
 
+  /// The gradient of the view.
+  /// 
+  /// If `backgroundColor` is specified, the gradient won't be rendered
   final AdGradient gradient;
 
-  /// The id of the view. Used to recognize
+  /// The id of the view. Used to recognize it
   String id;
 
   AdView({

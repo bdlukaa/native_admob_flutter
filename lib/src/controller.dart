@@ -98,6 +98,7 @@ class NativeAdController {
       case "onAdImpression":
         _onEvent.add({AdEvent.impression: null});
         break;
+      case 'undefined':
       default:
         _onEvent.add({AdEvent.undefined: null});
         break;
@@ -108,10 +109,10 @@ class NativeAdController {
   ///
   /// If [unitId] is not specified, uses [NativeAds.nativeAdUnitId]
   void load([String unitId]) {
-    assert(
-      NativeAds.isInitialized,
-      'You MUST initialize the ADMOB before requesting any ads',
-    );
+    // assert(
+    //   NativeAds.isInitialized,
+    //   'You MUST initialize the ADMOB before requesting any ads',
+    // );
     final id = unitId ?? NativeAds.nativeAdUnitId;
     assert(id != null, 'The ad unit id can NOT be null');
     _channel.invokeMethod('loadAd', {
