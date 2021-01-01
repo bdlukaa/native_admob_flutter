@@ -2,24 +2,11 @@
 
 Easy-to-make native ads in flutter.
 
+English | [Português](README-PT.md)
+
 ## ⚠️WARNING⚠️
 - This is NOT production ready. You may find some issues
 - iOS is NOT supported
-
-## Installation
-
-From pub (latest stable release):
-```yaml
-dependencies:
-  native_admob_flutter: 0.0.3+1
-```
-
-From github (latest pre-release):
-```yaml
-dependencies:
-  native_admob_flutter:
-    url: https://github.com/bdlukaa/native_admob_flutter
-```
 
 # Platform setup
 
@@ -64,29 +51,32 @@ Before creating any native ads, you must initalize the admob. It can be initiali
 ```dart
 import 'package:flutter/foundation.dart';
 
-String get admobAppId {
+String get admobUnitId {
   /// Always test with test ads
   if (kDebugMode)
     return 'ca-app-pub-3940256099942544/2247696110';
-  else return 'your-admob-app-id';
+  else return 'your-native-ad-unit-id';
 }
 
-void main() async {
+void main() {
   // Add this line if you will initialize it before runApp
   WidgetsFlutterBinding.ensureInitialized();
-  // default admob app id: ca-app-pub-3940256099942544/2247696110
-  /* await */ NativeAds.initialize(admobAppId);
+  // default native ad unit id: ca-app-pub-3940256099942544/2247696110
+  NativeAds.initialize(admobUnitId);
   runApp(MyApp());
 }
 ```
+
+❗NOTE:❗ Unit IDs `are NOT` App IDs
 
 ## Always test with test ads
 
 When building and testing your apps, make sure you use test ads rather than live, production ads. Failure to do so can lead to suspension of your account.
 
-The easiest way to load test ads is to use our dedicated test ad unit ID for Native Advanced on Android:
+The easiest way to load test ads is to use the dedicated test ad unit ID for Native Ads on Android:
 
-`ca-app-pub-3940256099942544/2247696110`
+App ID: `ca-app-pub-3940256099942544~3347511713`\
+Unit ID: `ca-app-pub-3940256099942544/2247696110`
 
 It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
@@ -96,8 +86,6 @@ Learn how to create your own native ads unit ids [here](https://support.google.c
 
 ## When to request ads
 Applications displaying native ads are free to request them in advance of when they'll actually be displayed. In many cases, this is the recommended practice. An app displaying a list of items with native ads mixed in, for example, can load native ads for the whole list, knowing that some will be shown only after the user scrolls the view and some may not be displayed at all.
-
-⭐Note⭐: While prefetching ads is a great technique, it's important that publishers not keep old ads around too long without displaying them. Any ad objects that have been held for longer than an hour without being displayed should be discarded and replaced with new ads from a new request.
 
 # Creating an ad
 
@@ -116,17 +104,17 @@ This library provides a default layout builder: `adBannerLayoutBuilder`:
 
 ## Creating a layout builder
 
-You can use each provided view only once. `headline` and `attribuition` are required to be in the view by google
+You can use each provided view only once. `headline` and `attribution` are required to be in the view by google
 
 ```dart
 // ⭐Note⭐: The function must be a getter, otherwise hot reload will not work
 AdLayoutBuilder get myCustomLayoutBuilder => (ratingBar, media, icon, headline,
-    advertiser, body, price, store, attribuition, button) {
+    advertiser, body, price, store, attribution, button) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),
     borderRadius: AdBorderRadius.all(10),
     // The first linear layout width needs to be extended to the
-    // parents height, otherwise the children won't fit good
+    // parents width, otherwise the children won't fit good
     width: MATCH_PARENT,
     children: [
       AdLinearLayout(
@@ -136,7 +124,7 @@ AdLayoutBuilder get myCustomLayoutBuilder => (ratingBar, media, icon, headline,
             children: [
               headline,
               AdLinearLayout(
-                children: [attribuition, advertiser],
+                children: [attribution, advertiser],
                 orientation: HORIZONTAL,
                 width: WRAP_CONTENT,
               ),
@@ -181,7 +169,7 @@ NativeAd(
     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
     maxLines: 1,
   ),
-  attribuition: AdTextView(
+  attribution: AdTextView(
     width: WRAP_CONTENT, // You can use WRAP_CONTENT
     height: WRAP_CONTENT, // or MATCH_PARENT
     padding: EdgeInsets.symmetric(horizontal: 2, vertical: 1),
@@ -206,7 +194,7 @@ NativeAd(
 | Field          | Class           | Description                                                               | Always included? | Required to be displayed? |
 | -------------- | --------------- | ------------------------------------------------------------------------- | :--------------: | :-----------------------: |
 | Headline       | AdTextView      | Primary headline text (e.g., app title or article title).                 |       Yes        |            Yes            |
-| Attribuition   | AdTextView      | Indicate that the ad is an ad                                             |       Yes        |            Yes            |
+| Attribution   | AdTextView      | Indicate that the ad is an ad                                             |       Yes        |            Yes            |
 | Image          | AdMediaView     | Large, primary image.                                                     |       Yes        |        Recommended        |
 | Body           | AdTextView      | Secondary body text (e.g., app description or article description).       |       Yes        |        Recommended        |
 | Icon           | AdImageView     | Small icon image (e.g., app store image or advertiser logo).              |        No        |        Recommended        |
