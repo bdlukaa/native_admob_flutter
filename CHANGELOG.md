@@ -1,3 +1,9 @@
+## 0.0.4+1
+
+- Portuguese translation
+- Improvoved documentation
+- Remove useless files
+
 ## 0.0.4
 
 - Button text style is customizable
