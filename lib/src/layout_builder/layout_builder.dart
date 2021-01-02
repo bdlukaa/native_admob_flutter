@@ -18,6 +18,7 @@ typedef AdLayoutBuilder = AdLinearLayout Function(
   AdTextView store,
   AdTextView attribution,
   AdButtonView button,
+  AdButtonView muteThisAd,
 );
 
 /// Expands the view to fit the parent size. Same as `double.infinity`
@@ -56,6 +57,8 @@ class AdView {
   /// If `backgroundColor` is specified, the gradient won't be rendered
   final AdGradient gradient;
 
+  final String tooltipText;
+
   /// The id of the view. Used to recognize it
   String id;
 
@@ -70,6 +73,7 @@ class AdView {
     this.height,
     this.id,
     this.gradient,
+    this.tooltipText,
   });
 
   Map<String, dynamic> toJson() {
@@ -106,6 +110,8 @@ class AdView {
       // screen bounds
       'width': width,
       'height': height,
+      // other
+      'tooltipText': tooltipText,
     };
   }
 }
@@ -119,6 +125,7 @@ class AdImageView extends AdView {
     AdBorderRadius borderRadius,
     BorderSide border,
     AdGradient gradient,
+    String tooltipText,
   }) : super(
           viewType: 'image_view',
           padding: padding,
@@ -129,6 +136,7 @@ class AdImageView extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
         );
 }
 
@@ -142,6 +150,7 @@ class AdMediaView extends AdView {
     AdBorderRadius borderRadius,
     BorderSide border,
     AdGradient gradient,
+    String tooltipText,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -152,6 +161,7 @@ class AdMediaView extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
         );
 }
 
@@ -167,6 +177,7 @@ class AdRatingBarView extends AdView {
     AdBorderRadius borderRadius,
     BorderSide border,
     AdGradient gradient,
+    String tooltipText,
     // rating
     this.stepSize,
   }) : super(
@@ -179,6 +190,7 @@ class AdRatingBarView extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {

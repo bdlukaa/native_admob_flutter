@@ -1,9 +1,22 @@
+## 0.0.6
+
+- Implementation for NativeAdOptions
+    - **HIGHLIGHT**: adChoicesPlacement
+    - **HIGHLIGHT**: mediaAspectRatio
+    - **HIGHLIGHT**: requestCustomMuteThisAd
+    - returnUrlsForImageAssets
+    - requestMultipleImages
+    - videoOptions
+- Implement custom mute this ad
+- Performance update
+- Pre custom mute this ad
+
 ## 0.0.5
 
 - Implementation for new methods
-    - setChildDirected
-    - setTagForUnderAgeOfConsent
-    - setMaxAdContentRating
+    - **HIGHLIGHT**: setChildDirected
+    - **HIGHLIGHT**: setTagForUnderAgeOfConsent
+    - **HIGHLIGHT**: setMaxAdContentRating
     - setAppVolume
     - setAppMuted
 - Improved documentation

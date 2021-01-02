@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'layout_builder/layout_builder.dart';
 
+/// Default ad layout
 AdLayoutBuilder get adBannerLayoutBuilder => (ratingBar, media, icon, headline,
-    advertiser, body, price, store, attribuition, button) {
+    advertiser, body, price, store, attribuition, button, muteThisAdButton) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),
     borderRadius: AdBorderRadius.all(10),

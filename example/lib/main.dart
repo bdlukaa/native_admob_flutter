@@ -3,7 +3,7 @@ import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NativeAds.initialize();
+  NativeAds.initialize();
   runApp(MyApp());
 }
 
@@ -47,8 +47,14 @@ class _MyHomePageState extends State<MyHomePage> {
             buildLayout: adBannerLayoutBuilder,
             loading: Text('loading'),
             error: Text('error'),
+            button: AdButtonView(
+              borderRadius: AdBorderRadius.vertical(bottom: 10),
+              // backgroundColor: Colors.transparent,
+              margin: EdgeInsets.only(left: 6, right: 6, bottom: 6),
+              gradient:
+                  AdLinearGradient(colors: [Colors.yellow[300], Colors.amber]),
+            ),
           ),
-
           NativeAd(
             height: 100,
             buildLayout: secondBuilder,
@@ -57,16 +63,18 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: AdImageView(size: 80),
             headline: AdTextView(
               style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              maxLines: 1,
             ),
             media: AdMediaView(height: 80, width: 120),
           ),
-
           NativeAd(
             height: 300,
             buildLayout: fullBuilder,
+            options: NativeAdOptions(requestCustomMuteThisAd: true),
             loading: Text('loading'),
             error: Text('error'),
             icon: AdImageView(size: 40),
@@ -102,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
-        advertiser, body, price, store, attribuition, button) {
+        advertiser, body, price, store, attribuition, button, muteThisAdButton) {
       return AdLinearLayout(
         padding: EdgeInsets.all(10),
         // The first linear layout width needs to be extended to the
@@ -125,6 +133,7 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
                   width: WRAP_CONTENT,
                 ),
               ], margin: EdgeInsets.only(left: 4)),
+              muteThisAdButton,
             ],
             width: WRAP_CONTENT,
             orientation: HORIZONTAL,
@@ -140,7 +149,7 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
     };
 
 AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
-        advertiser, body, price, store, attribution, button) {
+        advertiser, body, price, store, attribution, button, muteThisAdButton) {
       return AdLinearLayout(
         padding: EdgeInsets.all(10),
         // The first linear layout width needs to be extended to the
@@ -161,10 +170,11 @@ AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
                 children: [attribution, advertiser, ratingBar],
                 orientation: HORIZONTAL,
                 width: WRAP_CONTENT,
-                height: 25,
+                height: 20,
               ),
+              button,
             ],
-            margin: EdgeInsets.all(4),
+            margin: EdgeInsets.symmetric(horizontal: 4),
           ),
         ],
       );

@@ -8,6 +8,7 @@ import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.GradientDrawable.Orientation
 import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
 import android.os.Build
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
@@ -47,6 +48,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private var adStore: TextView? = TextView(context)
     private var adAttribution: TextView? = TextView(context)
     private var callToAction: Button? = Button(context)
+    private var muteThisAdButton: Button? = Button(context)
 
     private fun build(data: Map<*, *>, context: Context): View {
         return buildView(data, context)
@@ -136,6 +138,17 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             }
         }
 
+        (data["tooltipText"] as? String).let {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                view.tooltipText = it
+            }
+        }
+        view.setOnLongClickListener {
+            controller?.undefined()
+            true
+        }
+        view.setOnClickListener { controller?.undefined() }
+
         // radius
         val topRight = ((data["topRightRadius"] as? Double) ?: 0.0).toFloat()
         val topLeft = ((data["topLeftRadius"] as? Double) ?: 0.0).toFloat()
@@ -183,6 +196,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             "attribution" -> adAttribution = view as TextView
             "body" -> adBody = view as TextView
             "button" -> callToAction = view as Button
+            "muteThisAd" -> muteThisAdButton = view as Button
             "headline" -> adHeadline = view as TextView
             "icon" -> adIcon = view as ImageView
             "media" -> adMedia = view as MediaView
@@ -253,6 +267,8 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         adBody?.text = nativeAd.body
         (adView.callToActionView as? Button?)?.text = nativeAd.callToAction
 
+        muteThisAdButton?.visibility = if (nativeAd.isCustomMuteThisAdEnabled) View.VISIBLE else View.INVISIBLE
+
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
         val icon = nativeAd.icon
@@ -306,4 +322,5 @@ fun TextView.applyText(data: Map<*, *>) {
         if (it) view.setTypeface(view.typeface, Typeface.BOLD)
     }
     (data["text"] as? String)?.let { view.text = it }
+    view.ellipsize = TextUtils.TruncateAt.END;
 }

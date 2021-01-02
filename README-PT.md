@@ -240,7 +240,13 @@ void initState() {
           break;
         case AdEvent.clicked;
           print('clicado');
-          break
+          break;
+        case AdEvent.muted:
+          showDialog(
+            ...,
+            builder: (_) => AlertDialog(title: Text('Anúncio silenciado')),
+          );
+          break;
         default:
           break;
       }
@@ -265,7 +271,8 @@ void dispose() {
 # A FAZER:
 
 - [Suporte ao iOS](https://developers.google.com/admob/ios/native/start)
-- [Mute this ad customizável](https://developers.google.com/admob/android/native/mute-this-ad)
 - [Anúncios de vídeo nativos](https://developers.google.com/admob/android/native/video-ads)
-- Efeito de pressionar o botão
 - [Suporte à elevação](https://developer.android.com/training/material/shadows-clipping)
+- Adicionar interção com o anúncio
+  - Tooltips
+  - Efeito de pressionar o botão

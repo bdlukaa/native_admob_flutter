@@ -20,6 +20,7 @@ class AdLinearLayout extends AdView {
     AdBorderRadius borderRadius,
     BorderSide border,
     AdGradient gradient,
+    String tooltipText,
     this.gravity,
   })  : assert(orientation != null),
         super(
@@ -33,6 +34,7 @@ class AdLinearLayout extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {

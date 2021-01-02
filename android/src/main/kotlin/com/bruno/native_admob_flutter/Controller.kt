@@ -2,11 +2,11 @@ package com.bruno.native_admob_flutter
 
 import android.content.Context
 import com.google.android.gms.ads.*
+import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
-import java.util.*
 import kotlin.collections.ArrayList
 
 class NativeAdmobController(
@@ -34,7 +34,8 @@ class NativeAdmobController(
                     result.error("no_unit_id", "An unit id is necessary", null)
                     return
                 }
-                loadAd(unitId)
+                val options = call.argument<Map<String, Any>>("options")
+                loadAd(unitId, options!!)
                 result.success(null)
             }
             "updateUI" -> {
@@ -48,45 +49,97 @@ class NativeAdmobController(
                 }
                 result.success(null)
             }
+            "muteAd" -> {
+                // yep it's always success :)
+                if (nativeAd == null) return result.success(null);
+                if (nativeAd!!.isCustomMuteThisAdEnabled)
+                    nativeAd?.muteThisAd(nativeAd!!.muteThisAdReasons[call.argument<Int>("reason")!!]);
+                result.success(null)
+            }
             else -> result.notImplemented()
         }
     }
 
     fun undefined() {
-        channel?.invokeMethod("undefined", null)
+        channel.invokeMethod("undefined", null)
     }
 
-    private fun loadAd(unitId: String) {
+    private fun loadAd(unitId: String, options: Map<String, Any>) {
         channel.invokeMethod("loading", null)
-        val builder = AdLoader.Builder(context, unitId)
-//        if(nonPersonalizedAds){
-//            val extras = Bundle().apply {
-//                putString("npa", "1")
-//            }
-//            builder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-//        }
-        builder.forUnifiedNativeAd { this.nativeAd = it }.withAdListener(object : AdListener() {
-            override fun onAdImpression() {
-                super.onAdImpression()
-                channel.invokeMethod("onAdImpression", null)
-            }
+        // ad options
+        val adOptions = NativeAdOptions.Builder()
+                .setReturnUrlsForImageAssets(options["returnUrlsForImageAssets"] as Boolean)
+                .setRequestMultipleImages(options["requestMultipleImages"] as Boolean)
+                .setAdChoicesPlacement(options["adChoicesPlacement"] as Int)
+                .setMediaAspectRatio(options["mediaAspectRatio"] as Int)
+                .setRequestCustomMuteThisAd(options["requestCustomMuteThisAd"] as Boolean)
+        val videoOptions = options["videoOptions"] as Map<String, Any>
+        val adVideoOptions = VideoOptions.Builder()
+                .setStartMuted(videoOptions["startMuted"] as Boolean)
+        adOptions.setVideoOptions(adVideoOptions.build())
 
-            override fun onAdClicked() {
-                super.onAdClicked()
-                channel.invokeMethod("onAdClicked", null)
-            }
+        // load ad
+        AdLoader.Builder(context, unitId)
+                .forUnifiedNativeAd {
+                    nativeAd = it
+                    nativeAd!!.setMuteThisAdListener {
+                        channel.invokeMethod("onAdMuted", null)
+                    }
+                    if (nativeAd!!.mediaContent.hasVideoContent()) {
+                        nativeAd!!.mediaContent.videoController.videoLifecycleCallbacks =
+                                object : VideoController.VideoLifecycleCallbacks() {
+                                    override fun onVideoStart() {
+                                        channel.invokeMethod("onVideoStart", null)
+                                    }
 
-            override fun onAdFailedToLoad(error: LoadAdError) {
-                super.onAdFailedToLoad(error)
-                channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
-            }
+                                    override fun onVideoPlay() {
+                                        channel.invokeMethod("onVideoPlay", null)
+                                    }
 
-            override fun onAdLoaded() {
-                super.onAdLoaded()
-                nativeAdChanged?.let { it(nativeAd) }
-                channel.invokeMethod("onAdLoaded", null)
-            }
-        }).build().loadAd(AdRequest.Builder().build())
+                                    override fun onVideoPause() {
+                                        channel.invokeMethod("onVideoPause", null)
+                                    }
+
+                                    override fun onVideoEnd() {
+                                        channel.invokeMethod("onVideoEnd", null)
+                                    }
+
+                                    override fun onVideoMute(isMuted: Boolean) {
+                                        channel.invokeMethod("onVideoMute", isMuted)
+                                    }
+                                }
+                    }
+                }
+                .withAdListener(object : AdListener() {
+                    override fun onAdImpression() {
+                        super.onAdImpression()
+                        channel.invokeMethod("onAdImpression", null)
+                    }
+
+                    override fun onAdClicked() {
+                        super.onAdClicked()
+                        channel.invokeMethod("onAdClicked", null)
+                    }
+
+                    override fun onAdFailedToLoad(error: LoadAdError) {
+                        super.onAdFailedToLoad(error)
+                        channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                    }
+
+                    override fun onAdLoaded() {
+                        super.onAdLoaded()
+                        nativeAdChanged?.let { it(nativeAd) }
+                        channel.invokeMethod(
+                                "onAdLoaded",
+                                mapOf("muteThisAdReasons" to nativeAd?.muteThisAdReasons?.map {
+                                    it.description
+                                } as List<String>)
+                        )
+                    }
+                })
+                .withNativeAdOptions(adOptions.build())
+                .build()
+                .loadAd(AdRequest.Builder().build())
     }
 
 }

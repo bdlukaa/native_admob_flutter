@@ -24,6 +24,7 @@ class AdTextView extends AdView {
     AdBorderRadius borderRadius,
     BorderSide border,
     AdGradient gradient,
+    String tooltipText,
     // text
     this.style,
     this.minLines,
@@ -43,6 +44,7 @@ class AdTextView extends AdView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {
@@ -74,6 +76,7 @@ class AdButtonView extends AdTextView {
     BorderSide border,
     this.pressColor,
     AdGradient gradient,
+    String tooltipText,
     // text
     int minLines,
     int maxLines,
@@ -89,6 +92,8 @@ class AdButtonView extends AdTextView {
           borderRadius: borderRadius,
           border: border,
           gradient: gradient,
+          tooltipText: tooltipText,
+          // text
           maxLines: maxLines,
           minLines: minLines,
           style: textStyle ??

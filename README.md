@@ -109,7 +109,7 @@ You can use each provided view only once. `headline` and `attribution` are requi
 ```dart
 // ⭐Note⭐: The function must be a getter, otherwise hot reload will not work
 AdLayoutBuilder get myCustomLayoutBuilder => (ratingBar, media, icon, headline,
-    advertiser, body, price, store, attribution, button) {
+    advertiser, body, price, store, attribution, button, muteThisAdButton) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),
     borderRadius: AdBorderRadius.all(10),
@@ -239,7 +239,13 @@ void initState() {
           break;
         case AdEvent.clicked;
           print('clicked');
-          break
+          break;
+        case AdEvent.muted:
+          showDialog(
+            ...,
+            builder: (_) => AlertDialog(title: Text('Ad muted')),
+          );
+          break;
         default:
           break;
       }
@@ -263,7 +269,8 @@ void dispose() {
 
 # TODO:
 - [iOS support](https://developers.google.com/admob/ios/native/start)
-- [Custom mute this ad](https://developers.google.com/admob/android/native/mute-this-ad)
 - [Native Video Ads](https://developers.google.com/admob/android/native/video-ads)
-- Add button press effect
 - [Add elevation support](https://developer.android.com/training/material/shadows-clipping)
+- Add interaction with the ad
+  - Tooltips
+  - Buttton press effect

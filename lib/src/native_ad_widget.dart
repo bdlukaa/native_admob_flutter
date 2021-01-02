@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 
 import 'layout_builder/layout_builder.dart';
 import 'utils.dart';
-import 'controller.dart';
+import 'controller/controller.dart';
 
 const _viewType = "native_admob";
 
@@ -45,6 +45,12 @@ class NativeAd extends StatefulWidget {
   /// The ad button. This isn't always inclued in the request
   final AdButtonView button;
 
+  /// The button to mute this ad. Implement it:
+  ///
+  /// ```dart
+  /// ```
+  final AdButtonView muteThisAdButton;
+
   /// The ad controller. If not specified, uses a default controller
   final NativeAdController controller;
 
@@ -76,6 +82,15 @@ class NativeAd extends StatefulWidget {
   /// Usage inside of a ListView requires a defined width.
   final double width;
 
+  /// Used to configure native ad requests.
+  ///
+  /// If this is changed, the ad will be reloaded. To disable it, set
+  /// `reloadWhenOptionsChange` to false
+  final NativeAdOptions options;
+
+  /// If true, the ad will be reloaded whenever `options` change
+  final bool reloadWhenOptionsChange;
+
   NativeAd({
     Key key,
     @required this.buildLayout,
@@ -83,6 +98,7 @@ class NativeAd extends StatefulWidget {
     this.attribution,
     this.body,
     this.button,
+    this.muteThisAdButton,
     this.headline,
     this.icon,
     this.media,
@@ -94,7 +110,10 @@ class NativeAd extends StatefulWidget {
     this.loading,
     this.height,
     this.width,
+    this.options,
+    this.reloadWhenOptionsChange = true,
   })  : assert(buildLayout != null),
+        assert(reloadWhenOptionsChange != null),
         super(key: key);
 
   @override
@@ -110,7 +129,12 @@ class _NativeAdState extends State<NativeAd>
   @override
   void didUpdateWidget(NativeAd oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (layout(oldWidget) != layout(widget)) {
+    // reload if options changed
+    if (widget.reloadWhenOptionsChange &&
+        oldWidget.options?.toJson()?.toString() !=
+            widget.options?.toJson()?.toString())
+      controller.load(options: widget.options);
+    if (layout(oldWidget).toString() != layout(widget).toString()) {
       controller.requestAdUIUpdate(layout(widget));
     }
   }
@@ -119,7 +143,8 @@ class _NativeAdState extends State<NativeAd>
   void initState() {
     super.initState();
     controller = widget.controller ?? NativeAdController();
-    controller.load();
+    controller.attach();
+    controller.load(options: widget.options);
     controller.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
@@ -129,11 +154,13 @@ class _NativeAdState extends State<NativeAd>
           setState(() => state = event);
           break;
         case AdEvent.undefined:
+        default:
           setState(() {});
           break;
-        default:
-          break;
       }
+    });
+    controller.onVideoEvent.listen((event) {
+      print(event);
     });
   }
 
@@ -231,8 +258,19 @@ class _NativeAdState extends State<NativeAd>
         AdButtonView(
           backgroundColor: Colors.yellow,
           pressColor: Colors.red,
-          margin: EdgeInsets.all(6),
-          // borderRadius: AdBorderRadius.vertical(bottom: 10),
+          margin: EdgeInsets.only(top: 6),
+        );
+    final muteThisAdButton = widget.muteThisAdButton ??
+        AdButtonView(
+          text: 'X',
+          textStyle: TextStyle(color: Colors.white, fontSize: 16),
+          border: BorderSide(color: Colors.white),
+          borderRadius: AdBorderRadius.all(10),
+          // padding: EdgeInsets.all(3),
+          margin: EdgeInsets.only(left: 2),
+          tooltipText: 'Close this ad',
+          width: 30,
+          height: 30,
         );
     final icon = widget.icon ??
         AdImageView(
@@ -248,6 +286,7 @@ class _NativeAdState extends State<NativeAd>
     attribution.id = 'attribution';
     body.id = 'body';
     button.id = 'button';
+    muteThisAdButton.id = 'muteThisAd';
     headline.id = 'headline';
     icon.id = 'icon';
     media.id = 'media';
@@ -268,6 +307,7 @@ class _NativeAdState extends State<NativeAd>
           store,
           attribution,
           button,
+          muteThisAdButton,
         )
         ?.toJson();
     assert(layout != null, 'The layout must not return null');
