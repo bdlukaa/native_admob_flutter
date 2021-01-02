@@ -19,10 +19,6 @@ class NativeAdmobController(
     var nativeAdChanged: ((UnifiedNativeAd?) -> Unit)? = null
     var nativeAdUpdateRequested: ((Map<String, Any?>, UnifiedNativeAd?) -> Unit)? = null
     var nativeAd: UnifiedNativeAd? = null
-//        set(value) {
-//            field = value
-////            invokeLoadCompleted()
-//        }
 
     private var nonPersonalizedAds = false
 
@@ -69,9 +65,7 @@ class NativeAdmobController(
 //            }
 //            builder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
 //        }
-        builder.forUnifiedNativeAd {
-            this.nativeAd = it
-        }.withAdListener(object : AdListener() {
+        builder.forUnifiedNativeAd { this.nativeAd = it }.withAdListener(object : AdListener() {
             override fun onAdImpression() {
                 super.onAdImpression()
                 channel.invokeMethod("onAdImpression", null)

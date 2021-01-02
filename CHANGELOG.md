@@ -1,3 +1,14 @@
+## 0.0.5
+
+- Implementation for new methods
+    - setChildDirected
+    - setTagForUnderAgeOfConsent
+    - setMaxAdContentRating
+    - setAppVolume
+    - setAppMuted
+- Improved documentation
+- Preparation for `Custom Mute this Ad` and `Native Video Ads`
+
 ## 0.0.4+1
 
 - Portuguese translation
@@ -6,7 +17,7 @@
 
 ## 0.0.4
 
-- Button text style is customizable
+- Button text style is now customizable
 - Fixed `Colors.transparent` color bug
 
 ## 0.0.3+1

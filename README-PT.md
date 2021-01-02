@@ -264,6 +264,8 @@ void dispose() {
 
 # A FAZER:
 
-- [Suporte à iOS](https://developers.google.com/admob/ios/native/start)
-- Efeito de precionar o botão
-- [Suporte à elevation](https://developer.android.com/training/material/shadows-clipping)
+- [Suporte ao iOS](https://developers.google.com/admob/ios/native/start)
+- [Mute this ad customizável](https://developers.google.com/admob/android/native/mute-this-ad)
+- [Anúncios de vídeo nativos](https://developers.google.com/admob/android/native/video-ads)
+- Efeito de pressionar o botão
+- [Suporte à elevação](https://developer.android.com/training/material/shadows-clipping)

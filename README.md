@@ -263,5 +263,7 @@ void dispose() {
 
 # TODO:
 - [iOS support](https://developers.google.com/admob/ios/native/start)
+- [Custom mute this ad](https://developers.google.com/admob/android/native/mute-this-ad)
+- [Native Video Ads](https://developers.google.com/admob/android/native/video-ads)
 - Add button press effect
 - [Add elevation support](https://developer.android.com/training/material/shadows-clipping)

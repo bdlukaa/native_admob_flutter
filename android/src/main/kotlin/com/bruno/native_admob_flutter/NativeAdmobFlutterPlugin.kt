@@ -12,7 +12,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
-/** NativeAdmobFlutterPlugin */
 class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
@@ -35,8 +34,7 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             "initialize" -> {
-                MobileAds.initialize(context)
-                result.success(null)
+                MobileAds.initialize(context) { result.success(null) }
                 println("Initializing mobile ads")
             }
             "initController" -> {
@@ -49,16 +47,72 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
                 result.success(null)
                 println("controller disposed")
             }
+            // isTestDevice method is not found. Idk why
+//            "isTestDevice" -> result.success(AdRequest.isTestDevice(context))
             "setTestDeviceIds" -> {
-                call.argument<List<String>>("ids")?.let {
-                    val configuration = RequestConfiguration.Builder().setTestDeviceIds(it).build()
-                    MobileAds.setRequestConfiguration(configuration)
-                    result.success(null)
+                val configuration = MobileAds
+                        .getRequestConfiguration()
+                        .toBuilder()
+                        .setTestDeviceIds(call.argument<List<String>>("ids"))
+                        .build()
+                MobileAds.setRequestConfiguration(configuration)
+                result.success(null)
+            }
+            "setChildDirected" -> {
+                val child: Int = when (call.argument<Boolean>("directed")) {
+                    true -> RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_TRUE
+                    false -> RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_FALSE
+                    null -> RequestConfiguration.TAG_FOR_CHILD_DIRECTED_TREATMENT_UNSPECIFIED
                 }
+                val configuration = MobileAds
+                        .getRequestConfiguration()
+                        .toBuilder()
+                        .setTagForChildDirectedTreatment(child)
+                        .build()
+                MobileAds.setRequestConfiguration(configuration)
+                result.success(null)
             }
-            else -> {
-                result.notImplemented()
+            "setTagForUnderAgeOfConsent" -> {
+                val age: Int = when (call.argument<Boolean>("under")) {
+                    true -> RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_TRUE
+                    false -> RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_FALSE
+                    null -> RequestConfiguration.TAG_FOR_UNDER_AGE_OF_CONSENT_UNSPECIFIED
+                }
+                val configuration = MobileAds
+                        .getRequestConfiguration()
+                        .toBuilder()
+                        .setTagForUnderAgeOfConsent(age)
+                        .build()
+                MobileAds.setRequestConfiguration(configuration)
+                result.success(null)
             }
+            "setMaxAdContentRating" -> {
+                val age: String = when (call.argument<Int>("maxRating")) {
+                    0 -> RequestConfiguration.MAX_AD_CONTENT_RATING_G
+                    1 -> RequestConfiguration.MAX_AD_CONTENT_RATING_PG
+                    2 -> RequestConfiguration.MAX_AD_CONTENT_RATING_T
+                    3 -> RequestConfiguration.MAX_AD_CONTENT_RATING_MA
+                    else -> RequestConfiguration.MAX_AD_CONTENT_RATING_G
+                }
+                val configuration = MobileAds
+                        .getRequestConfiguration()
+                        .toBuilder()
+                        .setMaxAdContentRating(age)
+                        .build()
+                MobileAds.setRequestConfiguration(configuration)
+                result.success(null)
+            }
+            "setAppVolume" -> {
+                val volume: Float = call.argument<Double>("volume")!!.toFloat()
+                MobileAds.setAppVolume(volume)
+                result.success(null)
+            }
+            "setAppMuted" -> {
+                val muted: Boolean = call.argument<Boolean>("muted")!!
+                MobileAds.setAppMuted(muted)
+                result.success(null)
+            }
+            else -> result.notImplemented()
         }
     }
 
