@@ -45,12 +45,6 @@ class NativeAd extends StatefulWidget {
   /// The ad button. This isn't always inclued in the request
   final AdButtonView button;
 
-  /// The button to mute this ad. Implement it:
-  ///
-  /// ```dart
-  /// ```
-  final AdButtonView muteThisAdButton;
-
   /// The ad controller. If not specified, uses a default controller
   final NativeAdController controller;
 
@@ -98,7 +92,6 @@ class NativeAd extends StatefulWidget {
     this.attribution,
     this.body,
     this.button,
-    this.muteThisAdButton,
     this.headline,
     this.icon,
     this.media,
@@ -260,18 +253,6 @@ class _NativeAdState extends State<NativeAd>
           pressColor: Colors.red,
           margin: EdgeInsets.only(top: 6),
         );
-    final muteThisAdButton = widget.muteThisAdButton ??
-        AdButtonView(
-          text: 'X',
-          textStyle: TextStyle(color: Colors.white, fontSize: 16),
-          border: BorderSide(color: Colors.white),
-          borderRadius: AdBorderRadius.all(10),
-          // padding: EdgeInsets.all(3),
-          margin: EdgeInsets.only(left: 2),
-          tooltipText: 'Close this ad',
-          width: 30,
-          height: 30,
-        );
     final icon = widget.icon ??
         AdImageView(
           margin: EdgeInsets.only(right: 4),
@@ -286,7 +267,6 @@ class _NativeAdState extends State<NativeAd>
     attribution.id = 'attribution';
     body.id = 'body';
     button.id = 'button';
-    muteThisAdButton.id = 'muteThisAd';
     headline.id = 'headline';
     icon.id = 'icon';
     media.id = 'media';
@@ -307,7 +287,6 @@ class _NativeAdState extends State<NativeAd>
           store,
           attribution,
           button,
-          muteThisAdButton,
         )
         ?.toJson();
     assert(layout != null, 'The layout must not return null');

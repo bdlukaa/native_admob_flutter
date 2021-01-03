@@ -1,3 +1,7 @@
+## 0.0.6+1
+
+- Custom mute this ad is still avaiable but you can't use a `AdView` for it
+
 ## 0.0.6
 
 - Implementation for NativeAdOptions
@@ -9,7 +13,6 @@
     - videoOptions
 - Implement custom mute this ad
 - Performance update
-- Pre custom mute this ad
 
 ## 0.0.5
 

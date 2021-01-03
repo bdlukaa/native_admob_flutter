@@ -18,7 +18,7 @@ typedef AdLayoutBuilder = AdLinearLayout Function(
   AdTextView store,
   AdTextView attribution,
   AdButtonView button,
-  AdButtonView muteThisAd,
+  // AdButtonView muteThisAd,
 );
 
 /// Expands the view to fit the parent size. Same as `double.infinity`

@@ -99,8 +99,10 @@ class _MyHomePageState extends State<MyHomePage> {
               borderRadius: AdBorderRadius.all(10),
               text: 'Anúncio',
               border: BorderSide(color: Colors.green, width: 1),
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -109,8 +111,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
-        advertiser, body, price, store, attribuition, button, muteThisAdButton) {
+AdLayoutBuilder get fullBuilder => (
+      ratingBar,
+      media,
+      icon,
+      headline,
+      advertiser,
+      body,
+      price,
+      store,
+      attribuition,
+      button,
+    ) {
       return AdLinearLayout(
         padding: EdgeInsets.all(10),
         // The first linear layout width needs to be extended to the
@@ -133,7 +145,6 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
                   width: WRAP_CONTENT,
                 ),
               ], margin: EdgeInsets.only(left: 4)),
-              muteThisAdButton,
             ],
             width: WRAP_CONTENT,
             orientation: HORIZONTAL,
@@ -149,7 +160,7 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
     };
 
 AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
-        advertiser, body, price, store, attribution, button, muteThisAdButton) {
+        advertiser, body, price, store, attribution, button) {
       return AdLinearLayout(
         padding: EdgeInsets.all(10),
         // The first linear layout width needs to be extended to the
