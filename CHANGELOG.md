@@ -1,3 +1,8 @@
+## 0.0.6+2
+
+- Fix custom this ad reasons
+- Implemented `isCustomMuteThisAdEnabled` on controller
+
 ## 0.0.6+1
 
 - Custom mute this ad is still avaiable but you can't use a `AdView` for it

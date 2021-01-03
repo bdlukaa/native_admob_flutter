@@ -64,6 +64,13 @@ class NativeAdmobController(
         channel.invokeMethod("undefined", null)
     }
 
+    fun sendMuteThisAdInfo(ad: UnifiedNativeAd) {
+        channel.invokeMethod("muteThisAdInfo", mapOf<String, Any?>(
+                "muteThisAdReasons" to ad.muteThisAdReasons?.map { it.description } as List<String>,
+                "isCustomMuteThisAdEnabled" to ad.isCustomMuteThisAdEnabled
+        ));
+    }
+
     private fun loadAd(unitId: String, options: Map<String, Any>) {
         channel.invokeMethod("loading", null)
         // ad options
@@ -129,12 +136,7 @@ class NativeAdmobController(
                     override fun onAdLoaded() {
                         super.onAdLoaded()
                         nativeAdChanged?.let { it(nativeAd) }
-                        channel.invokeMethod(
-                                "onAdLoaded",
-                                mapOf("muteThisAdReasons" to nativeAd?.muteThisAdReasons?.map {
-                                    it.description
-                                } as List<String>)
-                        )
+                        channel.invokeMethod("onAdLoaded", null)
                     }
                 })
                 .withNativeAdOptions(adOptions.build())

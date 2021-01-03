@@ -4,6 +4,8 @@ Easy-to-make native ads in flutter.
 
 English | [Português](README-PT.md)
 
+[Read the wiki](https://github.com/bdlukaa/native_admob_flutter/wiki) for advanced usage and more info
+
 ## ⚠️WARNING⚠️
 - This is NOT production ready. You may find some issues
 - iOS is NOT supported

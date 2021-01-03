@@ -4,6 +4,8 @@ Anúncios nativos fáceis de fazer em flutter
 
 [English](README.md) | Português
 
+[Leia o guia (Inglês)](https://github.com/bdlukaa/native_admob_flutter/wiki) para uso avançado e mais informações
+
 ## ⚠️AVISO⚠️
 
 - Não está pronto para produção. Você pode encontrar alguns problemas

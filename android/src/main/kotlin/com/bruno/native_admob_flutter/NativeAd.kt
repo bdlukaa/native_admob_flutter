@@ -259,6 +259,8 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private fun setNativeAd(nativeAd: UnifiedNativeAd?) {
         if (nativeAd == null) return
 
+        controller?.sendMuteThisAdInfo(nativeAd)
+
         // Some assets are guaranteed to be in every UnifiedNativeAd.
         adMedia?.setMediaContent(nativeAd.mediaContent)
         adMedia?.setImageScaleType(ImageView.ScaleType.FIT_CENTER)

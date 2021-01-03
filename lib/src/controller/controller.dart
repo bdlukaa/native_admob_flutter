@@ -31,6 +31,9 @@ class NativeAdController {
   List<String> _muteThisAdReasons = [];
   List<String> get muteThisAdReasons => _muteThisAdReasons;
 
+  bool _customMuteThisAdEnabled = false;
+  bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
+
   /// Listen to the events the controller throws
   ///
   /// Usage:
@@ -159,16 +162,16 @@ class NativeAdController {
       case "onAdMuted":
         _onEvent.add({AdEvent.muted: null});
         break;
+      case "muteThisAdInfo":
+        final Map args = (call.arguments ?? {}) as Map;
+        _muteThisAdReasons = args?.get('muteThisAdReasons') ?? [];
+        _customMuteThisAdEnabled =
+            args?.get('isCustomMuteThisAdEnabled') ?? false;
+        break;
       case 'undefined':
       default:
         _onEvent.add({AdEvent.undefined: null});
         break;
-    }
-    if (call.arguments != null && call.arguments is Map) {
-      final Map args = call.arguments as Map;
-      if (args.containsKey('muteThisAdReasons')) {
-        _muteThisAdReasons = args['muteThisAdReasons'] ?? [];
-      }
     }
   }
 
@@ -197,7 +200,7 @@ class NativeAdController {
   /// Mutes This Ad programmatically.
   ///
   /// Use null to Mute This Ad with default reason.
-  void muteAd([int reason]) {
+  void muteThisAd([int reason]) {
     // assert(reason != null);
     // assert(
     //   muteThisAdReasons.length > reason,
@@ -208,5 +211,8 @@ class NativeAdController {
 }
 
 extension map<K, V> on Map<K, V> {
-  V get(K key) => this[key];
+  V get(K key) {
+    if (containsKey(key)) return this[key];
+    return null;
+  }
 }
