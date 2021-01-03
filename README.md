@@ -109,7 +109,7 @@ You can use each provided view only once. `headline` and `attribution` are requi
 ```dart
 // ⭐Note⭐: The function must be a getter, otherwise hot reload will not work
 AdLayoutBuilder get myCustomLayoutBuilder => (ratingBar, media, icon, headline,
-    advertiser, body, price, store, attribution, button, muteThisAdButton) {
+    advertiser, body, price, store, attribution, button) {
   return AdLinearLayout(
     margin: EdgeInsets.all(10),
     borderRadius: AdBorderRadius.all(10),
