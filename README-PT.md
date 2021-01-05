@@ -1,22 +1,18 @@
 # native_admob_flutter
 
-Anúncios nativos fáceis de fazer em flutter
+Anúncios nativos fáceis de fazer em flutter usando AdMOB SDK do Google
 
 [English](README.md) | Português
 
 [Leia o guia (Inglês)](https://github.com/bdlukaa/native_admob_flutter/wiki) para uso avançado e mais informações
 
-## ⚠️AVISO⚠️
-
-- Não está pronto para produção. Você pode encontrar alguns problemas
-- iOS NÃO é suportado
-
 # Configurações da plataforma
 
-- [x] Android
-- [ ] iOS
+- [x] Android ([Admob](https://developers.google.com/admob/android/quick-start) e [AndroidView](https://api.flutter.dev/flutter/widgets/AndroidView-class.html))
+- [ ] iOS ([Admob](https://developers.google.com/admob/ios/quick-start) e [UIKitView](https://api.flutter.dev/flutter/widgets/UiKitView-class.html))
+- [ ] Web ([AdSense](https://www.google.com/adsense/start/) e [HtmlElementView](https://api.flutter.dev/flutter/widgets/HtmlElementView-class.html))
 
-Google suporta anúncios nativos somente no mobile. Web e desktop estão fora de alcance
+Desktop (Windows, macOS and Linux) estão fora de alcance
 
 ## Android
 
@@ -274,7 +270,10 @@ void dispose() {
 
 - [Suporte ao iOS](https://developers.google.com/admob/ios/native/start)
 - [Anúncios de vídeo nativos](https://developers.google.com/admob/android/native/video-ads)
+- [Suporte a mediation](https://developers.google.com/admob/android/mediate)
+- [Suporte à web (adsense)](https://www.google.com/adsense/start/)
 - [Suporte à elevação](https://developer.android.com/training/material/shadows-clipping)
 - Adicionar interção com o anúncio
   - Tooltips
   - Efeito de pressionar o botão
+- [Hybrid composition para Android](https://github.com/flutter/flutter/wiki/Hybrid-Composition)

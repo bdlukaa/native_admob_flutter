@@ -1,23 +1,21 @@
 # native_admob_flutter
 
-Easy-to-make native ads in flutter.
+Easy-to-make native ads in flutter with Google's AdMob SDK.
 
 English | [Português](README-PT.md)
 
 [Read the wiki](https://github.com/bdlukaa/native_admob_flutter/wiki) for advanced usage and more info
 
-## ⚠️WARNING⚠️
-- This is NOT production ready. You may find some issues
-- iOS is NOT supported
-
 # Platform setup
 
-- [x] Android
-- [ ] iOS
+- [x] Android ([Admob](https://developers.google.com/admob/android/quick-start) and [AndroidView](https://api.flutter.dev/flutter/widgets/AndroidView-class.html))
+- [ ] iOS ([Admob](https://developers.google.com/admob/ios/quick-start) and [UIKitView](https://api.flutter.dev/flutter/widgets/UiKitView-class.html))
+- [ ] Web ([AdSense](https://www.google.com/adsense/start/) and [HtmlElementView](https://api.flutter.dev/flutter/widgets/HtmlElementView-class.html))
 
-Google only supports native ads on mobile. Web and desktop are out of reach
+Desktop (Windows, macOS and Linux) is out of reach
 
 ## Android
+
 Add your ADMOB App ID ([How to find it?](https://support.google.com/admob/answer/7356431)) in `AndroidManifest.xml`.
 
 ```xml
@@ -87,6 +85,7 @@ For more information about how the Mobile Ads SDK's test ads work, see [Test Ads
 Learn how to create your own native ads unit ids [here](https://support.google.com/admob/answer/7187428?hl=en&ref_topic=7384666)
 
 ## When to request ads
+
 Applications displaying native ads are free to request them in advance of when they'll actually be displayed. In many cases, this is the recommended practice. An app displaying a list of items with native ads mixed in, for example, can load native ads for the whole list, knowing that some will be shown only after the user scrolls the view and some may not be displayed at all.
 
 # Creating an ad
@@ -196,7 +195,7 @@ NativeAd(
 | Field          | Class           | Description                                                               | Always included? | Required to be displayed? |
 | -------------- | --------------- | ------------------------------------------------------------------------- | :--------------: | :-----------------------: |
 | Headline       | AdTextView      | Primary headline text (e.g., app title or article title).                 |       Yes        |            Yes            |
-| Attribution   | AdTextView      | Indicate that the ad is an ad                                             |       Yes        |            Yes            |
+| Attribution    | AdTextView      | Indicate that the ad is an ad                                             |       Yes        |            Yes            |
 | Image          | AdMediaView     | Large, primary image.                                                     |       Yes        |        Recommended        |
 | Body           | AdTextView      | Secondary body text (e.g., app description or article description).       |       Yes        |        Recommended        |
 | Icon           | AdImageView     | Small icon image (e.g., app store image or advertiser logo).              |        No        |        Recommended        |
@@ -260,7 +259,7 @@ Widget build(BuildContext context) {
   return NativeAd(controller: controller);
 }
 
-// Dispose the controller. 
+// Dispose the controller.
 // You can't use the it again once it's disposed
 @override
 void dispose() {
@@ -270,9 +269,12 @@ void dispose() {
 ```
 
 # TODO:
+
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - [Native Video Ads](https://developers.google.com/admob/android/native/video-ads)
-- [Add elevation support](https://developer.android.com/training/material/shadows-clipping)
+- [Support mediation](https://developers.google.com/admob/android/mediate)
+- [Support web (adsense)](https://www.google.com/adsense/start/)
 - Add interaction with the ad
   - Tooltips
   - Buttton press effect
+- [Hybrid composition for Android](https://github.com/flutter/flutter/wiki/Hybrid-Composition)

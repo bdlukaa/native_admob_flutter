@@ -1,6 +1,9 @@
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
+// import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
 import 'layout_builder/layout_builder.dart';
@@ -155,6 +158,10 @@ class _NativeAdState extends State<NativeAd>
     controller.onVideoEvent.listen((event) {
       print(event);
     });
+    // Timer.periodic(Duration(milliseconds: 1500), (timer) {
+    //   setState(() {});
+    //   print('haha');
+    // });
   }
 
   @override
@@ -185,11 +192,34 @@ class _NativeAdState extends State<NativeAd>
     params.addAll({'controllerId': controller.id});
 
     if (Platform.isAndroid) {
+      // virtual display
       w = AndroidView(
         viewType: _viewType,
         creationParamsCodec: StandardMessageCodec(),
         creationParams: params,
       );
+      // hybrid composition
+      // w = PlatformViewLink(
+      //   viewType: _viewType,
+      //   surfaceFactory: (context, controller) {
+      //     return AndroidViewSurface(
+      //       controller: controller,
+      //       gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{},
+      //       hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+      //     );
+      //   },
+      //   onCreatePlatformView: (PlatformViewCreationParams p) {
+      //     return PlatformViewsService.initSurfaceAndroidView(
+      //       id: p.id,
+      //       viewType: _viewType,
+      //       layoutDirection: TextDirection.ltr,
+      //       creationParams: params,
+      //       creationParamsCodec: StandardMessageCodec(),
+      //     )
+      //       ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
+      //       ..create();
+      //   },
+      // );
       // } else if (Platform.isIOS) {
       //   w = UiKitView(
       //     viewType: _viewType,
@@ -249,9 +279,10 @@ class _NativeAdState extends State<NativeAd>
     final body = widget.body ?? AdTextView();
     final button = widget.button ??
         AdButtonView(
-          backgroundColor: Colors.yellow,
+          // backgroundColor: Colors.yellow,
           pressColor: Colors.red,
           margin: EdgeInsets.only(top: 6),
+          tooltipText: 'tooltip to the button',
         );
     final icon = widget.icon ??
         AdImageView(

@@ -1,3 +1,8 @@
+## 0.0.6+3
+
+- Update the documentation
+- Created the wiki
+
 ## 0.0.6+2
 
 - Fix custom this ad reasons
