@@ -10,7 +10,6 @@ Anúncios nativos fáceis de fazer em flutter usando AdMOB SDK do Google
 
 - [x] Android ([Admob](https://developers.google.com/admob/android/quick-start) e [AndroidView](https://api.flutter.dev/flutter/widgets/AndroidView-class.html))
 - [ ] iOS ([Admob](https://developers.google.com/admob/ios/quick-start) e [UIKitView](https://api.flutter.dev/flutter/widgets/UiKitView-class.html))
-- [ ] Web ([AdSense](https://www.google.com/adsense/start/) e [HtmlElementView](https://api.flutter.dev/flutter/widgets/HtmlElementView-class.html))
 
 Desktop (Windows, macOS and Linux) estão fora de alcance
 
@@ -39,9 +38,31 @@ android {
 }
 ```
 
+### Ativando hybrid composition (Composição híbrida)
+
+Uma vez incializado, você pode ativar hybrid composition assim:
+
+```dart
+NativeAds.useHybridComposition = true;
+```
+
+Ou você pode ativar ela na inicialização:
+
+```dart
+NativeAds.initialize(useHybridComposition: true);
+```
+
+Está ativado por padrão no Android 19. Saiba que versões acima do Android 10 Hybrid Composition tem algumas [desvantagens de desempenho](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance). 
+
+#### **Nota**: A verificação sobre a versão do Android é feita automaticamente, então você não precisa se preocupar sobre isso.
+
 ## iOS
 
 iOS não é suportado ainda (Não tenho um ambiente da Apple:/). Se sinta livre para [criar um pull request](https://github.com/bdlukaa/native_admob_flutter/pulls) com a implementação para iOS :)
+
+## Web
+
+A Web não é suportada no momento
 
 # Incialize
 
@@ -53,20 +74,20 @@ import 'package:flutter/foundation.dart';
 String get admobUnitId {
   /// Sempre teste com anúncios de teste
   if (kDebugMode)
-    return 'ca-app-pub-3940256099942544/2247696110';
+    return NativeAds.testAdUnitId;
   else return 'your-native-ad-unit-id';
 }
 
-void main() {
+void main() async {
   // Adicione essa linha se você for inicializar antes de runApp
   WidgetsFlutterBinding.ensureInitialized();
   // Unit Id de testes: ca-app-pub-3940256099942544/2247696110
-  NativeAds.initialize(admobUnitId);
+  /* await */ NativeAds.initialize(admobUnitId);
   runApp(MyApp());
 }
 ```
 
-❗NOTA:❗ Não confunda Unit ID com App ID
+❗NOTA:❗ Não confunda `Unit ID` com `App ID`
 
 ## Sempre teste com anúncios de teste
 
@@ -271,9 +292,7 @@ void dispose() {
 - [Suporte ao iOS](https://developers.google.com/admob/ios/native/start)
 - [Anúncios de vídeo nativos](https://developers.google.com/admob/android/native/video-ads)
 - [Suporte a mediation](https://developers.google.com/admob/android/mediate)
-- [Suporte à web (adsense)](https://www.google.com/adsense/start/)
 - [Suporte à elevação](https://developer.android.com/training/material/shadows-clipping)
 - Adicionar interção com o anúncio
   - Tooltips
   - Efeito de pressionar o botão
-- [Hybrid composition para Android](https://github.com/flutter/flutter/wiki/Hybrid-Composition)

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/services.dart';
 
 class NativeAds {
@@ -12,24 +14,64 @@ class NativeAds {
   /// `NativeAds.initialize()`
   static bool get isInitialized => _initialized;
 
+  static bool _useHybridComposition = false;
+
+  /// Check if hybrid composition is enabled on android. It's enabled by default if
+  /// the android version is 19. Do NOT set it before `MobileAds.initialize()`.
+  /// Note that on Android versions prior to Android 10 Hybrid Composition has some
+  /// [performance drawbacks](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance).
+  ///
+  /// Hybrid composition is enabled in iOS and can NOT be disabled
+  ///
+  /// Basic usage:
+  /// ```dart
+  /// MobileAds.initialize(
+  ///   useHybridComposition: true,
+  /// )
+  /// ```
+  static bool get useHybridComposition => _useHybridComposition;
+  static set useHybridComposition(bool use) {
+    assert(use != null);
+    _useHybridComposition = use ?? useHybridComposition;
+  }
+
   /// Before creating any native ads, you must initalize the admob. It can be initialized only once:
   ///
   /// ```dart
   /// void main() async {
   ///   // Add this line if you will initialize it before runApp
   ///   WidgetsFlutterBinding.ensureInitialized();
-  ///   // default admob ad unit id: ca-app-pub-3940256099942544/2247696110
-  ///   NativeAds.initialize('your-admob-app-id');
+  ///   // default admob native ad unit id: ca-app-pub-3940256099942544/2247696110
+  ///   NativeAds.initialize(nativeAdUnitId: 'your-native-ad-unit-id');
   ///   runApp(MyApp());
   /// }
   /// ```
   ///
   /// This method must be called in the main thread
-  static Future<void> initialize([String nativeAdUnitId]) async {
+  static Future<void> initialize({
+    String nativeAdUnitId,
+    bool useHybridComposition,
+  }) async {
     NativeAds.nativeAdUnitId = nativeAdUnitId ?? NativeAds.testAdUnitId;
     assert(NativeAds.nativeAdUnitId != null);
-    await _pluginChannel.invokeMethod('initialize');
-    _initialized = true;
+    final version = await _pluginChannel.invokeMethod<int>('initialize');
+    if (Platform.isAndroid) {
+      assert(
+        version >= 19,
+        """
+        Ads are not supported in versions before 19 because flutter only support platform views on Android 19 or greater.
+        """,
+      );
+      // hybrid composition is enabled in android 19 and can't be disabled
+      NativeAds.useHybridComposition =
+          version == 19 ? true : useHybridComposition ?? false;
+
+      if (version >= 29 && NativeAds.useHybridComposition) {
+        print("""
+        It is NOT recommended to use hybrid composition on Android 10 or greater. It has some performance drawbacks
+        """);
+      }
+    }
   }
 
   /// Sets a list of test device IDs corresponding to test devices which will
@@ -125,17 +167,17 @@ class NativeAds {
     });
   }
 
-  /// If your app has its own volume controls (such as custom music or sound effect volumes), 
-  /// disclosing app volume to the Google Mobile Ads SDK allows video ads to respect app volume 
+  /// If your app has its own volume controls (such as custom music or sound effect volumes),
+  /// disclosing app volume to the Google Mobile Ads SDK allows video ads to respect app volume
   /// settings. This ensures users receive video ads with the expected audio volume.
   ///
-  /// The device volume, controlled through volume buttons or OS-level volume slider, determines 
-  /// the volume for device audio output. However, apps can independently adjust volume levels 
-  /// relative to the device volume to tailor the audio experience. You can report the relative 
-  /// app volume to the Mobile Ads SDK through the static setAppVolume() method. Valid ad volume 
-  /// values range from 0.0 (silent) to 1.0 (current device volume). Here's an example of how to 
+  /// The device volume, controlled through volume buttons or OS-level volume slider, determines
+  /// the volume for device audio output. However, apps can independently adjust volume levels
+  /// relative to the device volume to tailor the audio experience. You can report the relative
+  /// app volume to the Mobile Ads SDK through the static setAppVolume() method. Valid ad volume
+  /// values range from 0.0 (silent) to 1.0 (current device volume). Here's an example of how to
   /// report the relative app volume to the SDK:
-  /// 
+  ///
   /// ```dart
   /// NativeAds.initialize();
   /// // Set app volume to be half of current device volume.
@@ -143,17 +185,18 @@ class NativeAds {
   /// ```
   static Future<void> setAppVolume(double volume) {
     assert(volume != null, 'The volume can NOT be null');
-    assert(volume >= 0 && volume <= 1, 'The volume must be in bettwen of 0 and 1');
+    assert(
+        volume >= 0 && volume <= 1, 'The volume must be in bettwen of 0 and 1');
     return _pluginChannel.invokeMethod('setAppVolume', {'volume': volume ?? 1});
   }
- 
+
   /// To inform the SDK that the app volume has been muted, use the `setAppMuted()` method:
-  /// 
-  /// Unmuting the app volume reverts it to the previously set level. By default, the app 
+  ///
+  /// Unmuting the app volume reverts it to the previously set level. By default, the app
   /// volume for the Google Mobile Ads SDK is set to 1 (the current device volume).
   static Future<void> setAppMuted(bool muted) {
     assert(muted != null, 'The value can NOT be null');
-    return _pluginChannel.invokeMethod('setAppMuted', {'muted', muted ?? false});
+    return _pluginChannel
+        .invokeMethod('setAppMuted', {'muted', muted ?? false});
   }
-
 }

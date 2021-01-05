@@ -10,9 +10,8 @@ English | [Português](README-PT.md)
 
 - [x] Android ([Admob](https://developers.google.com/admob/android/quick-start) and [AndroidView](https://api.flutter.dev/flutter/widgets/AndroidView-class.html))
 - [ ] iOS ([Admob](https://developers.google.com/admob/ios/quick-start) and [UIKitView](https://api.flutter.dev/flutter/widgets/UiKitView-class.html))
-- [ ] Web ([AdSense](https://www.google.com/adsense/start/) and [HtmlElementView](https://api.flutter.dev/flutter/widgets/HtmlElementView-class.html))
 
-Desktop (Windows, macOS and Linux) is out of reach
+Desktop (Windows, macOS and Linux) and Web are out of reach
 
 ## Android
 
@@ -29,20 +28,42 @@ Add your ADMOB App ID ([How to find it?](https://support.google.com/admob/answer
 </manifest>
 ```
 
-Change `minSdkVersion` to `20`. It's the minimum sdk version required by flutter to use a PlatformView. [Learn more](https://flutter.dev/docs/development/platform-integration/platform-views#on-the-platform-side)
+Change `minSdkVersion` to `19`. It's the minimum sdk version required by flutter to use a PlatformView. [Learn more](https://flutter.dev/docs/development/platform-integration/platform-views#on-the-platform-side)
 
 ```groovy
 android {
     defaultConfig {
-        minSdkVersion 20
+        minSdkVersion 19
     }
 }
 ```
+
+### Enabling hybrid composition
+
+Once initialized, you can enable hybrid composition as following:
+
+```dart
+NativeAds.useHybridComposition = true;
+```
+
+Or you can enable it on initialization:
+
+```dart
+NativeAds.initialize(useHybridComposition: true);
+```
+
+It's enabled by default on Android 19. Note that on Android versions prior to Android 10 Hybrid Composition has some [performance drawbacks](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance). 
+
+#### **Note**: It autommatically does the checking for you about the android version, so you don't need to worry about it. 
 
 ## iOS
 
 iOS is currently not supported (I don't have an Apple environment :/).
 Feel free to [create a pull request](https://github.com/bdlukaa/native_admob_flutter/pulls) with the implementation for it :)
+
+## Web
+
+Web is currently not supported.
 
 # Initialize
 
@@ -54,15 +75,15 @@ import 'package:flutter/foundation.dart';
 String get admobUnitId {
   /// Always test with test ads
   if (kDebugMode)
-    return 'ca-app-pub-3940256099942544/2247696110';
+    return NativeAds.testAdUnitId;
   else return 'your-native-ad-unit-id';
 }
 
-void main() {
+void main() async {
   // Add this line if you will initialize it before runApp
   WidgetsFlutterBinding.ensureInitialized();
   // default native ad unit id: ca-app-pub-3940256099942544/2247696110
-  NativeAds.initialize(admobUnitId);
+  /* await */ NativeAds.initialize(nativeAdUnitId: admobUnitId);
   runApp(MyApp());
 }
 ```
@@ -273,8 +294,6 @@ void dispose() {
 - [iOS support](https://developers.google.com/admob/ios/native/start)
 - [Native Video Ads](https://developers.google.com/admob/android/native/video-ads)
 - [Support mediation](https://developers.google.com/admob/android/mediate)
-- [Support web (adsense)](https://www.google.com/adsense/start/)
 - Add interaction with the ad
   - Tooltips
   - Buttton press effect
-- [Hybrid composition for Android](https://github.com/flutter/flutter/wiki/Hybrid-Composition)

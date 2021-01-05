@@ -1,6 +1,7 @@
 package com.bruno.native_admob_flutter
 
 import android.content.Context
+import android.os.Build
 import androidx.annotation.NonNull
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
@@ -34,7 +35,7 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             "initialize" -> {
-                MobileAds.initialize(context) { result.success(null) }
+                MobileAds.initialize(context) { result.success(Build.VERSION.SDK_INT) }
                 println("Initializing mobile ads")
             }
             "initController" -> {

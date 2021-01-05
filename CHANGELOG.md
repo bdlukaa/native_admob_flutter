@@ -1,3 +1,8 @@
+## 0.0.6+4
+
+- Support Hybrid Composition on android
+- Improved documentation
+
 ## 0.0.6+3
 
 - Update the documentation
