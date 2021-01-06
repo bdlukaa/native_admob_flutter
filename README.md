@@ -1,10 +1,17 @@
-# native_admob_flutter
+<center>
+  <h1>native_admob_flutter</h1>
+  <a title="Pub" href="https://pub.dartlang.org/packages/native_admob_flutter" ><img src="https://img.shields.io/pub/v/native_admob_flutter.svg?style=popout&include_prereleases" /></a>
 
 Easy-to-make native ads in flutter with Google's AdMob SDK.
 
-English | [Português](README-PT.md)
+</center>
 
+---
+
+English | [Português](README-PT.md)\
 [Read the wiki](https://github.com/bdlukaa/native_admob_flutter/wiki) for advanced usage and more info
+
+---
 
 # Platform setup
 
@@ -52,18 +59,14 @@ Or you can enable it on initialization:
 NativeAds.initialize(useHybridComposition: true);
 ```
 
-It's enabled by default on Android 19. Note that on Android versions prior to Android 10 Hybrid Composition has some [performance drawbacks](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance). 
+It's enabled by default on Android 19. Note that on Android versions prior to Android 10 Hybrid Composition has some [performance drawbacks](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance).
 
-#### **Note**: It autommatically does the checking for you about the android version, so you don't need to worry about it. 
+#### **Note**: It autommatically does the checking for you about the android version, so you don't need to worry about it.
 
 ## iOS
 
 iOS is currently not supported (I don't have an Apple environment :/).
 Feel free to [create a pull request](https://github.com/bdlukaa/native_admob_flutter/pulls) with the implementation for it :)
-
-## Web
-
-Web is currently not supported.
 
 # Initialize
 
@@ -99,7 +102,7 @@ The easiest way to load test ads is to use the dedicated test ad unit ID for Nat
 App ID: `ca-app-pub-3940256099942544~3347511713`\
 Unit ID: `ca-app-pub-3940256099942544/2247696110`
 
-It's been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
+They've been specially configured to return test ads for every request, and you're free to use it in your own apps while coding, testing, and debugging. Just make sure you replace it with your own ad unit ID before publishing your app.
 
 For more information about how the Mobile Ads SDK's test ads work, see [Test Ads](https://developers.google.com/admob/android/test-ads).
 

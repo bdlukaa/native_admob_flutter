@@ -3,7 +3,7 @@ import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NativeAds.initialize();
+  NativeAds.initialize(useHybridComposition: false);
   runApp(MyApp());
 }
 
@@ -39,7 +39,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: ListView(
+      body: Column(
         children: [
           // Create a native ad with the default style
           NativeAd(
@@ -49,7 +49,6 @@ class _MyHomePageState extends State<MyHomePage> {
             error: Text('error'),
             button: AdButtonView(
               borderRadius: AdBorderRadius.vertical(bottom: 10),
-              // backgroundColor: Colors.transparent,
               margin: EdgeInsets.only(left: 6, right: 6, bottom: 6),
               gradient:
                   AdLinearGradient(colors: [Colors.yellow[300], Colors.amber]),
@@ -74,7 +73,6 @@ class _MyHomePageState extends State<MyHomePage> {
           NativeAd(
             height: 300,
             buildLayout: fullBuilder,
-            options: NativeAdOptions(requestCustomMuteThisAd: true),
             loading: Text('loading'),
             error: Text('error'),
             icon: AdImageView(size: 40),
@@ -99,10 +97,8 @@ class _MyHomePageState extends State<MyHomePage> {
               borderRadius: AdBorderRadius.all(10),
               text: 'Anúncio',
               border: BorderSide(color: Colors.green, width: 1),
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
         ],
@@ -111,18 +107,8 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-AdLayoutBuilder get fullBuilder => (
-      ratingBar,
-      media,
-      icon,
-      headline,
-      advertiser,
-      body,
-      price,
-      store,
-      attribuition,
-      button,
-    ) {
+AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
+        advertiser, body, price, store, attribuition, button) {
       return AdLinearLayout(
         padding: EdgeInsets.all(10),
         // The first linear layout width needs to be extended to the
@@ -142,20 +128,19 @@ AdLayoutBuilder get fullBuilder => (
                 AdLinearLayout(
                   children: [attribuition, advertiser],
                   orientation: HORIZONTAL,
-                  width: WRAP_CONTENT,
+                  width: MATCH_PARENT,
                 ),
               ], margin: EdgeInsets.only(left: 4)),
             ],
             width: WRAP_CONTENT,
             orientation: HORIZONTAL,
-            margin: EdgeInsets.all(6),
+            margin: EdgeInsets.only(top: 6),
           ),
           AdLinearLayout(
             children: [button],
-            // gravity: LayoutGravity.center_horizontal,
+            orientation: HORIZONTAL,
           ),
         ],
-        // backgroundColor: Colors.blue,
       );
     };
 

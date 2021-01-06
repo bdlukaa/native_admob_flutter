@@ -1,6 +1,13 @@
+## 0.0.7
+
+- **HIGHLIGHT**: Automatic support for Hybrid Composition on android
+- Removed custom mute this button from native side
+- Removed web implementation
+- Improved readme
+- Improve view size calculation and warnings
+
 ## 0.0.6+4
 
-- Support Hybrid Composition on android
 - Improved documentation
 
 ## 0.0.6+3

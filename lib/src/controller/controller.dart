@@ -140,6 +140,8 @@ class NativeAdController {
         case 'onVideoEnd':
           _onVideoEvent.add({AdVideoEvent.end: null});
           break;
+        default:
+          break;
       }
       return;
     }

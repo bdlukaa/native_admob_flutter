@@ -9,10 +9,7 @@ import android.graphics.drawable.GradientDrawable.Orientation
 import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
 import android.os.Build
 import android.text.TextUtils
-import android.view.Gravity
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
@@ -22,7 +19,6 @@ import com.google.android.gms.ads.formats.UnifiedNativeAdView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
-
 
 class NativeViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
@@ -48,7 +44,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private var adStore: TextView? = TextView(context)
     private var adAttribution: TextView? = TextView(context)
     private var callToAction: Button? = Button(context)
-    private var muteThisAdButton: Button? = Button(context)
 
     private fun build(data: Map<*, *>, context: Context): View {
         return buildView(data, context)
@@ -96,8 +91,8 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             "rating_bar" -> view = RatingBar(context)
             "button_view" -> {
                 view = Button(context)
-                view.isClickable = true
-                view.isLongClickable = true
+//                view.isClickable = true
+//                view.isLongClickable = true
                 view.applyText(data)
             }
         }
@@ -160,13 +155,16 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                 bottomRight, bottomRight,
                 bottomLeft, bottomLeft)
 
-        (data["backgroundColor"] as? String)?.let { shape.setColor(Color.parseColor(it)) }
-
         (data["borderWidth"] as? Double)?.let {
             val color: String = (data["borderColor"] as? String?) ?: "#FFFFFF"
             shape.setStroke(it.toInt().dp(), Color.parseColor(color))
         }
+
+        (data["backgroundColor"] as? String)?.let { shape.setColor(Color.parseColor(it)) }
+
         view.background = shape
+
+        // bounds
 
         val layoutParams = view.layoutParams ?: LinearLayout.LayoutParams(-1, -1, 0f)
         val marginParams = (layoutParams as? ViewGroup.MarginLayoutParams)
@@ -196,7 +194,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             "attribution" -> adAttribution = view as TextView
             "body" -> adBody = view as TextView
             "button" -> callToAction = view as Button
-            "muteThisAd" -> muteThisAdButton = view as Button
             "headline" -> adHeadline = view as TextView
             "icon" -> adIcon = view as ImageView
             "media" -> adMedia = view as MediaView
@@ -259,8 +256,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private fun setNativeAd(nativeAd: UnifiedNativeAd?) {
         if (nativeAd == null) return
 
-        controller?.sendMuteThisAdInfo(nativeAd)
-
         // Some assets are guaranteed to be in every UnifiedNativeAd.
         adMedia?.setMediaContent(nativeAd.mediaContent)
         adMedia?.setImageScaleType(ImageView.ScaleType.FIT_CENTER)
@@ -268,8 +263,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         adHeadline?.text = nativeAd.headline
         adBody?.text = nativeAd.body
         (adView.callToActionView as? Button?)?.text = nativeAd.callToAction
-
-        muteThisAdButton?.visibility = if (nativeAd.isCustomMuteThisAdEnabled) View.VISIBLE else View.INVISIBLE
 
         // These assets aren't guaranteed to be in every UnifiedNativeAd, so it's important to
         // check before trying to display them.
@@ -320,9 +313,7 @@ fun TextView.applyText(data: Map<*, *>) {
     }
     (data["maxLines"] as? Int?)?.let { view.maxLines = it }
     (data["minLines"] as? Int?)?.let { view.minLines = it }
-    (data["bold"] as? Boolean)?.let {
-        if (it) view.setTypeface(view.typeface, Typeface.BOLD)
-    }
+    (data["bold"] as? Boolean)?.let { if (it) view.setTypeface(view.typeface, Typeface.BOLD) }
     (data["text"] as? String)?.let { view.text = it }
     view.ellipsize = TextUtils.TruncateAt.END;
 }

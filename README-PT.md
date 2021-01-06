@@ -1,17 +1,24 @@
-# native_admob_flutter
+<center>
+  <h1>native_admob_flutter</h1>
+  <a title="Pub" href="https://pub.dartlang.org/packages/native_admob_flutter" ><img src="https://img.shields.io/pub/v/native_admob_flutter.svg?style=popout&include_prereleases" /></a>
 
 Anúncios nativos fáceis de fazer em flutter usando AdMOB SDK do Google
 
-[English](README.md) | Português
+</center>
 
+---
+
+[English](README.md) | Português\
 [Leia o guia (Inglês)](https://github.com/bdlukaa/native_admob_flutter/wiki) para uso avançado e mais informações
+
+---
 
 # Configurações da plataforma
 
 - [x] Android ([Admob](https://developers.google.com/admob/android/quick-start) e [AndroidView](https://api.flutter.dev/flutter/widgets/AndroidView-class.html))
 - [ ] iOS ([Admob](https://developers.google.com/admob/ios/quick-start) e [UIKitView](https://api.flutter.dev/flutter/widgets/UiKitView-class.html))
 
-Desktop (Windows, macOS and Linux) estão fora de alcance
+Desktop (Windows, macOS and Linux) e a Web estão fora de alcance
 
 ## Android
 
@@ -52,17 +59,13 @@ Ou você pode ativar ela na inicialização:
 NativeAds.initialize(useHybridComposition: true);
 ```
 
-Está ativado por padrão no Android 19. Saiba que versões acima do Android 10 Hybrid Composition tem algumas [desvantagens de desempenho](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance). 
+Está ativado por padrão no Android 19. Saiba que versões acima do Android 10 Hybrid Composition tem algumas [desvantagens de desempenho](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance).
 
 #### **Nota**: A verificação sobre a versão do Android é feita automaticamente, então você não precisa se preocupar sobre isso.
 
 ## iOS
 
 iOS não é suportado ainda (Não tenho um ambiente da Apple:/). Se sinta livre para [criar um pull request](https://github.com/bdlukaa/native_admob_flutter/pulls) com a implementação para iOS :)
-
-## Web
-
-A Web não é suportada no momento
 
 # Incialize
 
@@ -98,7 +101,7 @@ O jeito mais fácil de carregar anúncios de teste é usar o anúncio de teste p
 App ID: `ca-app-pub-3940256099942544~3347511713`\
 Unit ID: `ca-app-pub-3940256099942544/2247696110`
 
-Foi especialmente configurado para retornar anúncios de teste para todos os pedidos, e você é livre para usar ele nos seus aplicativos enquanto testa e debuga. Apenas certifique-se que você use seu próprio ID antes de publicá-lo.
+Eles foram especialmente configurado para retornar anúncios de teste para todos os pedidos, e você é livre para usar ele nos seus aplicativos enquanto testa e debuga. Apenas certifique-se que você use seu próprio ID antes de publicá-lo.
 
 Para mais informações sobre como os anúncios de teste funcionam, veja [Anúncios de teste](https://developers.google.com/admob/android/test-ads).
 

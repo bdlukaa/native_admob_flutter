@@ -159,10 +159,6 @@ class _NativeAdState extends State<NativeAd>
     controller.onVideoEvent.listen((event) {
       print(event);
     });
-    // Timer.periodic(Duration(milliseconds: 1500), (timer) {
-    //   setState(() {});
-    //   print('haha');
-    // });
   }
 
   @override
@@ -192,83 +188,71 @@ class _NativeAdState extends State<NativeAd>
     final params = layout(widget);
     params.addAll({'controllerId': controller.id});
 
-    if (Platform.isAndroid) {
-      // print(NativeAds.useHybridComposition);
-      if (!NativeAds.useHybridComposition)
-        // virtual display
-        w = AndroidView(
-          viewType: _viewType,
-          creationParamsCodec: StandardMessageCodec(),
-          creationParams: params,
-        );
-      else
-        // hybrid composition
-        w = PlatformViewLink(
-          viewType: _viewType,
-          surfaceFactory: (context, controller) {
-            return AndroidViewSurface(
-              controller: controller,
-              gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>[
-                Factory<OneSequenceGestureRecognizer>(
-                  () => EagerGestureRecognizer(),
-                ),
-                Factory<OneSequenceGestureRecognizer>(
-                  () => TapGestureRecognizer(),
-                ),
-                Factory<OneSequenceGestureRecognizer>(
-                  () => LongPressGestureRecognizer(),
-                ),
-              ].toSet(),
-              hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-            );
-          },
-          onCreatePlatformView: (PlatformViewCreationParams p) {
-            return PlatformViewsService.initSurfaceAndroidView(
-              id: p.id,
-              viewType: _viewType,
-              layoutDirection: TextDirection.ltr,
-              creationParams: params,
-              creationParamsCodec: StandardMessageCodec(),
-            )
-              ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
-              ..create();
-          },
-        );
-      // } else if (Platform.isIOS) {
-      //   w = UiKitView(
-      //     viewType: _viewType,
-      //     creationParamsCodec: StandardMessageCodec(),
-      //     creationParams: layout,
-      //   );
-    } else if (kIsWeb) {
-      w = HtmlElementView(viewType: _viewType);
-    } else {
-      return SizedBox();
-    }
+    final gestures = <Factory<OneSequenceGestureRecognizer>>[
+      Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+      // Factory<OneSequenceGestureRecognizer>(() => TapGestureRecognizer()),
+      // Factory<OneSequenceGestureRecognizer>(() => LongPressGestureRecognizer()),
+    ].toSet();
 
-    if (widget.height != null)
+    return LayoutBuilder(builder: (context, consts) {
+      final size = consts.biggest;
+      final height = widget.height ?? size.height;
+      final width = widget.width ?? size.width;
+      // assert(!height.isInfinite, 'A height must be provided');
+      // assert(!width.isInfinite, 'A width must be provided');
       assert(
-        widget.height > 32,
+        height > 32 && width > 32,
         '''
         Ad views that have a width or height smaller than 32 will be demonetized in the future. 
         Please make sure the ad view has sufficiently large area.
         ''',
       );
 
-    if (widget.width != null)
-      assert(
-        widget.height > 32,
-        '''
-        Ad views that have a width or height smaller than 32 will be demonetized in the future. 
-        Please make sure the ad view has sufficiently large area.
-        ''',
-      );
+      if (Platform.isAndroid) {
+        if (NativeAds.useHybridComposition)
+          // virtual display
+          w = AndroidView(
+            viewType: _viewType,
+            creationParamsCodec: StandardMessageCodec(),
+            creationParams: params,
+            gestureRecognizers: gestures,
+          );
+        else
+          // hybrid composition
+          w = PlatformViewLink(
+            viewType: _viewType,
+            surfaceFactory: (context, controller) {
+              return AndroidViewSurface(
+                controller: controller,
+                gestureRecognizers: gestures,
+                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
+              );
+            },
+            onCreatePlatformView: (PlatformViewCreationParams p) {
+              return PlatformViewsService.initSurfaceAndroidView(
+                id: p.id,
+                viewType: _viewType,
+                layoutDirection: TextDirection.ltr,
+                creationParams: params,
+                creationParamsCodec: StandardMessageCodec(),
+              )
+                ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
+                // ..setSize(Size(width, height))
+                ..create();
+            },
+          );
+        // } else if (Platform.isIOS) {
+        //   w = UiKitView(
+        //     viewType: _viewType,
+        //     creationParamsCodec: StandardMessageCodec(),
+        //     creationParams: layout,
+        //   );
+      } else {
+        return SizedBox();
+      }
 
-    return SizedBox(
-      height: widget.height,
-      width: widget.width,
-      child: w,
-    );
+      return SizedBox(height: height, width: width, child: w);
+    });
   }
 
   Map<String, dynamic> layout(NativeAd widget) {
@@ -295,15 +279,14 @@ class _NativeAdState extends State<NativeAd>
     final body = widget.body ?? AdTextView();
     final button = widget.button ??
         AdButtonView(
-          // backgroundColor: Colors.yellow,
+          backgroundColor: Colors.yellow,
           pressColor: Colors.red,
           margin: EdgeInsets.only(top: 6),
           tooltipText: 'tooltip to the button',
         );
     final icon = widget.icon ??
         AdImageView(
-          margin: EdgeInsets.only(right: 4),
-        );
+            margin: EdgeInsets.only(right: 4), tooltipText: 'Tooltip haha');
     final media = widget.media ?? AdMediaView();
     final price = widget.price ?? AdTextView();
     final ratingBar = widget.ratingBar ?? AdRatingBarView();
