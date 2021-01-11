@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
 import 'options.dart';
+import 'media_content.dart';
 
 export 'options.dart';
+export 'media_content.dart';
 
 enum AdEvent {
   impression,
@@ -25,6 +27,13 @@ class NativeAdController {
 
   /// The unique id of the controller
   String get id => _key.toString();
+
+  MediaContent _mediaContent;
+
+  /// Provides media content information.
+  ///
+  /// This will be null until load is complete
+  MediaContent get mediaContent => _mediaContent;
 
   final _onEvent = StreamController<Map<AdEvent, dynamic>>.broadcast();
 
@@ -119,6 +128,7 @@ class NativeAdController {
     _pluginChannel.invokeMethod("disposeController", {"id": id});
     _onEvent.close();
     _onVideoEvent.close();
+    _attached = false;
   }
 
   /// Handle the messages the channel sends
@@ -164,16 +174,28 @@ class NativeAdController {
       case "onAdMuted":
         _onEvent.add({AdEvent.muted: null});
         break;
-      case "muteThisAdInfo":
-        final Map args = (call.arguments ?? {}) as Map;
-        _muteThisAdReasons = args?.get('muteThisAdReasons') ?? [];
-        _customMuteThisAdEnabled =
-            args?.get('isCustomMuteThisAdEnabled') ?? false;
-        break;
       case 'undefined':
       default:
         _onEvent.add({AdEvent.undefined: null});
         break;
+    }
+
+    if (call.arguments != null && call.arguments is Map) {
+      (call.arguments as Map).forEach((key, value) {
+        switch (key) {
+          case 'muteThisAdInfo':
+            final Map args = (value ?? {}) as Map;
+            _muteThisAdReasons = args?.get('muteThisAdReasons') ?? [];
+            _customMuteThisAdEnabled =
+                args?.get('isCustomMuteThisAdEnabled') ?? false;
+            break;
+          case 'mediaContent':
+            _mediaContent = MediaContent.fromJson(value);
+            break;
+          default:
+            break;
+        }
+      });
     }
   }
 

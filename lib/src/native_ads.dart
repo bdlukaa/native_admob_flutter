@@ -72,6 +72,7 @@ class NativeAds {
         """);
       }
     }
+    _initialized = true;
   }
 
   /// Sets a list of test device IDs corresponding to test devices which will

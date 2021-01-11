@@ -51,9 +51,9 @@ class NativeAdmobController(
             }
             "muteAd" -> {
                 // yep it's always success :)
-                if (nativeAd == null) return result.success(null);
+                if (nativeAd == null) return result.success(null)
                 if (nativeAd!!.isCustomMuteThisAdEnabled)
-                    nativeAd?.muteThisAd(nativeAd!!.muteThisAdReasons[call.argument<Int>("reason")!!]);
+                    nativeAd?.muteThisAd(nativeAd!!.muteThisAdReasons[call.argument<Int>("reason")!!])
                 result.success(null)
             }
             else -> result.notImplemented()
@@ -62,13 +62,6 @@ class NativeAdmobController(
 
     fun undefined() {
         channel.invokeMethod("undefined", null)
-    }
-
-    fun sendMuteThisAdInfo(ad: UnifiedNativeAd) {
-        channel.invokeMethod("muteThisAdInfo", mapOf<String, Any?>(
-                "muteThisAdReasons" to ad.muteThisAdReasons?.map { it.description } as List<String>,
-                "isCustomMuteThisAdEnabled" to ad.isCustomMuteThisAdEnabled
-        ));
     }
 
     private fun loadAd(unitId: String, options: Map<String, Any>) {
@@ -136,7 +129,18 @@ class NativeAdmobController(
                     override fun onAdLoaded() {
                         super.onAdLoaded()
                         nativeAdChanged?.let { it(nativeAd) }
-                        channel.invokeMethod("onAdLoaded", null)
+                        val mediaContent = nativeAd!!.mediaContent
+                        channel.invokeMethod("onAdLoaded", hashMapOf(
+                                "muteThisAdInfo" to hashMapOf(
+                                        "muteThisAdReasons" to nativeAd!!.muteThisAdReasons?.map { it.description } as List<String>,
+                                        "isCustomMuteThisAdEnabled" to nativeAd!!.isCustomMuteThisAdEnabled
+                                ),
+                                "mediaContent" to hashMapOf(
+                                        "duration" to mediaContent.duration.toDouble(),
+                                        "aspectRatio" to mediaContent.aspectRatio.toDouble(),
+                                        "hasVideoContent" to mediaContent.hasVideoContent()
+                                )
+                        ))
                     }
                 })
                 .withNativeAdOptions(adOptions.build())

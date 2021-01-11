@@ -151,8 +151,9 @@ class _NativeAdState extends State<NativeAd>
           setState(() => state = event);
           break;
         case AdEvent.undefined:
-        default:
           setState(() {});
+          break;
+        default:
           break;
       }
     });
@@ -209,7 +210,7 @@ class _NativeAdState extends State<NativeAd>
       );
 
       if (Platform.isAndroid) {
-        if (NativeAds.useHybridComposition)
+        if (!NativeAds.useHybridComposition)
           // virtual display
           w = AndroidView(
             viewType: _viewType,

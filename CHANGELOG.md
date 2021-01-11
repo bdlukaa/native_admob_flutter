@@ -1,3 +1,8 @@
+## 0.0.8
+
+- Implement MediaContent
+- Fixed mute this ad info
+
 ## 0.0.7
 
 - **HIGHLIGHT**: Automatic support for Hybrid Composition on android
