@@ -89,6 +89,9 @@ class NativeAd extends StatefulWidget {
   /// If true, the ad will be reloaded whenever `options` change
   final bool reloadWhenOptionsChange;
 
+  /// Build the ad
+  final Widget Function(BuildContext context, Widget child) builder;
+
   NativeAd({
     Key key,
     @required this.buildLayout,
@@ -109,6 +112,7 @@ class NativeAd extends StatefulWidget {
     this.width,
     this.options,
     this.reloadWhenOptionsChange = true,
+    this.builder,
   })  : assert(buildLayout != null),
         assert(reloadWhenOptionsChange != null),
         super(key: key);
@@ -252,7 +256,11 @@ class _NativeAdState extends State<NativeAd>
         return SizedBox();
       }
 
-      return SizedBox(height: height, width: width, child: w);
+      return SizedBox(
+        height: height,
+        width: width,
+        child: widget.builder != null ? widget.builder(context, w) : w,
+      );
     });
   }
 
