@@ -256,11 +256,12 @@ class _NativeAdState extends State<NativeAd>
         return SizedBox();
       }
 
-      return SizedBox(
+      w = SizedBox(
         height: height,
         width: width,
-        child: widget.builder != null ? widget.builder(context, w) : w,
+        child: w,
       );
+      return widget.builder?.call(context, w) ?? w;
     });
   }
 

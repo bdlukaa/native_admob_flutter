@@ -1,3 +1,7 @@
+## 0.0.8+2
+
+- Fixed bug fix that the whole ad builder would get the size, but only the `NativeAd` needs it
+
 ## 0.0.8+1
 
 - Implement ad builder
