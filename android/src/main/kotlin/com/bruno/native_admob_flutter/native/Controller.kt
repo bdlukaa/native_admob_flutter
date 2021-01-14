@@ -1,4 +1,4 @@
-package com.bruno.native_admob_flutter
+package com.bruno.native_admob_flutter.native
 
 import android.content.Context
 import com.google.android.gms.ads.*

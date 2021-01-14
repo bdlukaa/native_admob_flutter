@@ -3,6 +3,7 @@ package com.bruno.native_admob_flutter
 import android.content.Context
 import android.os.Build
 import androidx.annotation.NonNull
+import com.bruno.native_admob_flutter.banner.*
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 
@@ -12,6 +13,8 @@ import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
+
+import com.bruno.native_admob_flutter.native.*
 
 class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
     private lateinit var channel: MethodChannel
@@ -27,27 +30,34 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
         context = binding.applicationContext
         messenger = binding.binaryMessenger
 
-        binding
-                .platformViewRegistry
-                .registerViewFactory("native_admob", NativeViewFactory())
+        binding.platformViewRegistry.registerViewFactory("native_admob", NativeViewFactory())
+        binding.platformViewRegistry.registerViewFactory("banner_admob", BannerAdViewFactory())
     }
 
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             "initialize" -> {
                 MobileAds.initialize(context) { result.success(Build.VERSION.SDK_INT) }
-                println("Initializing mobile ads")
             }
-            "initController" -> {
+            // Native Ads Controller
+            "initNativeAdController" -> {
                 NativeAdmobControllerManager.createController(call.argument<String>("id")!!, messenger, context)
                 result.success(null)
-                println("controller created")
             }
-            "disposeController" -> {
+            "disposeNativeAdController" -> {
                 NativeAdmobControllerManager.removeController(call.argument<String>("id")!!)
                 result.success(null)
-                println("controller disposed")
             }
+            // Banner Ads Controller
+            "initBannerAdController" -> {
+                BannerAdControllerManager.createController(call.argument<String>("id")!!, messenger, context)
+                result.success(null)
+            }
+            "disposeBannerAdController" -> {
+                BannerAdControllerManager.removeController(call.argument<String>("id")!!)
+                result.success(null)
+            }
+            // General Controller
             // isTestDevice method is not found. Idk why
 //            "isTestDevice" -> result.success(AdRequest.isTestDevice(context))
             "setTestDeviceIds" -> {

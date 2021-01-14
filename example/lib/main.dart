@@ -3,7 +3,7 @@ import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  NativeAds.initialize(useHybridComposition: false);
+  MobileAds.initialize();
   runApp(MyApp());
 }
 
@@ -36,10 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey,
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Column(
+      body: ListView(
         children: [
           // Create a native ad with the default style
           NativeAd(
@@ -101,6 +98,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ),
+          BannerAd(),
         ],
       ),
     );

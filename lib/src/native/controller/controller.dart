@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../native_admob_flutter.dart';
+import '../../../native_admob_flutter.dart';
 import 'options.dart';
 import 'media_content.dart';
 
 export 'options.dart';
 export 'media_content.dart';
 
-enum AdEvent {
+enum NativeAdEvent {
   impression,
   clicked,
   loadFailed,
@@ -35,14 +35,13 @@ class NativeAdController {
   /// This will be null until load is complete
   MediaContent get mediaContent => _mediaContent;
 
-  final _onEvent = StreamController<Map<AdEvent, dynamic>>.broadcast();
-
   List<String> _muteThisAdReasons = [];
   List<String> get muteThisAdReasons => _muteThisAdReasons;
 
   bool _customMuteThisAdEnabled = false;
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
+  final _onEvent = StreamController<Map<NativeAdEvent, dynamic>>.broadcast();
   /// Listen to the events the controller throws
   ///
   /// Usage:
@@ -50,23 +49,23 @@ class NativeAdController {
   /// controller.onEvent.listen((e) {
   ///   final event = e.keys.first;
   ///   switch (event) {
-  ///     case AdEvent.loading:
+  ///     case NativeAdEvent.loading:
   ///       print('loading');
   ///       break;
-  ///     case AdEvent.loaded:
+  ///     case NativeAdEvent.loaded:
   ///       print('loaded');
   ///       break;
-  ///     case AdEvent.loadFailed:
+  ///     case NativeAdEvent.loadFailed:
   ///       final errorCode = e.values.first;
   ///       print('loadFailed $errorCode');
   ///       break;
-  ///     case AdEvent.impression:
+  ///     case NativeAdEvent.impression:
   ///       print('add rendered');
   ///       break;
-  ///     case AdEvent.clicked;
+  ///     case NativeAdEvent.clicked;
   ///       print('clicked');
   ///       break;
-  ///     case AdEvent.muted:
+  ///     case NativeAdEvent.muted:
   ///       showDialog(
   ///         ...,
   ///         builder: (_) => AlertDialog(title: Text('Ad muted')),
@@ -77,7 +76,7 @@ class NativeAdController {
   ///   }
   /// });
   /// ```
-  Stream<Map<AdEvent, dynamic>> get onEvent => _onEvent.stream;
+  Stream<Map<NativeAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
   final _onVideoEvent =
       StreamController<Map<AdVideoEvent, dynamic>>.broadcast();
@@ -102,7 +101,7 @@ class NativeAdController {
 
   /// Initialize the controller. This can be called only by the controller
   void _init() {
-    _pluginChannel.invokeMethod("initController", {"id": id});
+    _pluginChannel.invokeMethod("initNativeAdController", {"id": id});
   }
 
   void attach() {
@@ -125,7 +124,7 @@ class NativeAdController {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod("disposeController", {"id": id});
+    _pluginChannel.invokeMethod("disposeNativeAdController", {"id": id});
     _onEvent.close();
     _onVideoEvent.close();
     _attached = false;
@@ -157,26 +156,26 @@ class NativeAdController {
     }
     switch (call.method) {
       case "loading":
-        _onEvent.add({AdEvent.loading: null});
+        _onEvent.add({NativeAdEvent.loading: null});
         break;
       case "onAdFailedToLoad":
-        _onEvent.add({AdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent.add({NativeAdEvent.loadFailed: call.arguments['errorCode']});
         break;
       case "onAdLoaded":
-        _onEvent.add({AdEvent.loaded: null});
+        _onEvent.add({NativeAdEvent.loaded: null});
         break;
       case "onAdClicked":
-        _onEvent.add({AdEvent.clicked: null});
+        _onEvent.add({NativeAdEvent.clicked: null});
         break;
       case "onAdImpression":
-        _onEvent.add({AdEvent.impression: null});
+        _onEvent.add({NativeAdEvent.impression: null});
         break;
       case "onAdMuted":
-        _onEvent.add({AdEvent.muted: null});
+        _onEvent.add({NativeAdEvent.muted: null});
         break;
       case 'undefined':
       default:
-        _onEvent.add({AdEvent.undefined: null});
+        _onEvent.add({NativeAdEvent.undefined: null});
         break;
     }
 
@@ -207,10 +206,10 @@ class NativeAdController {
     //   NativeAds.isInitialized,
     //   'You MUST initialize the ADMOB before requesting any ads',
     // );
-    final id = unitId ?? NativeAds.nativeAdUnitId;
+    final id = unitId ?? MobileAds.nativeAdUnitId;
     assert(id != null, 'The ad unit id can NOT be null');
     _channel.invokeMethod('loadAd', {
-      'unitId': id ?? NativeAds.testAdUnitId,
+      'unitId': id ?? MobileAds.nativeAdUnitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     });
   }

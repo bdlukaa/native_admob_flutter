@@ -1,6 +1,10 @@
-## 0.0.8+2
+## 0.1.0
 
-- Fixed bug fix that the whole ad builder would get the size, but only the `NativeAd` needs it
+- Implementation for BannerAds
+- **BREAKING**: 
+    - Rename `AdEvent` to `NativeAdEvent`
+    - Rename `NativeAds` to `MobileAds`
+- Size is only applied to the ad, not the builder
 
 ## 0.0.8+1
 

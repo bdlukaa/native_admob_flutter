@@ -2,16 +2,22 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 
-class NativeAds {
+class MobileAds {
+  // Unit ids
   static String nativeAdUnitId;
-  static const String testAdUnitId = 'ca-app-pub-3940256099942544/2247696110';
+  static const String nativeAdTestUnitId =
+      'ca-app-pub-3940256099942544/2247696110';
+
+  static String bannerAdUnitId;
+  static const String bannerAdTestUnitId =
+      'ca-app-pub-3940256099942544/6300978111';
 
   static final _pluginChannel = const MethodChannel("native_admob_flutter");
 
   static bool _initialized = false;
 
   /// Check if the ADMOB is initialized. To initialize it, use
-  /// `NativeAds.initialize()`
+  /// `MobileAds.initialize()`
   static bool get isInitialized => _initialized;
 
   static bool _useHybridComposition = false;
@@ -42,7 +48,7 @@ class NativeAds {
   ///   // Add this line if you will initialize it before runApp
   ///   WidgetsFlutterBinding.ensureInitialized();
   ///   // default admob native ad unit id: ca-app-pub-3940256099942544/2247696110
-  ///   NativeAds.initialize(nativeAdUnitId: 'your-native-ad-unit-id');
+  ///   MobileAds.initialize(nativeAdUnitId: 'your-native-ad-unit-id');
   ///   runApp(MyApp());
   /// }
   /// ```
@@ -50,10 +56,12 @@ class NativeAds {
   /// This method must be called in the main thread
   static Future<void> initialize({
     String nativeAdUnitId,
+    String bannerAdUnitId,
     bool useHybridComposition,
   }) async {
-    NativeAds.nativeAdUnitId = nativeAdUnitId ?? NativeAds.testAdUnitId;
-    assert(NativeAds.nativeAdUnitId != null);
+    MobileAds.nativeAdUnitId = nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
+    MobileAds.bannerAdUnitId = bannerAdUnitId ?? MobileAds.bannerAdTestUnitId;
+    assert(MobileAds.nativeAdUnitId != null);
     final version = await _pluginChannel.invokeMethod<int>('initialize');
     if (Platform.isAndroid) {
       assert(
@@ -63,10 +71,10 @@ class NativeAds {
         """,
       );
       // hybrid composition is enabled in android 19 and can't be disabled
-      NativeAds.useHybridComposition =
+      MobileAds.useHybridComposition =
           version == 19 ? true : useHybridComposition ?? false;
 
-      if (version >= 29 && NativeAds.useHybridComposition) {
+      if (version >= 29 && MobileAds.useHybridComposition) {
         print("""
         It is NOT recommended to use hybrid composition on Android 10 or greater. It has some performance drawbacks
         """);
@@ -180,9 +188,9 @@ class NativeAds {
   /// report the relative app volume to the SDK:
   ///
   /// ```dart
-  /// NativeAds.initialize();
+  /// MobileAds.initialize();
   /// // Set app volume to be half of current device volume.
-  /// NativeAds.setAppVolume(0.5);
+  /// MobileAds.setAppVolume(0.5);
   /// ```
   static Future<void> setAppVolume(double volume) {
     assert(volume != null, 'The volume can NOT be null');

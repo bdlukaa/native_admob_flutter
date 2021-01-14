@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:native_admob_flutter/native_admob_flutter.dart';
+
+import '../utils.dart';
+import '../../native_admob_flutter.dart';
 
 import 'layout_builder/layout_builder.dart';
 import 'utils.dart';
@@ -90,7 +90,7 @@ class NativeAd extends StatefulWidget {
   final bool reloadWhenOptionsChange;
 
   /// Build the ad
-  final Widget Function(BuildContext context, Widget child) builder;
+  final AdBuilder builder;
 
   NativeAd({
     Key key,
@@ -124,8 +124,7 @@ class NativeAd extends StatefulWidget {
 class _NativeAdState extends State<NativeAd>
     with AutomaticKeepAliveClientMixin {
   NativeAdController controller;
-
-  AdEvent state = AdEvent.loading;
+  NativeAdEvent state = NativeAdEvent.loading;
 
   @override
   void didUpdateWidget(NativeAd oldWidget) {
@@ -149,20 +148,17 @@ class _NativeAdState extends State<NativeAd>
     controller.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
-        case AdEvent.loading:
-        case AdEvent.loaded:
-        case AdEvent.loadFailed:
+        case NativeAdEvent.loading:
+        case NativeAdEvent.loaded:
+        case NativeAdEvent.loadFailed:
           setState(() => state = event);
           break;
-        case AdEvent.undefined:
+        case NativeAdEvent.undefined:
           setState(() {});
           break;
         default:
           break;
       }
-    });
-    controller.onVideoEvent.listen((event) {
-      print(event);
     });
   }
 
@@ -175,29 +171,15 @@ class _NativeAdState extends State<NativeAd>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // Google Native ads are only supported in Android and iOS
-    assert(
-      Platform.isAndroid || Platform.isIOS,
-      'The current platform does not support native ads. The platforms that support it are Android and iOS',
-    );
+    assertPlatformIsSupported();
 
-    assert(
-        Platform.isAndroid, 'Android is the only supported platform for now');
-
-    if (state == AdEvent.loading) return widget.loading ?? SizedBox();
-
-    if (state == AdEvent.loadFailed) return widget.error ?? SizedBox();
+    if (state == NativeAdEvent.loading) return widget.loading ?? SizedBox();
+    if (state == NativeAdEvent.loadFailed) return widget.error ?? SizedBox();
 
     Widget w;
 
     final params = layout(widget);
     params.addAll({'controllerId': controller.id});
-
-    final gestures = <Factory<OneSequenceGestureRecognizer>>[
-      Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-      // Factory<OneSequenceGestureRecognizer>(() => TapGestureRecognizer()),
-      // Factory<OneSequenceGestureRecognizer>(() => LongPressGestureRecognizer()),
-    ].toSet();
 
     return LayoutBuilder(builder: (context, consts) {
       final size = consts.biggest;
@@ -208,44 +190,17 @@ class _NativeAdState extends State<NativeAd>
       assert(
         height > 32 && width > 32,
         '''
-        Ad views that have a width or height smaller than 32 will be demonetized in the future. 
+        Native ad views that have a width or height smaller than 32 will be demonetized in the future. 
         Please make sure the ad view has sufficiently large area.
         ''',
       );
 
       if (Platform.isAndroid) {
-        if (!NativeAds.useHybridComposition)
-          // virtual display
-          w = AndroidView(
-            viewType: _viewType,
-            creationParamsCodec: StandardMessageCodec(),
-            creationParams: params,
-            gestureRecognizers: gestures,
-          );
-        else
-          // hybrid composition
-          w = PlatformViewLink(
-            viewType: _viewType,
-            surfaceFactory: (context, controller) {
-              return AndroidViewSurface(
-                controller: controller,
-                gestureRecognizers: gestures,
-                hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-              );
-            },
-            onCreatePlatformView: (PlatformViewCreationParams p) {
-              return PlatformViewsService.initSurfaceAndroidView(
-                id: p.id,
-                viewType: _viewType,
-                layoutDirection: TextDirection.ltr,
-                creationParams: params,
-                creationParamsCodec: StandardMessageCodec(),
-              )
-                ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
-                // ..setSize(Size(width, height))
-                ..create();
-            },
-          );
+        w = buildAndroidPlatformView(
+          params,
+          _viewType,
+          MobileAds.useHybridComposition,
+        );
         // } else if (Platform.isIOS) {
         //   w = UiKitView(
         //     viewType: _viewType,

@@ -1,4 +1,4 @@
-package com.bruno.native_admob_flutter
+package com.bruno.native_admob_flutter.native
 
 import android.content.Context
 import android.content.res.Resources
@@ -13,6 +13,7 @@ import android.view.*
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
+import com.bruno.native_admob_flutter.R
 import com.google.android.gms.ads.formats.MediaView
 import com.google.android.gms.ads.formats.UnifiedNativeAd
 import com.google.android.gms.ads.formats.UnifiedNativeAdView

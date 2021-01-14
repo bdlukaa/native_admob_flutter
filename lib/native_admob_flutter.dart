@@ -1,8 +1,12 @@
-export 'src/native_ad_widget.dart';
-export 'src/native_ads.dart';
-export 'src/controller/controller.dart';
-export 'src/utils.dart' hide colorExtension;
+export 'src/mobile_ads.dart';
 
-export 'src/layout_builder/layout_builder.dart';
+export 'src/native/native_ad_widget.dart';
+export 'src/native/controller/controller.dart';
+export 'src/native/utils.dart' hide colorExtension;
 
-export 'src/gradient/gradient.dart';
+export 'src/native/layout_builder/layout_builder.dart';
+
+export 'src/native/gradient/gradient.dart';
+
+export 'src/banner/banner_ad_widget.dart';
+export 'src/banner/controller.dart';
