@@ -1,3 +1,7 @@
+## 0.1.1
+
+- Documentation improvement
+
 ## 0.1.0
 
 - Implementation for BannerAds

@@ -42,6 +42,7 @@ class NativeAdController {
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
   final _onEvent = StreamController<Map<NativeAdEvent, dynamic>>.broadcast();
+
   /// Listen to the events the controller throws
   ///
   /// Usage:
@@ -60,7 +61,7 @@ class NativeAdController {
   ///       print('loadFailed $errorCode');
   ///       break;
   ///     case NativeAdEvent.impression:
-  ///       print('add rendered');
+  ///       print('ad rendered');
   ///       break;
   ///     case NativeAdEvent.clicked;
   ///       print('clicked');
@@ -80,6 +81,34 @@ class NativeAdController {
 
   final _onVideoEvent =
       StreamController<Map<AdVideoEvent, dynamic>>.broadcast();
+
+  /// Listen to the video events the controller throws
+  ///
+  /// Usage:
+  /// ```dart
+  /// controller.onVideoEvent.listen((e) {
+  ///   final event = e.keys.first;
+  ///   switch (event) {
+  ///     case AdVideoEvent.start:
+  ///       print('video started');
+  ///       break;
+  ///     case NativeAdEvent.play:
+  ///       print('video played');
+  ///       break;
+  ///     case AdVideoEvent.pause:
+  ///       print('video paused');
+  ///       break;
+  ///     case AdVideoEvent.end:
+  ///       print('video finished');
+  ///       break;
+  ///     case AdVideoEvent.mute;
+  ///       print('video muted');
+  ///       break;
+  ///     default:
+  ///       break;
+  ///   }
+  /// });
+  /// ```
   Stream<Map<AdVideoEvent, dynamic>> get onVideoEvent => _onVideoEvent.stream;
 
   /// Channel to communicate with plugin

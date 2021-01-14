@@ -59,17 +59,11 @@ class BannerAdController {
   ///       print('loadFailed $errorCode');
   ///       break;
   ///     case BannerAdEvent.impression:
-  ///       print('add rendered');
+  ///       print('ad rendered');
   ///       break;
   ///     case BannerAdEvent.clicked;
   ///       print('clicked');
   ///       break;
-  ///     case BannerAdEvent.muted:
-  ///       showDialog(
-  ///         ...,
-  ///         builder: (_) => AlertDialog(title: Text('Ad muted')),
-  ///       );
-  ///       break
   ///     default:
   ///       break;
   ///   }
