@@ -5,6 +5,7 @@ import '../utils.dart';
 
 part 'text.dart';
 part 'linear_layout.dart';
+part 'container.dart';
 
 /// The layout builder. It must return an `AdLinearLayout` and can't return null
 typedef AdLayoutBuilder = AdLinearLayout Function(
@@ -28,20 +29,13 @@ const double MATCH_PARENT = -1;
 const double WRAP_CONTENT = -2;
 
 class AdView {
-  /// The radius of the view
-  final AdBorderRadius borderRadius;
+  final AdDecoration decoration;
 
   /// The padding applied to the view. Default to none
   final EdgeInsets padding;
 
   /// The margin applied to the view. Default to none
   final EdgeInsets margin;
-
-  /// The background color applied to the view.
-  final Color backgroundColor;
-
-  /// The border of the view
-  final BorderSide border;
 
   /// The width of the view
   final double width;
@@ -52,29 +46,20 @@ class AdView {
   /// The type of the view. Do not change this manually
   final String viewType;
 
-  /// The gradient of the view.
-  /// 
-  /// If `backgroundColor` is specified, the gradient won't be rendered
-  final AdGradient gradient;
-
   final String tooltipText;
 
   /// The id of the view. Used to recognize it
   String id;
 
-  AdView({
-    @required this.viewType,
-    this.border,
-    this.padding = EdgeInsets.zero,
-    this.margin = EdgeInsets.zero,
-    this.borderRadius,
-    this.backgroundColor,
-    this.width,
-    this.height,
-    this.id,
-    this.gradient,
-    this.tooltipText,
-  });
+  AdView(
+      {@required this.viewType,
+      this.padding = EdgeInsets.zero,
+      this.margin = EdgeInsets.zero,
+      this.width,
+      this.height,
+      this.id,
+      this.tooltipText,
+      this.decoration});
 
   Map<String, dynamic> toJson() {
     double width = this.width;
@@ -83,7 +68,7 @@ class AdView {
     double height = this.height;
     if (height == double.infinity) height = MATCH_PARENT;
 
-    return {
+    final json = <String, dynamic>{
       // meta
       'id': id,
       'viewType': viewType,
@@ -97,45 +82,31 @@ class AdView {
       'marginLeft': margin?.left,
       'marginTop': margin?.top,
       'marginBottom': margin?.bottom,
-      // radius
-      'topRightRadius': borderRadius?.topRight,
-      'topLeftRadius': borderRadius?.topLeft,
-      'bottomRightRadius': borderRadius?.bottomRight,
-      'bottomLeftRadius': borderRadius?.bottomLeft,
-      // decoration
-      'borderWidth': border?.width ?? 0,
-      'borderColor': border?.color?.toHex(),
-      'backgroundColor': backgroundColor?.toHex(),
-      'gradient': gradient?.toJson(),
       // screen bounds
       'width': width,
       'height': height,
       // other
       'tooltipText': tooltipText,
     };
+    if (decoration != null) json.addAll(decoration.toJson());
+    return json;
   }
 }
 
 class AdImageView extends AdView {
-  AdImageView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    Color backgroundColor,
-    double size,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-    AdGradient gradient,
-    String tooltipText,
-  }) : super(
+  AdImageView(
+      {EdgeInsets padding,
+      EdgeInsets margin,
+      double size,
+      String tooltipText,
+      AdDecoration decoration})
+      : super(
           viewType: 'image_view',
           padding: padding,
           margin: margin,
-          backgroundColor: backgroundColor,
+          decoration: decoration,
           width: size ?? 40,
           height: size ?? 40,
-          borderRadius: borderRadius,
-          border: border,
-          gradient: gradient,
           tooltipText: tooltipText,
         );
 }
@@ -144,23 +115,17 @@ class AdMediaView extends AdView {
   AdMediaView({
     EdgeInsets padding,
     EdgeInsets margin,
-    Color backgroundColor,
+    AdDecoration decoration,
     double width,
     double height,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-    AdGradient gradient,
     String tooltipText,
   }) : super(
           viewType: 'media_view',
           padding: padding,
           margin: margin,
-          backgroundColor: backgroundColor,
+          decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-          gradient: gradient,
           tooltipText: tooltipText,
         );
 }
@@ -171,12 +136,9 @@ class AdRatingBarView extends AdView {
   AdRatingBarView({
     EdgeInsets padding,
     EdgeInsets margin,
-    Color backgroundColor,
+    AdDecoration decoration,
     double width,
     double height,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-    AdGradient gradient,
     String tooltipText,
     // rating
     this.stepSize,
@@ -184,12 +146,9 @@ class AdRatingBarView extends AdView {
           viewType: 'rating_bar',
           padding: padding,
           margin: margin,
-          backgroundColor: backgroundColor,
+          decoration: decoration,
           width: width ?? WRAP_CONTENT,
           height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-          gradient: gradient,
           tooltipText: tooltipText,
         );
 

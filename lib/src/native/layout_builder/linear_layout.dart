@@ -14,12 +14,9 @@ class AdLinearLayout extends AdView {
     @required this.children,
     EdgeInsets padding,
     EdgeInsets margin,
-    Color backgroundColor,
+    AdDecoration decoration,
     double width,
     double height,
-    AdBorderRadius borderRadius,
-    BorderSide border,
-    AdGradient gradient,
     String tooltipText,
     this.gravity,
   })  : assert(orientation != null),
@@ -28,19 +25,17 @@ class AdLinearLayout extends AdView {
           viewType: 'linear_layout',
           padding: padding,
           margin: margin,
-          backgroundColor: backgroundColor,
+          decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          borderRadius: borderRadius,
-          border: border,
-          gradient: gradient,
           tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     List<Map<String, dynamic>> childrenData = [];
-    for (final child in children) if (child != null) childrenData.add(child.toJson());
+    for (final child in children)
+      if (child != null) childrenData.add(child.toJson());
     json.addAll({
       'children': childrenData,
       'orientation': orientation ?? 'vertical',
@@ -51,12 +46,38 @@ class AdLinearLayout extends AdView {
 }
 
 enum LayoutGravity {
-
-  center, center_horizontal, center_vertical,
-  left, right, top, bottom
-
+  center,
+  center_horizontal,
+  center_vertical,
+  left,
+  right,
+  top,
+  bottom
 }
 
 String _layoutGravityName(LayoutGravity g) {
   return g?.toString()?.replaceAll('LayoutGravity.', '')?.toLowerCase();
+}
+
+class AdSingleChildView extends AdLinearLayout {
+  AdSingleChildView({@required AdView child})
+      : assert(child != null),
+        super(children: [child]);
+}
+
+class AdExpanded extends AdSingleChildView {
+  final double flex;
+
+  AdExpanded({
+    @required this.flex,
+    @required AdView child,
+  })  : assert(flex != null && flex >= 0),
+        super(child: child);
+
+  @override
+  Map<String, dynamic> toJson() {
+    final json = super.toJson();
+    json.addAll({'layout_weight': flex});
+    return json;
+  }
 }

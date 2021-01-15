@@ -234,24 +234,29 @@ class _NativeAdState extends State<NativeAd>
           width: WRAP_CONTENT,
           height: WRAP_CONTENT,
           padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
-          backgroundColor: Colors.yellow,
           style: TextStyle(color: Colors.black),
           text: 'Ad',
           margin: EdgeInsets.only(right: 2),
           maxLines: 1,
-          borderRadius: AdBorderRadius.all(10),
+          decoration: AdDecoration(
+            borderRadius: AdBorderRadius.all(10),
+            backgroundColor: Colors.yellow,
+          ),
         );
     final body = widget.body ?? AdTextView();
     final button = widget.button ??
         AdButtonView(
-          backgroundColor: Colors.yellow,
           pressColor: Colors.red,
+          decoration: AdDecoration(
+            backgroundColor: Colors.yellow,
+          ),
           margin: EdgeInsets.only(top: 6),
-          tooltipText: 'tooltip to the button',
         );
     final icon = widget.icon ??
         AdImageView(
-            margin: EdgeInsets.only(right: 4), tooltipText: 'Tooltip haha');
+            margin: EdgeInsets.only(right: 4),
+            // tooltipText: 'Tooltip haha',
+            );
     final media = widget.media ?? AdMediaView();
     final price = widget.price ?? AdTextView();
     final ratingBar = widget.ratingBar ?? AdRatingBarView();

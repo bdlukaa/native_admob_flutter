@@ -33,6 +33,3 @@ To get started with Native Ads for Flutter, [read the documentation](https://git
 Please file issues, bugs, or feature requests in our [issue tracker](https://github.com/bdlukaa/native_admob_flutter/issues/new).
 
 To contribute a change to this plugin open a [pull request](https://github.com/bdlukaa/native_admob_flutter/pulls).
-
-I've been maintaining this package for quite a long time and blowing up slowly. If you could help me cheer up, buying me a cup of coffee would give me more energy and make my life happier :)\
-<a title="Buy me a coffee" href="https://www.buymeacoffee.com/bdlukaa"><img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"></a>

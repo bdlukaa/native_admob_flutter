@@ -15,15 +15,15 @@ class BannerAd extends StatefulWidget {
     this.builder,
     this.controller,
     this.size = BannerSize.SMART_BANNER,
-    // this.error,
-    // this.loading,
+    this.error,
+    this.loading,
   })  : assert(size != null),
         super(key: key);
 
   final AdBuilder builder;
 
-  // final Widget error;
-  // final Widget loading;
+  final Widget error;
+  final Widget loading;
 
   final BannerAdController controller;
 
@@ -36,7 +36,7 @@ class BannerAd extends StatefulWidget {
 
 class _BannerAdState extends State<BannerAd> {
   BannerAdController controller;
-  // BannerAdEvent state = BannerAdEvent.loading;
+  BannerAdEvent state = BannerAdEvent.loading;
 
   @override
   void initState() {
@@ -47,11 +47,11 @@ class _BannerAdState extends State<BannerAd> {
       final event = e.keys.first;
       // final info = e.values.first;
       switch (event) {
-        // case BannerAdEvent.loading:
-        // case BannerAdEvent.loadFailed:
-        // case BannerAdEvent.loaded:
-        //   setState(() => state = event);
-        //   break;
+        case BannerAdEvent.loading:
+        case BannerAdEvent.loadFailed:
+        case BannerAdEvent.loaded:
+          setState(() => state = event);
+          break;
         case BannerAdEvent.undefined:
           setState(() {});
           break;
@@ -72,8 +72,6 @@ class _BannerAdState extends State<BannerAd> {
   @override
   Widget build(BuildContext context) {
     assertPlatformIsSupported();
-    // if (state == BannerAdEvent.loading) return widget.loading ?? SizedBox();
-    // if (state == BannerAdEvent.loadFailed) return widget.error ?? SizedBox();
 
     Widget w;
 
@@ -126,6 +124,16 @@ class _BannerAdState extends State<BannerAd> {
       w = SizedBox(height: height, child: w);
     }
 
-    return widget.builder?.call(context, w) ?? w;
+    w = widget.builder?.call(context, w) ?? w;
+
+    w = Stack(
+      children: [
+        w,
+        if (state == BannerAdEvent.loading) widget.loading ?? SizedBox(),
+        if (state == BannerAdEvent.loadFailed) widget.error ?? SizedBox(),
+      ],
+    );
+
+    return w;
   }
 }

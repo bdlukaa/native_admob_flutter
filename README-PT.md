@@ -33,6 +33,3 @@ Para começar com Anúncios Nativos para Flutter, [leia a documentação - Ingl�
 Registre problemas, bugs ou solicitações de recursos em nosso [rastreador de problemas](https://github.com/bdlukaa/native_admob_flutter/issues/new).
 
 Para contribuir com uma mudança neste plug-in, faça um [pull request](https://github.com/bdlukaa/native_admob_flutter/pulls).
-
-Tenho mantido este pacote por um bom tempo e surtando lentamente. Se você pudesse me ajudar a me animar, comprar uma xícara de café me daria mais energia e deixaria minha vida mais feliz :)\
-<a title="Me compre um café" href="https://www.buymeacoffee.com/bdlukaa"><img src="https://img.buymeacoffee.com/button-api/?text=Me compre um café&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00"></a>

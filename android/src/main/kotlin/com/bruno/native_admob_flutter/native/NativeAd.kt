@@ -9,7 +9,10 @@ import android.graphics.drawable.GradientDrawable.Orientation
 import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
 import android.os.Build
 import android.text.TextUtils
-import android.view.*
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
@@ -51,52 +54,53 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     }
 
     private fun buildView(data: Map<*, *>, context: Context): View {
-        val viewType: String = data["viewType"] as String
+        val viewType: String? = data["viewType"] as? String
         var view = View(context)
-        when (viewType) {
-            "linear_layout" -> {
-                view = LinearLayout(context)
-                view.orientation = if (data["orientation"] as String == "vertical")
-                    VERTICAL
-                else HORIZONTAL
+        if (viewType != null)
+            when (viewType) {
+                "linear_layout" -> {
+                    view = LinearLayout(context)
+                    view.orientation = if (data["orientation"] as String == "vertical")
+                        VERTICAL
+                    else HORIZONTAL
 
-                (data["gravity"] as? String).let {
-                    (view as LinearLayout).gravity = when (it!!) {
-                        "center" -> Gravity.CENTER
-                        "center_horizontal" -> Gravity.CENTER_HORIZONTAL
-                        "center_vertical" -> Gravity.CENTER_VERTICAL
-                        "left" -> Gravity.LEFT
-                        "right" -> Gravity.RIGHT
-                        "top" -> Gravity.TOP
-                        "bottom" -> Gravity.BOTTOM
-                        else -> Gravity.TOP
+                    (data["gravity"] as? String)?.let {
+                        (view as LinearLayout).gravity = when (it) {
+                            "center" -> Gravity.CENTER
+                            "center_horizontal" -> Gravity.CENTER_HORIZONTAL
+                            "center_vertical" -> Gravity.CENTER_VERTICAL
+                            "left" -> Gravity.LEFT
+                            "right" -> Gravity.RIGHT
+                            "top" -> Gravity.TOP
+                            "bottom" -> Gravity.BOTTOM
+                            else -> Gravity.TOP
+                        }
                     }
-                }
 
-                if (data["children"] != null)
-                    for (child in data["children"] as List<*>)
-                        view.addView(buildView(child as Map<*, *>, context))
-            }
-            "text_view" -> {
-                view = TextView(context)
-                view.applyText(data)
-            }
-            "image_view" -> {
-                view = ImageView(context)
-                view.adjustViewBounds = true
-            }
-            "media_view" -> {
-                view = MediaView(context)
-                view.setImageScaleType(ImageView.ScaleType.FIT_START)
-            }
-            "rating_bar" -> view = RatingBar(context)
-            "button_view" -> {
-                view = Button(context)
+                    if (data["children"] != null)
+                        for (child in data["children"] as List<*>)
+                            view.addView(buildView(child as Map<*, *>, context))
+                }
+                "text_view" -> {
+                    view = TextView(context)
+                    view.applyText(data)
+                }
+                "image_view" -> {
+                    view = ImageView(context)
+                    view.adjustViewBounds = true
+                }
+                "media_view" -> {
+                    view = MediaView(context)
+                    view.setImageScaleType(ImageView.ScaleType.FIT_START)
+                }
+                "rating_bar" -> view = RatingBar(context)
+                "button_view" -> {
+                    view = Button(context)
 //                view.isClickable = true
 //                view.isLongClickable = true
-                view.applyText(data)
+                    view.applyText(data)
+                }
             }
-        }
 
         var shape = GradientDrawable()
 
@@ -167,7 +171,9 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
         // bounds
 
-        val layoutParams = view.layoutParams ?: LinearLayout.LayoutParams(-1, -1, 0f)
+        val weight: Float = ((data["layout_weight"] as? Double)?.toFloat()) ?: 0f
+
+        val layoutParams = view.layoutParams ?: LinearLayout.LayoutParams(-1, -1, weight)
         val marginParams = (layoutParams as? ViewGroup.MarginLayoutParams)
                 ?: ViewGroup.MarginLayoutParams(context, null)
 
@@ -190,18 +196,19 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         (data["height"] as? Double)?.let { marginParams.height = it.toInt().dp() }
         (data["width"] as? Double)?.let { marginParams.width = it.toInt().dp() }
 
-        when (data["id"] as String) {
-            "advertiser" -> adAdvertiser = view as TextView
-            "attribution" -> adAttribution = view as TextView
-            "body" -> adBody = view as TextView
-            "button" -> callToAction = view as Button
-            "headline" -> adHeadline = view as TextView
-            "icon" -> adIcon = view as ImageView
-            "media" -> adMedia = view as MediaView
-            "price" -> adPrice = view as TextView
-            "ratingBar" -> ratingBar = view as RatingBar
-            "store" -> adStore = view as TextView
-        }
+        if (data["id"] != null)
+            when (data["id"] as String) {
+                "advertiser" -> adAdvertiser = view as TextView
+                "attribution" -> adAttribution = view as TextView
+                "body" -> adBody = view as TextView
+                "button" -> callToAction = view as Button
+                "headline" -> adHeadline = view as TextView
+                "icon" -> adIcon = view as ImageView
+                "media" -> adMedia = view as MediaView
+                "price" -> adPrice = view as TextView
+                "ratingBar" -> ratingBar = view as RatingBar
+                "store" -> adStore = view as TextView
+            }
 
         return view
     }

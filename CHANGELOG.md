@@ -1,10 +1,20 @@
+# 0.1.2
+
+- **NEW**:
+    - `AdSingleChildView`. Equivalent to `SingleChildView`
+    - `AdExpanded`. Equivalent to `Expanded`
+- Use `AdDecoration` for decorating `AdView`s
+- Changed the default native ad layout builder design to make it more like [this](https://developers.google.com/admob/android/banner/adaptive#when_to_use_adaptive_banners)
+- `Loading` and `Error` placeholders are now avaiable on `BannerAd`s
+- Updated example app. It's more clear and more intuitive to use
+
 ## 0.1.1
 
 - Documentation improvement
 
 ## 0.1.0
 
-- Implementation for BannerAds
+-**NEW**: BannerAds
 - **BREAKING**: 
     - Rename `AdEvent` to `NativeAdEvent`
     - Rename `NativeAds` to `MobileAds`

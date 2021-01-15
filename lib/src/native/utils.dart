@@ -3,37 +3,33 @@ import 'layout_builder/layout_builder.dart';
 
 /// Default ad layout
 AdLayoutBuilder get adBannerLayoutBuilder => (ratingBar, media, icon, headline,
-    advertiser, body, price, store, attribuition, button) {
-  return AdLinearLayout(
-    margin: EdgeInsets.all(10),
-    borderRadius: AdBorderRadius.all(10),
-    // The first linear layout width needs to be extended to the
-    // parents height, otherwise the children won't fit good
-    width: MATCH_PARENT,
-    children: [
-      AdLinearLayout(
+        advertiser, body, price, store, attribution, button) {
+      return AdLinearLayout(
+        decoration: AdDecoration(backgroundColor: Colors.white),
+        width: MATCH_PARENT,
+        height: MATCH_PARENT,
+        orientation: HORIZONTAL,
+        gravity: LayoutGravity.center_vertical,
         children: [
           icon,
-          AdLinearLayout(
-            children: [
-              headline,
-              AdLinearLayout(
-                children: [attribuition, advertiser],
-                orientation: HORIZONTAL,
-                width: WRAP_CONTENT,
-              ),
-            ],
+          AdExpanded(
+            flex: 2,
+            child: AdLinearLayout(
+              width: WRAP_CONTENT,
+              margin: EdgeInsets.symmetric(horizontal: 4),
+              children: [
+                headline,
+                AdLinearLayout(
+                  orientation: HORIZONTAL,
+                  children: [attribution, advertiser],
+                ),
+              ],
+            ),
           ),
+          AdExpanded(flex: 3, child: button),
         ],
-        width: MATCH_PARENT,
-        orientation: HORIZONTAL,
-        margin: EdgeInsets.all(6),
-      ),
-      button,
-    ],
-    backgroundColor: Colors.blue,
-  );
-};
+      );
+    };
 
 extension colorExtension on Color {
   String toHex([bool hashtag = true]) {
