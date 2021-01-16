@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+/// Assert the running platform is supported.
 void assertPlatformIsSupported() {
   // Google Native ads are only supported in Android and iOS
   assert(
@@ -13,13 +14,18 @@ void assertPlatformIsSupported() {
     'The current platform does not support native ads. The platforms that support it are Android and iOS',
   );
 
+  // TODO: Support iOS
   assert(Platform.isAndroid, 'Android is the only supported platform for now');
 }
 
 typedef AdBuilder = Widget Function(BuildContext context, Widget child);
 
-Widget buildAndroidPlatformView(Map<String, dynamic> params, String viewType,
-    [bool useHybridComposition = false]) {
+/// Build the android platform view
+Widget buildAndroidPlatformView(
+  Map<String, dynamic> params,
+  String viewType, [
+  bool useHybridComposition = false,
+]) {
   assert(useHybridComposition != null);
   final gestures = <Factory<OneSequenceGestureRecognizer>>[
     // Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),

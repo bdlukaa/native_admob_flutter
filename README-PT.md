@@ -10,9 +10,11 @@
     <a title="PRs são bem-vindos">
       <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" />
     </a>
-  <p>
-  <p align="center" title="Me compre um café" href="https://www.buymeacoffee.com/bdlukaa">
-    <img src="https://img.buymeacoffee.com/button-api/?text=Me compre um café&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00">
+  </p>
+  <p align="center">
+    <a title="Me compre um café" href="https://www.buymeacoffee.com/bdlukaa">
+      <img src="https://img.buymeacoffee.com/button-api/?text=Me compre um café&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00">
+    </a>
   </p>
 
 Easy-to-make native ads in flutter with Google's AdMob SDK.\

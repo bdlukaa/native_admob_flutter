@@ -1,4 +1,11 @@
-# 0.1.2
+## 0.1.2+1
+
+- Readme update
+- All AdViews are documentated now
+- Deprecate `SMART_BANNER`, as it's deprecated in SDK v20
+    - See [this](https://developers.google.com/admob/android/migration#smart)
+
+## 0.1.2
 
 - **NEW**:
     - `AdSingleChildView`. Equivalent to `SingleChildView`

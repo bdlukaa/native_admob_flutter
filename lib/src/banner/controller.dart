@@ -4,20 +4,38 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
 enum BannerAdEvent {
+  /// Called when an impression is recorded for an ad.
   impression,
+
+  /// Called when a click is recorded for an ad.
   clicked,
+
+  /// Called when an ad request failed.
   loadFailed,
+
+  /// Called when an ad is received.
   loaded,
+
+  /// Called when the ad starts loading
   loading,
+
+  /// Called when the event is unkown (usually for rebuilding ui)
   undefined,
 }
 
 class BannerSize {
+  /// The Size of the Banner.
   final Size size;
 
   const BannerSize(this.size);
 
-  // static const BannerSize ADAPTIVE = BannerSize(Size(-1, -1));
+  /// Smart Banners are ad units that render screen-width banner
+  /// ads on any screen size across different devices in either
+  /// orientation. Smart Banners detect the width of the device
+  /// in its current orientation and create the ad view that size.
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#smart-banners)
+  @Deprecated('Smart banner is deprecated in favor of adaptive banner')
   static const BannerSize SMART_BANNER = BannerSize(Size(-1, -2));
   static const BannerSize BANNER = BannerSize(Size(320, 50));
   static const BannerSize LARGE_BANNER = BannerSize(Size(320, 100));
@@ -79,6 +97,9 @@ class BannerAdController {
 
   bool _attached = false;
 
+  /// Check if the controller is attached to a `BannerAd`
+  bool get isAttached => _attached;
+
   /// Creates a new native ad controller
   BannerAdController() {
     _channel = MethodChannel(id);
@@ -93,12 +114,15 @@ class BannerAdController {
     _pluginChannel.invokeMethod("initBannerAdController", {"id": id});
   }
 
+  /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
+  /// is already attached.
+  ///
+  /// You should NOT call this function
   void attach() {
     assert(
-      !_attached,
+      !isAttached,
       'This controller has already been attached to a native ad. You need one controller for each native ad.',
     );
-    if (_attached) return;
     _attached = true;
   }
 

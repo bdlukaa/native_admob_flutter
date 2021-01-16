@@ -1,7 +1,10 @@
 part of 'layout_builder.dart';
 
 class AdSizedView extends AdSingleChildView {
+  /// If non-null, requires the child to have exactly this height.
   final double height;
+
+  /// If non-null, requires the child to have exactly this width.
   final double width;
 
   AdSizedView({
@@ -29,6 +32,7 @@ class AdSizedView extends AdSingleChildView {
 }
 
 class AdPadding extends AdSingleChildView {
+  /// The amount of space by which to inset the child.
   final EdgeInsets padding;
 
   AdPadding({
@@ -51,6 +55,7 @@ class AdPadding extends AdSingleChildView {
 }
 
 class AdDecoratedView extends AdSingleChildView {
+  /// What decoration to paint.
   AdDecoration decoration;
 
   AdDecoratedView({
@@ -95,9 +100,10 @@ class AdDecoration {
       'topLeftRadius': borderRadius?.topLeft,
       'bottomRightRadius': borderRadius?.bottomRight,
       'bottomLeftRadius': borderRadius?.bottomLeft,
-      // decoration
+      // border
       'borderWidth': border?.width ?? 0,
       'borderColor': border?.color?.toHex(),
+      // other
       'backgroundColor': backgroundColor?.toHex(),
       'gradient': gradient?.toJson(),
     };

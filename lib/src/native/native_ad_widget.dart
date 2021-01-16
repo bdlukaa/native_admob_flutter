@@ -16,7 +16,10 @@ const _viewType = "native_admob";
 class NativeAd extends StatefulWidget {
   /// How the views should be presented to the user.
   ///
-  /// Use [adBannerLayoutBuilder] as a default banner layout
+  /// Use [adBannerLayoutBuilder] as a default banner layout\
+  /// ![adBannerLayoutBuilder screenshot](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/default_banner_screenshot.png)
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
   final AdLayoutBuilder buildLayout;
 
   /// The rating bar. This isn't always inclued in the request
@@ -50,12 +53,18 @@ class NativeAd extends StatefulWidget {
   final AdButtonView button;
 
   /// The ad controller. If not specified, uses a default controller
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events)
   final NativeAdController controller;
 
   /// The widget used in case an error shows up
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
   final Widget error;
 
   /// The widget used when the ad is loading.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
   final Widget loading;
 
   /// The height of the ad. If this is null, the widget will expand
@@ -65,8 +74,8 @@ class NativeAd extends StatefulWidget {
   /// demonetized in the future.
   /// Please make sure the ad view has sufficiently large area.
   ///
-  /// Usage inside of a Column requires an Expanded or a defined height.
-  /// Usage inside of a ListView requires a defined height.
+  /// Usage inside of a `Column` requires an `Expanded` or a defined height.
+  /// Usage inside of a `ListView` requires a defined height.
   final double height;
 
   /// The width of the ad. If this is null, the widget will expand
@@ -92,6 +101,9 @@ class NativeAd extends StatefulWidget {
   /// Build the ad
   final AdBuilder builder;
 
+  /// Create a NativeAd
+  /// 
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
   NativeAd({
     Key key,
     @required this.buildLayout,
@@ -254,9 +266,9 @@ class _NativeAdState extends State<NativeAd>
         );
     final icon = widget.icon ??
         AdImageView(
-            margin: EdgeInsets.only(right: 4),
-            // tooltipText: 'Tooltip haha',
-            );
+          margin: EdgeInsets.only(right: 4),
+          // tooltipText: 'Tooltip haha',
+        );
     final media = widget.media ?? AdMediaView();
     final price = widget.price ?? AdTextView();
     final ratingBar = widget.ratingBar ?? AdRatingBarView();

@@ -11,35 +11,30 @@ const int MEDIA_ASPECT_RATIO_SQUARE = 4;
 class NativeAdOptions {
   NativeAdOptions({
     bool requestCustomMuteThisAd,
-    // bool requestMultipleImages,
-    // bool returnUrlsForImageAssets,
     int adChoichesPlacement,
     int mediaAspectRatio,
     VideoOptions videoOptions,
   }) {
     this.requestCustomMuteThisAd = requestCustomMuteThisAd;
-    // this.requestMultipleImages = requestMultipleImages;
-    // this.returnUrlsForImageAssets = returnUrlsForImageAssets;
     this.adChoicesPlacement = adChoicesPlacement;
     this.mediaAspectRatio = mediaAspectRatio;
     this.videoOptions = videoOptions ?? VideoOptions();
   }
-
-  bool _returnUrlsForImageAssets = false;
-  bool get returnUrlsForImageAssets => _returnUrlsForImageAssets;
-  set returnUrlsForImageAssets(bool v) =>
-      _returnUrlsForImageAssets = v ?? false;
-
-  bool _requestMultipleImages = false;
-  bool get requestMultipleImages => _requestMultipleImages;
-  set requestMultipleImages(bool v) => _requestMultipleImages = v ?? false;
-
   bool _requestCustomMuteThisAd = false;
   bool get requestCustomMuteThisAd => _requestCustomMuteThisAd;
   set requestCustomMuteThisAd(bool request) =>
       _requestCustomMuteThisAd = request ?? false;
 
   int _adChoichesPlacement = ADCHOICES_TOP_RIGHT;
+
+  /// The AdChoices overlay is set to the top right corner by default.
+  /// Apps can change which corner this overlay is rendered in by setting
+  /// this property to one of the following:
+  ///
+  /// 1. `ADCHOICES_TOP_LEFT`
+  /// 2. `ADCHOICES_TOP_RIGHT` *default*
+  /// 3. `ADCHOICES_BOTTOM_RIGHT`
+  /// 4. `ADCHOICES_BOTTOM_LEFT`
   int get adChoicesPlacement => _adChoichesPlacement;
   set adChoicesPlacement(int value) {
     if (value != null)
@@ -56,6 +51,15 @@ class NativeAdOptions {
   }
 
   int _mediaAspectRatio = MEDIA_ASPECT_RATIO_LANDSCAPE;
+
+  /// This sets the aspect ratio for image or video to be returned for the native ad.
+  /// Setting NativeMediaAspectRatio to one of the following constants will cause only
+  /// ads with media of the specified aspect ratio to be returned:
+  ///
+  /// 1. NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE *default*
+  /// 2. NATIVE_MEDIA_ASPECT_RATIO_PORTRAIT
+  /// 3. NATIVE_MEDIA_ASPECT_RATIO_SQUARE
+  /// 4. NATIVE_MEDIA_ASPECT_RATIO_ANY
   int get mediaAspectRatio => _mediaAspectRatio;
   set mediaAspectRatio(int aspect) {
     if (aspect != null)
@@ -79,8 +83,8 @@ class NativeAdOptions {
 
   Map<String, dynamic> toJson() {
     return {
-      'returnUrlsForImageAssets': returnUrlsForImageAssets ?? false,
-      'requestMultipleImages': requestMultipleImages ?? false,
+      'returnUrlsForImageAssets': false,
+      'requestMultipleImages': false,
       'requestCustomMuteThisAd': requestCustomMuteThisAd ?? false,
       'adChoicesPlacement': adChoicesPlacement ?? ADCHOICES_TOP_RIGHT,
       'mediaAspectRatio': mediaAspectRatio ?? MEDIA_ASPECT_RATIO_LANDSCAPE,

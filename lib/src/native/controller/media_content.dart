@@ -1,8 +1,11 @@
 class MediaContent {
-
+  /// Indicates whether the media content has video content.
   final bool hasVideoContent;
 
+  /// The aspect ratio of the media content.
   final double aspectRatio;
+
+  /// The duration of the video.
   final Duration duration;
 
   MediaContent({
@@ -18,5 +21,4 @@ class MediaContent {
       hasVideoContent: map['hasVideoContent'],
     );
   }
-
 }

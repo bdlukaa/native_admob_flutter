@@ -11,12 +11,23 @@ export 'options.dart';
 export 'media_content.dart';
 
 enum NativeAdEvent {
+  /// Called when an impression is recorded for an ad.
   impression,
+
+  /// Called when a click is recorded for an ad.
   clicked,
+
+  /// Called when an ad request failed.
   loadFailed,
+
+  /// Called when an ad is received.
   loaded,
+
+  /// Called when the ad starts loading
   loading,
   muted,
+
+  /// Called when the event is unkown (usually for rebuilding ui)
   undefined,
 }
 
@@ -36,9 +47,18 @@ class NativeAdController {
   MediaContent get mediaContent => _mediaContent;
 
   List<String> _muteThisAdReasons = [];
+
+  /// Returns Mute This Ad reasons available for this ad. Use
+  /// these `String`s for showing the user
   List<String> get muteThisAdReasons => _muteThisAdReasons;
 
   bool _customMuteThisAdEnabled = false;
+
+  /// Returns true if this ad can be muted programmatically.
+  /// Use `NativeAdOptions` when loading the ad to request
+  /// custom implementation of Mute This Ad.
+  ///
+  /// Use `options` in `NativeAd` to enable Custom Mute This Ad
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
   final _onEvent = StreamController<Map<NativeAdEvent, dynamic>>.broadcast();
@@ -119,6 +139,9 @@ class NativeAdController {
 
   bool _attached = false;
 
+  /// Check if the controller is attached to a `NativeAd`
+  bool get isAttached => _attached;
+
   /// Creates a new native ad controller
   NativeAdController() {
     _channel = MethodChannel(id);
@@ -133,6 +156,10 @@ class NativeAdController {
     _pluginChannel.invokeMethod("initNativeAdController", {"id": id});
   }
 
+  /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
+  /// is already attached.
+  ///
+  /// You should NOT call this function
   void attach() {
     assert(
       !_attached,
@@ -243,9 +270,10 @@ class NativeAdController {
     });
   }
 
-  /// Request the UI to update when changes happen
+  /// Request the UI to update when changes happen. This is used for 
+  /// dynamically changing the layout (by hot reload or setState)
   void requestAdUIUpdate(Map<String, dynamic> layout) {
-    print('requested ui update');
+    // print('requested ui update');
     _channel.invokeMethod('updateUI', {'layout': layout ?? {}});
   }
 
@@ -253,16 +281,11 @@ class NativeAdController {
   ///
   /// Use null to Mute This Ad with default reason.
   void muteThisAd([int reason]) {
-    // assert(reason != null);
-    // assert(
-    //   muteThisAdReasons.length > reason,
-    //   'The specified reason has not been found',
-    // );
     _channel.invokeMethod('muteAd', {'reason': reason});
   }
 }
 
-extension map<K, V> on Map<K, V> {
+extension _map<K, V> on Map<K, V> {
   V get(K key) {
     if (containsKey(key)) return this[key];
     return null;

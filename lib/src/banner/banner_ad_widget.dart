@@ -14,20 +14,122 @@ class BannerAd extends StatefulWidget {
     Key key,
     this.builder,
     this.controller,
+    // SMART_BANNER is deprecated, but still use it while Adaptive Banners
+    // are not avaiable
+    // ignore: deprecated_member_use_from_same_package
     this.size = BannerSize.SMART_BANNER,
     this.error,
     this.loading,
   })  : assert(size != null),
         super(key: key);
 
+  /// The builder of the ad. The ad won't be reloaded if this changes
+  ///
+  /// DO:
+  /// ```dart
+  /// BannerAd(
+  ///   builder: (context, child) {
+  ///     return Container(
+  ///       // Applies a blue color to the background.
+  ///       // You can use anything here to build the ad.
+  ///       // The ad won't be reloaded
+  ///       color: Colors.blue,
+  ///       child: child,
+  ///     );
+  ///   }
+  /// )
+  /// ```
+  ///
+  /// DON'T:
+  /// ```dart
+  /// Container(
+  ///   color: Colors.blue,
+  ///   child: BannerAd(),
+  /// )
+  /// ```
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#adbuilder)
   final AdBuilder builder;
 
+  /// The error placeholder. If an error happens, this widget will be shown
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#loading-and-error-placeholders)
   final Widget error;
+
+  /// The loading placeholder. This widget will be shown while the ad is loading
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#loading-and-error-placeholders)
   final Widget loading;
 
+  /// The controller of the ad.
+  /// This controller must be unique and can be used on only one `BannerAd`
+  ///
+  /// The ad is loaded automatically when attached and it's not necessary to load it
+  /// manually.
+  /// You can use the controller to reload the ad:
+  /// ```dart
+  /// controller.load();
+  /// ```
+  ///
+  /// You can use the controller to listen to events:
+  /// ```dart
+  /// controller.onEvent.listen((e) {
+  ///    final event = e.keys.first;
+  ///    final info = e.values.first;
+  ///    switch (event) {
+  ///     case BannerAdEvent.loading:
+  ///       break;
+  ///     case BannerAdEvent.loadFailed:
+  ///       print(info);
+  ///       break;
+  ///     case BannerAdEvent.loaded:
+  ///       break;
+  ///     case BannerAdEvent.undefined:
+  ///       break;
+  ///     default:
+  ///       break;
+  ///   }
+  /// });
+  /// ```
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events)
   final BannerAdController controller;
 
-  /// This can be set only once
+  /// The size of the Ad
+  ///
+  /// ## Sizes
+  ///
+  /// | Name             | `Width`x`Height` | Availability       |
+  /// | ---------------- | ---------------- | ------------------ |
+  /// | BANNER           | 320x50           | Phones and Tablets |
+  /// | LARGE_BANNER     | 320x100          | Phones and Tablets |
+  /// | MEDIUM_RECTANGLE | 320x250          | Phones and Tablets |
+  /// | FULL_BANNER      | 468x60           | Tablets            |
+  /// | LEADERBOARD      | 728x90           | Tablets            |
+  /// | SMART_BANNER     | `?`x(32, 50, 90) | Phones and Tablets |
+  ///
+  /// ### Usage
+  /// ```dart
+  /// BannerAd(
+  ///   ...
+  ///   size: BannerSize.`Name` /* (`BANNER`, `FULL_BANNER`, etc) */,
+  ///   ...
+  /// )
+  /// ```
+  ///
+  /// ## Custom size
+  /// To define a custom banner size, set your desired `BannerSize`, as shown here:
+  /// ```dart
+  /// BannerAd(
+  ///   ...
+  ///                      // width, height
+  ///   size: BannerSize.fromWH(300, 50),
+  ///   size: BannerSize(Size(300, 50)),
+  ///   ...
+  /// )
+  /// ```
+  ///
+  /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#creating-an-ad)
   final BannerSize size;
 
   @override
