@@ -12,6 +12,10 @@ class MobileAds {
   static const String bannerAdTestUnitId =
       'ca-app-pub-3940256099942544/6300978111';
 
+  static String interstitialAdUnitId;
+  static const String interstitialAdTestUnitId =
+      'ca-app-pub-3940256099942544/1033173712';
+
   static final _pluginChannel = const MethodChannel("native_admob_flutter");
 
   static bool _initialized = false;
@@ -57,11 +61,13 @@ class MobileAds {
   static Future<void> initialize({
     String nativeAdUnitId,
     String bannerAdUnitId,
+    String interstitialAdUnitId,
     bool useHybridComposition,
   }) async {
     MobileAds.nativeAdUnitId = nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
     MobileAds.bannerAdUnitId = bannerAdUnitId ?? MobileAds.bannerAdTestUnitId;
-    assert(MobileAds.nativeAdUnitId != null);
+    MobileAds.interstitialAdUnitId =
+        interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
     final version = await _pluginChannel.invokeMethod<int>('initialize');
     if (Platform.isAndroid) {
       assert(

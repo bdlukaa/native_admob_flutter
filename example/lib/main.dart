@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 import 'screens/native_ads.dart';
+import 'screens/full_screen_ads.dart';
 import 'screens/banner_ads.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.initialize();
+  // MobileAds.setTestDeviceIds(['9345804C1E5B8F0871DFE29CA0758842']);
   runApp(MyApp());
 }
 
@@ -39,18 +41,22 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         backgroundColor: Colors.grey,
         appBar: AppBar(
           title: Text('Ads demo'),
           centerTitle: true,
           bottom: TabBar(
-            tabs: [Tab(text: 'Native Ads'), Tab(text: 'Banner Ads')],
+            tabs: [
+              Tab(text: 'Native Ads'),
+              Tab(text: 'Banner Ads'),
+              Tab(text: 'Full Screen Ads'),
+            ],
           ),
         ),
         body: TabBarView(
-          children: [NativeAds(), BannerAds()],
+          children: [NativeAds(), BannerAds(), FullScreenAds()],
         ),
       ),
     );

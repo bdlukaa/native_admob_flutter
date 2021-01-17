@@ -14,10 +14,7 @@ class BannerAd extends StatefulWidget {
     Key key,
     this.builder,
     this.controller,
-    // SMART_BANNER is deprecated, but still use it while Adaptive Banners
-    // are not avaiable
-    // ignore: deprecated_member_use_from_same_package
-    this.size = BannerSize.SMART_BANNER,
+    this.size = BannerSize.ADAPTIVE,
     this.error,
     this.loading,
   })  : assert(size != null),
@@ -140,6 +137,8 @@ class _BannerAdState extends State<BannerAd> {
   BannerAdController controller;
   BannerAdEvent state = BannerAdEvent.loading;
 
+  double height;
+
   @override
   void initState() {
     super.initState();
@@ -147,11 +146,12 @@ class _BannerAdState extends State<BannerAd> {
     controller.attach();
     controller.onEvent.listen((e) {
       final event = e.keys.first;
-      // final info = e.values.first;
+      final info = e.values.first;
       switch (event) {
         case BannerAdEvent.loading:
         case BannerAdEvent.loadFailed:
         case BannerAdEvent.loaded:
+          height = (info as int)?.toDouble();
           setState(() => state = event);
           break;
         case BannerAdEvent.undefined:
@@ -175,67 +175,70 @@ class _BannerAdState extends State<BannerAd> {
   Widget build(BuildContext context) {
     assertPlatformIsSupported();
 
-    Widget w;
+    return LayoutBuilder(
+      builder: (context, consts) {
+        double height = widget.size.size.height;
+        double width = widget.size.size.width;
 
-    double height = widget.size.size.height;
-    double width = widget.size.size.width;
+        if (height == -1 && width == -1) {
+          width = consts.biggest.width;
+        }
 
-    if (height == -1 || width == -1) {
-      w = LayoutBuilder(builder: (context, consts) {
-        width = consts.biggest.width;
-        height = null;
+        final params = <String, dynamic>{};
+        params.addAll({
+          'controllerId': controller.id,
+          'unitId': MobileAds.bannerAdUnitId,
+          'size_height': height ?? -1,
+          'size_width': width,
+        });
+
+        Widget w;
+        if (Platform.isAndroid) {
+          w = buildAndroidPlatformView(
+            params,
+            _viewType,
+            MobileAds.useHybridComposition,
+          );
+          // } else if (Platform.isIOS) {
+          //   w = UiKitView(
+          //     viewType: _viewType,
+          //     creationParamsCodec: StandardMessageCodec(),
+          //     creationParams: layout,
+          //   );
+        } else {
+          return SizedBox();
+        }
+
+        double finalHeight;
+        if (this.height != null && !this.height.isNegative) {
+          finalHeight = this.height;
+        } else if (!height.isNegative)
+          finalHeight = height;
+        else /* if (height == -1 && width == -2) */ {
+          final screenHeight = MediaQuery.of(context).size.height;
+          double height;
+          if (screenHeight <= 400)
+            height = 32;
+          else if (screenHeight > 400 || screenHeight <= 720)
+            height = 50;
+          else
+            height = 90;
+          finalHeight = height;
+        }
+
+        w = SizedBox(height: finalHeight, child: w);
+        w = widget.builder?.call(context, w) ?? w;
+
+        w = Stack(
+          children: [
+            w,
+            if (state == BannerAdEvent.loading) widget.loading ?? SizedBox(),
+            if (state == BannerAdEvent.loadFailed) widget.error ?? SizedBox(),
+          ],
+        );
+
         return w;
-      });
-    }
-
-    final params = <String, dynamic>{};
-    params.addAll({
-      'controllerId': controller.id,
-      'unitId': MobileAds.bannerAdUnitId,
-      'size_height': height ?? -1,
-      'size_width': width,
-    });
-
-    if (Platform.isAndroid) {
-      w = buildAndroidPlatformView(
-        params,
-        _viewType,
-        MobileAds.useHybridComposition,
-      );
-      // } else if (Platform.isIOS) {
-      //   w = UiKitView(
-      //     viewType: _viewType,
-      //     creationParamsCodec: StandardMessageCodec(),
-      //     creationParams: layout,
-      //   );
-    } else {
-      return SizedBox();
-    }
-
-    if (!height.isNegative)
-      w = SizedBox(height: height, child: w);
-    else /* if (height == -1 && width == -2) */ {
-      final screenHeight = MediaQuery.of(context).size.height;
-      double height;
-      if (screenHeight <= 400)
-        height = 32;
-      else if (screenHeight > 400 || screenHeight <= 720)
-        height = 50;
-      else
-        height = 90;
-      w = SizedBox(height: height, child: w);
-    }
-
-    w = widget.builder?.call(context, w) ?? w;
-
-    w = Stack(
-      children: [
-        w,
-        if (state == BannerAdEvent.loading) widget.loading ?? SizedBox(),
-        if (state == BannerAdEvent.loadFailed) widget.error ?? SizedBox(),
-      ],
+      },
     );
-
-    return w;
   }
 }

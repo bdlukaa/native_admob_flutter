@@ -1,9 +1,11 @@
 package com.bruno.native_admob_flutter
 
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import androidx.annotation.NonNull
 import com.bruno.native_admob_flutter.banner.*
+import com.bruno.native_admob_flutter.interstitial.InterstitialAdControllerManager
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
 
@@ -28,6 +30,7 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this)
 
         context = binding.applicationContext
+        print(Resources.getSystem().displayMetrics.widthPixels)
         messenger = binding.binaryMessenger
 
         binding.platformViewRegistry.registerViewFactory("native_admob", NativeViewFactory())
@@ -50,11 +53,27 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
             }
             // Banner Ads Controller
             "initBannerAdController" -> {
-                BannerAdControllerManager.createController(call.argument<String>("id")!!, messenger, context)
+                BannerAdControllerManager.createController(
+                        call.argument<String>("id")!!,
+                        messenger,
+                        context)
                 result.success(null)
             }
             "disposeBannerAdController" -> {
                 BannerAdControllerManager.removeController(call.argument<String>("id")!!)
+                result.success(null)
+            }
+            // Interstitial
+            "initInterstitialAd" -> {
+                InterstitialAdControllerManager.createController(
+                        call.argument<String>("id")!!,
+                        call.argument<String>("unitId")!!,
+                        messenger,
+                        context)
+                result.success(null)
+            }
+            "disposeInterstitialAd" -> {
+                InterstitialAdControllerManager.removeController(call.argument<String>("id")!!)
                 result.success(null)
             }
             // General Controller

@@ -37,6 +37,8 @@ class BannerSize {
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#smart-banners)
   @Deprecated('Smart banner is deprecated in favor of adaptive banner')
   static const BannerSize SMART_BANNER = BannerSize(Size(-1, -2));
+  /// Adaptive Banners
+  static const BannerSize ADAPTIVE = BannerSize(Size(-1, -1));
   static const BannerSize BANNER = BannerSize(Size(320, 50));
   static const BannerSize LARGE_BANNER = BannerSize(Size(320, 100));
   static const BannerSize MEDIUM_RECTANGLE = BannerSize(Size(320, 250));
@@ -167,8 +169,6 @@ class BannerAdController {
   }
 
   /// Load the ad.
-  ///
-  /// If [unitId] is not specified, uses [NativeAds.nativeAdUnitId]
   void load() {
     // assert(
     //   NativeAds.isInitialized,

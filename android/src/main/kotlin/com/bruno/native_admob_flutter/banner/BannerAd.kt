@@ -20,23 +20,22 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
     private lateinit var adView: AdView
     private var controller: BannerAdController = BannerAdControllerManager.getController(data!!["controllerId"] as String)!!
-    private lateinit var adSize: AdSize
+    private var adSize: AdSize
 
     private fun getAdSize(context: Context, width: Float): AdSize {
         val density = Resources.getSystem().displayMetrics.density
-        val adWidth = (width / density).toInt()
-        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, adWidth)
+//        val adWidth = (width / density).toInt()
+        return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width.toInt())
     }
 
     init {
-        adSize = getAdSize(context, (data!!["size_width"] as Double).toFloat())
+        adSize = getAdSize(controller.context, (data!!["size_width"] as Double).toFloat())
         generateAdView(context, data)
         controller.loadRequested = { load() }
         load()
     }
 
     private fun load() {
-        AdSize.SMART_BANNER
         val adRequest = AdRequest.Builder().build()
         adView.loadAd(adRequest)
         adView.adListener = object : AdListener() {
@@ -57,7 +56,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                controller.channel.invokeMethod("onAdLoaded", adSize.height)
+                controller.channel.invokeMethod("onAdLoaded", adView.adSize.height)
             }
         }
     }
@@ -67,6 +66,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         val width: Int = (data!!["size_width"] as Double).toInt()
         val height: Int = (data["size_height"] as Double).toInt()
         if (height != -1) adView.adSize = AdSize(width, height)
+        else adView.adSize = adSize
         adView.adUnitId = data["unitId"] as String
     }
 

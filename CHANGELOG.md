@@ -1,3 +1,9 @@
+## 0.2.0
+
+- **NEW**:
+    - InterstitialAd
+    - Adaptive Banner Ads
+
 ## 0.1.2+1
 
 - Readme update
@@ -21,7 +27,7 @@
 
 ## 0.1.0
 
--**NEW**: BannerAds
+- **NEW**: BannerAds
 - **BREAKING**: 
     - Rename `AdEvent` to `NativeAdEvent`
     - Rename `NativeAds` to `MobileAds`

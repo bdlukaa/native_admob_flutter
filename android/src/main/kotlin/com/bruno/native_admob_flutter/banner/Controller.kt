@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 class BannerAdController(
         val id: String,
         val channel: MethodChannel,
-        private val context: Context
+        val context: Context
 ) : MethodChannel.MethodCallHandler {
 
     /// New native ad when loaded
@@ -29,9 +29,6 @@ class BannerAdController(
         }
     }
 
-    fun undefined() {
-        channel.invokeMethod("undefined", null)
-    }
 }
 
 object BannerAdControllerManager {

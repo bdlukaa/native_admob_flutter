@@ -256,10 +256,10 @@ class NativeAdController {
 
   /// Load the ad.
   ///
-  /// If [unitId] is not specified, uses [NativeAds.nativeAdUnitId]
+  /// If [unitId] is not specified, uses [MobileAds.nativeAdUnitId]
   void load({String unitId, NativeAdOptions options}) {
     // assert(
-    //   NativeAds.isInitialized,
+    //   MobileAds.isInitialized,
     //   'You MUST initialize the ADMOB before requesting any ads',
     // );
     final id = unitId ?? MobileAds.nativeAdUnitId;
