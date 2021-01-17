@@ -30,7 +30,6 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
         channel.setMethodCallHandler(this)
 
         context = binding.applicationContext
-        print(Resources.getSystem().displayMetrics.widthPixels)
         messenger = binding.binaryMessenger
 
         binding.platformViewRegistry.registerViewFactory("native_admob", NativeViewFactory())
