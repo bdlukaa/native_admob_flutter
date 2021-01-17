@@ -23,10 +23,42 @@ class _BannerAdsState extends State<BannerAds>
         setState(() => child = null);
       },
       child: ListView(
+        padding: EdgeInsets.symmetric(vertical: 10),
         children: [
           BannerAd(
+            builder: (context, child) {
+              return Container(
+                color: Colors.black,
+                child: child,
+              );
+            },
             loading: Text('loading'),
             error: Text('error'),
+            size: BannerSize.ADAPTIVE,
+          ),
+          SizedBox(height: 10),
+          BannerAd(
+            builder: (context, child) {
+              return Container(
+                color: Colors.black,
+                child: child,
+              );
+            },
+            loading: Text('loading'),
+            error: Text('error'),
+            size: BannerSize.SMART_BANNER,
+          ),
+          SizedBox(height: 10),
+          BannerAd(
+            builder: (context, child) {
+              return Container(
+                color: Colors.black,
+                child: child,
+              );
+            },
+            loading: Text('loading'),
+            error: Text('error'),
+            size: BannerSize.BANNER,
           ),
         ],
       ),

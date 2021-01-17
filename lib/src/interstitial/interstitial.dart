@@ -45,11 +45,11 @@ class InterstitialAd {
   final _onEvent =
       StreamController<Map<InterstitialAdEvent, dynamic>>.broadcast();
 
-  /// Listen to the events the controller throws
+  /// Listen to the events the ad throws
   ///
   /// Usage:
   /// ```dart
-  /// controller.onEvent.listen((e) {
+  /// ad.onEvent.listen((e) {
   ///   final event = e.keys.first;
   ///   switch (event) {
   ///     case InterstitialAdEvent.loading:

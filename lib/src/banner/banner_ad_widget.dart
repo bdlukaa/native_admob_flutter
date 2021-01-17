@@ -104,6 +104,7 @@ class BannerAd extends StatefulWidget {
   /// | FULL_BANNER      | 468x60           | Tablets            |
   /// | LEADERBOARD      | 728x90           | Tablets            |
   /// | SMART_BANNER     | `?`x(32, 50, 90) | Phones and Tablets |
+  /// | ADAPTIVE_BANNER  | `Screen width`x`?` | Phones and Tablets |
   ///
   /// ### Usage
   /// ```dart
@@ -227,7 +228,8 @@ class _BannerAdState extends State<BannerAd> {
         }
 
         w = SizedBox(height: finalHeight, child: w);
-        w = widget.builder?.call(context, w) ?? w;
+        if (state == BannerAdEvent.loaded)
+          w = widget.builder?.call(context, w) ?? w;
 
         w = Stack(
           children: [

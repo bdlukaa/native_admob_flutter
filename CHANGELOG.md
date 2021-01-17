@@ -1,3 +1,7 @@
+## 0.2.0+1
+
+- Banner Ad Builder is only applied if loaded
+
 ## 0.2.0
 
 - **NEW**:
