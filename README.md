@@ -28,6 +28,7 @@ To get started with Native Ads for Flutter, [read the documentation](https://git
 
 - [x] Native Ads
 - [x] Banner Ads
+- [x] Interstitial Ads
 
 ## Issues and feedback
 
