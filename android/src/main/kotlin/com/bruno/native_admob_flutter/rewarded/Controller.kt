@@ -1,63 +1,72 @@
-package com.bruno.native_admob_flutter.interstitial
+package com.bruno.native_admob_flutter.rewarded
 
-import android.content.Context
-import com.google.android.gms.ads.AdListener
+import android.app.Activity
+import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewarded.RewardItem
+import com.google.android.gms.ads.rewarded.RewardedAd
+import com.google.android.gms.ads.rewarded.RewardedAdCallback
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-class InterstitialAdController(
+
+class RewardedAdController(
         val id: String,
         unitId: String,
         val channel: MethodChannel,
-        context: Context
+        private val activity: Activity
 ) : MethodChannel.MethodCallHandler {
 
-    private var mInterstitialAd: InterstitialAd
+    val rewardedAd: RewardedAd
+    private lateinit var callback: RewardedAdLoadCallback
 
     init {
         channel.setMethodCallHandler(this)
-        mInterstitialAd = InterstitialAd(context)
-        mInterstitialAd.adUnitId = unitId
-        mInterstitialAd.adListener = object : AdListener() {
-            override fun onAdLoaded() {
-                channel.invokeMethod("onAdLoaded", null)
-            }
-
-            override fun onAdFailedToLoad(error: LoadAdError) {
-                channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
-            }
-
-            override fun onAdOpened() {
-                channel.invokeMethod("onAdOpened", null)
-            }
-
-            override fun onAdClicked() {
-                channel.invokeMethod("onAdClicked", null)
-            }
-
-            override fun onAdLeftApplication() {
-                channel.invokeMethod("onAdLeftApplication", null)
-            }
-
-            override fun onAdClosed() {
-                channel.invokeMethod("onAdClosed", null)
-            }
-        }
+        rewardedAd = RewardedAd(activity, unitId)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-                result.success(null)
+                callback = object : RewardedAdLoadCallback() {
+                    override fun onRewardedAdLoaded() {
+                        channel.invokeMethod("onAdLoaded", null)
+                        result.success(true)
+                    }
+
+                    override fun onRewardedAdFailedToLoad(error: LoadAdError) {
+                        channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                        result.success(false)
+                    }
+                }
+                rewardedAd.loadAd(AdRequest.Builder().build(), callback)
             }
             "show" -> {
-                mInterstitialAd.show()
+                val adCallback: RewardedAdCallback = object : RewardedAdCallback() {
+                    override fun onRewardedAdOpened() {
+                        channel.invokeMethod("onRewardedAdOpened", null)
+                    }
+
+                    override fun onRewardedAdClosed() {
+                        channel.invokeMethod("onRewardedAdClosed", null)
+                    }
+
+                    override fun onUserEarnedReward(reward: RewardItem) {
+                        channel.invokeMethod("onUserEarnedReward", hashMapOf<String, Any>(
+                                "amount" to reward.amount,
+                                "type" to reward.type
+                        ))
+                    }
+
+                    override fun onRewardedAdFailedToShow(error: AdError) {
+                        channel.invokeMethod("onRewardedAdFailedToShow", hashMapOf("errorCode" to error.code))
+                    }
+                }
+                rewardedAd.show(activity, adCallback)
             }
             else -> result.notImplemented()
         }
@@ -65,18 +74,20 @@ class InterstitialAdController(
 
 }
 
-object InterstitialAdControllerManager {
-    private val controllers: ArrayList<InterstitialAdController> = arrayListOf()
+object RewardedAdControllerManager {
+    private val controllers: ArrayList<RewardedAdController> = arrayListOf()
 
-    fun createController(id: String, unitId: String, binaryMessenger: BinaryMessenger, context: Context) {
+    fun createController(id: String, unitId: String, binaryMessenger: BinaryMessenger, activity: Activity): RewardedAdController {
         if (getController(id) == null) {
             val methodChannel = MethodChannel(binaryMessenger, id)
-            val controller = InterstitialAdController(id, unitId, methodChannel, context)
+            val controller = RewardedAdController(id, unitId, methodChannel, activity)
             controllers.add(controller)
+            return controller
         }
+        return getController(id)!!
     }
 
-    fun getController(id: String): InterstitialAdController? {
+    private fun getController(id: String): RewardedAdController? {
         return controllers.firstOrNull { it.id == id }
     }
 

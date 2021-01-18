@@ -32,15 +32,26 @@ class _FullScreenAdsState extends State<FullScreenAds> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Spacer(),
         FlatButton(
-          child: Text('Open interstitial ad'),
+          child: Text('Show interstitial ad'),
+          color: Colors.amber,
           onPressed: () async {
             // Load only if not loaded
             if (!interstitialAd.isLoaded) await interstitialAd.load();
             if (interstitialAd.isLoaded) interstitialAd.show();
           },
         ),
+        FlatButton(
+          child: Text('Show rewarded ad'),
+          color: Colors.redAccent,
+          onPressed: () async {
+            (await RewardedAd.createAndLoad()).show();
+          },
+        ),
+        Spacer(),
       ],
     );
   }
+
 }

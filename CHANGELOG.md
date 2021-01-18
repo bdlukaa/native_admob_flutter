@@ -1,3 +1,8 @@
+## 0.3.0
+
+- **NEW**: Rewarded ads
+- Removed unused methods from interstitial
+
 ## 0.2.0+1
 
 - Banner Ad Builder is only applied if loaded

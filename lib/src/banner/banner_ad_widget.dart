@@ -7,7 +7,7 @@ import 'controller.dart';
 
 import '../../native_admob_flutter.dart';
 
-const _viewType = "banner_admob";
+const _viewType = 'banner_admob';
 
 class BannerAd extends StatefulWidget {
   const BannerAd({

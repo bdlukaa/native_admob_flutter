@@ -30,7 +30,7 @@ AdLayoutBuilder get adBannerLayoutBuilder => (ratingBar, media, icon, headline,
               ],
             ),
           ),
-          AdExpanded(flex: 3, child: button),
+          AdExpanded(flex: 4, child: button),
         ],
       );
     };

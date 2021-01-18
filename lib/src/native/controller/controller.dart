@@ -132,7 +132,7 @@ class NativeAdController {
   Stream<Map<AdVideoEvent, dynamic>> get onVideoEvent => _onVideoEvent.stream;
 
   /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel("native_admob_flutter");
+  final _pluginChannel = const MethodChannel('native_admob_flutter');
 
   /// Channel to communicate with controller
   MethodChannel _channel;
@@ -153,7 +153,7 @@ class NativeAdController {
 
   /// Initialize the controller. This can be called only by the controller
   void _init() {
-    _pluginChannel.invokeMethod("initNativeAdController", {"id": id});
+    _pluginChannel.invokeMethod('initNativeAdController', {'id': id});
   }
 
   /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
@@ -180,7 +180,7 @@ class NativeAdController {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod("disposeNativeAdController", {"id": id});
+    _pluginChannel.invokeMethod('disposeNativeAdController', {'id': id});
     _onEvent.close();
     _onVideoEvent.close();
     _attached = false;
@@ -211,22 +211,22 @@ class NativeAdController {
       return;
     }
     switch (call.method) {
-      case "loading":
+      case 'loading':
         _onEvent.add({NativeAdEvent.loading: null});
         break;
-      case "onAdFailedToLoad":
+      case 'onAdFailedToLoad':
         _onEvent.add({NativeAdEvent.loadFailed: call.arguments['errorCode']});
         break;
-      case "onAdLoaded":
+      case 'onAdLoaded':
         _onEvent.add({NativeAdEvent.loaded: null});
         break;
-      case "onAdClicked":
+      case 'onAdClicked':
         _onEvent.add({NativeAdEvent.clicked: null});
         break;
-      case "onAdImpression":
+      case 'onAdImpression':
         _onEvent.add({NativeAdEvent.impression: null});
         break;
-      case "onAdMuted":
+      case 'onAdMuted':
         _onEvent.add({NativeAdEvent.muted: null});
         break;
       case 'undefined':

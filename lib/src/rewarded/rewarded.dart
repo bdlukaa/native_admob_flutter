@@ -5,10 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
 
-enum InterstitialAdEvent {
-  /// Called when a click is recorded for an ad.
-  clicked,
-
+enum RewardedAdEvent {
   /// Called when an ad request failed.
   ///
   /// **Warning**: Attempting to load a new ad when the load fail
@@ -26,24 +23,54 @@ enum InterstitialAdEvent {
   /// Called when the event is unkown (usually for rebuilding ui)
   undefined,
 
-  /// Called when the interstitial ad is opened
+  /// Called when the ad opens
   opened,
 
-  /// Called when the interstitial ad is closed
+  /// Called when the ad closes
   closed,
 
-  /// Called when the user has left the app
-  leftApplication,
+  /// Called when the user earns an reward
+  earnedReward,
+
+  /// Called when the ad failed to show
+  showFailed,
 }
 
-class InterstitialAd {
+class RewardItem {
+  int amount;
+  String type;
+
+  RewardItem({this.amount, this.type});
+
+  factory RewardItem.fromJson(Map j) {
+    return RewardItem(
+      amount: j['amount'],
+      type: j['type'],
+    );
+  }
+}
+
+class RewardedAd {
+  /// Create and load a new ad without extra code.
+  ///
+  /// #### Do NOT use this if it needs to be fast. If it does, use pre-loading
+  ///
+  /// Usage:
+  /// ```dart
+  /// (await createAndLoad()).show();
+  /// ```
+  static Future<RewardedAd> createAndLoad([String unitId]) async {
+    final ad = RewardedAd(unitId);
+    await ad.load();
+    return ad;
+  }
+
   final _key = UniqueKey();
 
   /// The unique id of the controller
   String get id => _key.toString();
 
-  final _onEvent =
-      StreamController<Map<InterstitialAdEvent, dynamic>>.broadcast();
+  final _onEvent = StreamController<Map<RewardedAdEvent, dynamic>>.broadcast();
 
   /// Listen to the events the ad throws
   ///
@@ -52,31 +79,39 @@ class InterstitialAd {
   /// ad.onEvent.listen((e) {
   ///   final event = e.keys.first;
   ///   switch (event) {
-  ///     case InterstitialAdEvent.loading:
+  ///     case RewardedAdEvent.loading:
   ///       print('loading');
   ///       break;
-  ///     case InterstitialAdEvent.loaded:
+  ///     case RewardedAdEvent.loaded:
   ///       print('loaded');
   ///       break;
-  ///     case InterstitialAdEvent.loadFailed:
+  ///     case RewardedAdEvent.loadFailed:
   ///       final errorCode = e.values.first;
-  ///       print('loadFailed $errorCode');
+  ///       print('load failed $errorCode');
   ///       break;
-  ///     case InterstitialAdEvent.opened:
+  ///     case RewardedAdEvent.opened:
   ///       print('ad opened');
   ///       break;
-  ///     case InterstitialAdEvent.closed:
+  ///     case RewardedAdEvent.closed:
   ///       print('ad closed');
   ///       break;
-  ///     case InterstitialAdEvent.clicked;
-  ///       print('clicked');
+  ///     case RewardedAdEvent.earnedReward:
+  ///       final reward = e.values.first;
+  ///       print('earned reward: $reward');
+  ///       break;
+  ///     case RewardedAdEvent.showFailed:
+  ///       final errorCode = e.values.first;
+  ///       print('show failed $errorCode');
   ///       break;
   ///     default:
   ///       break;
   ///   }
   /// });
   /// ```
-  Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => _onEvent.stream;
+  Stream<Map<RewardedAdEvent, dynamic>> get onEvent => _onEvent.stream;
+
+  RewardItem _item;
+  RewardItem get item => _item;
 
   /// Channel to communicate with plugin
   final _pluginChannel = const MethodChannel('native_admob_flutter');
@@ -90,7 +125,7 @@ class InterstitialAd {
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
-  InterstitialAd([String unitId]) {
+  RewardedAd([String unitId]) {
     _channel = MethodChannel(id);
     _channel.setMethodCallHandler(_handleMessages);
 
@@ -99,15 +134,15 @@ class InterstitialAd {
   }
 
   /// Initialize the controller. This can be called only by the controller
-  void _init(String unitId) {
-    final uId = unitId ??
-        MobileAds.interstitialAdUnitId ??
-        MobileAds.interstitialAdTestUnitId;
+  void _init(String unitId) async {
+    final uId =
+        unitId ?? MobileAds.rewardedAdUnitId ?? MobileAds.rewardedAdTestUnitId;
     assert(uId != null);
-    _pluginChannel.invokeMethod('initInterstitialAd', {
+    final reward = await _pluginChannel.invokeMethod('initRewardedAd', {
       'id': id,
       'unitId': uId,
     });
+    _item = RewardItem.fromJson(reward);
   }
 
   /// Dispose the controller. Once disposed, the controller can not be used anymore
@@ -121,7 +156,7 @@ class InterstitialAd {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod('disposeInterstitialAd', {'id': id});
+    _pluginChannel.invokeMethod('disposeRewardedAd', {'id': id});
     _onEvent.close();
   }
 
@@ -129,30 +164,30 @@ class InterstitialAd {
   Future<void> _handleMessages(MethodCall call) async {
     switch (call.method) {
       case 'loading':
-        _onEvent.add({InterstitialAdEvent.loading: null});
+        _onEvent.add({RewardedAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent
-            .add({InterstitialAdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent.add({RewardedAdEvent.loadFailed: call.arguments['errorCode']});
         break;
       case 'onAdLoaded':
-        _onEvent.add({InterstitialAdEvent.loaded: null});
+        _onEvent.add({RewardedAdEvent.loaded: null});
         break;
-      case 'onAdClicked':
-        _onEvent.add({InterstitialAdEvent.clicked: null});
+      case 'onRewardedAdOpened':
+        _onEvent.add({RewardedAdEvent.opened: null});
         break;
-      case 'onAdOpened':
-        _onEvent.add({InterstitialAdEvent.opened: null});
+      case 'onRewardedAdClosed':
+        _onEvent.add({RewardedAdEvent.closed: null});
+        dispose();
         break;
-      case 'onAdClosed':
-        _onEvent.add({InterstitialAdEvent.closed: null});
+      case 'onUserEarnedReward':
+        _onEvent.add({RewardedAdEvent.earnedReward: RewardItem.fromJson(call.arguments)});
         break;
-      case 'onAdLeftApplication':
-        _onEvent.add({InterstitialAdEvent.leftApplication: null});
+      case 'onRewardedAdFailedToShow':
+        _onEvent.add({RewardedAdEvent.showFailed: call.arguments['errorCode']});
         break;
       case 'undefined':
       default:
-        _onEvent.add({InterstitialAdEvent.undefined: null});
+        _onEvent.add({RewardedAdEvent.undefined: null});
         break;
     }
   }
@@ -166,18 +201,16 @@ class InterstitialAd {
     _loaded = await _channel.invokeMethod<bool>('loadAd', null);
   }
 
-  /// Show the interstitial ad.
+  /// Show the rewarded ad.
   ///
   /// The ad must be loaded. To check if the ad is loaded, call
   /// `controller.isLoaded`. If it's not loaded, throws an `AssertionError`
   void show() {
     assert(
       isLoaded,
-      '''
-      The ad must be loaded to show. 
+      '''The ad must be loaded to show. 
       Call controller.load() to load the ad. 
-      Call controller.isLoaded to check if the ad is loaded before showing.
-      ''',
+      Call controller.isLoaded to check if the ad is loaded before showing.''',
     );
     _channel.invokeMethod('show');
   }

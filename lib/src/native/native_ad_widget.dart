@@ -11,7 +11,7 @@ import 'layout_builder/layout_builder.dart';
 import 'utils.dart';
 import 'controller/controller.dart';
 
-const _viewType = "native_admob";
+const _viewType = 'native_admob';
 
 class NativeAd extends StatefulWidget {
   /// How the views should be presented to the user.
@@ -266,8 +266,7 @@ class _NativeAdState extends State<NativeAd>
         );
     final icon = widget.icon ??
         AdImageView(
-          margin: EdgeInsets.only(right: 4),
-          // tooltipText: 'Tooltip haha',
+          margin: EdgeInsets.only(left: 4),
         );
     final media = widget.media ?? AdMediaView();
     final price = widget.price ?? AdTextView();

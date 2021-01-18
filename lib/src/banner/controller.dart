@@ -92,7 +92,7 @@ class BannerAdController {
   Stream<Map<BannerAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
   /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel("native_admob_flutter");
+  final _pluginChannel = const MethodChannel('native_admob_flutter');
 
   /// Channel to communicate with controller
   MethodChannel _channel;
@@ -113,7 +113,7 @@ class BannerAdController {
 
   /// Initialize the controller. This can be called only by the controller
   void _init() {
-    _pluginChannel.invokeMethod("initBannerAdController", {"id": id});
+    _pluginChannel.invokeMethod('initBannerAdController', {'id': id});
   }
 
   /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
@@ -139,26 +139,26 @@ class BannerAdController {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod("disposeBannerAdController", {"id": id});
+    _pluginChannel.invokeMethod('disposeBannerAdController', {'id': id});
     _onEvent.close();
     _attached = false;
   }
 
   Future<dynamic> _handleMessages(MethodCall call) async {
     switch (call.method) {
-      case "loading":
+      case 'loading':
         _onEvent.add({BannerAdEvent.loading: null});
         break;
-      case "onAdFailedToLoad":
+      case 'onAdFailedToLoad':
         _onEvent.add({BannerAdEvent.loadFailed: call.arguments['errorCode']});
         break;
-      case "onAdLoaded":
+      case 'onAdLoaded':
         _onEvent.add({BannerAdEvent.loaded: call.arguments});
         break;
-      case "onAdClicked":
+      case 'onAdClicked':
         _onEvent.add({BannerAdEvent.clicked: null});
         break;
-      case "onAdImpression":
+      case 'onAdImpression':
         _onEvent.add({BannerAdEvent.impression: null});
         break;
       case 'undefined':

@@ -16,7 +16,11 @@ class MobileAds {
   static const String interstitialAdTestUnitId =
       'ca-app-pub-3940256099942544/1033173712';
 
-  static final _pluginChannel = const MethodChannel("native_admob_flutter");
+  static String rewardedAdUnitId;
+  static const String rewardedAdTestUnitId =
+      'ca-app-pub-3940256099942544/5224354917';
+
+  static final _pluginChannel = const MethodChannel('native_admob_flutter');
 
   static bool _initialized = false;
 
@@ -72,18 +76,18 @@ class MobileAds {
     if (Platform.isAndroid) {
       assert(
         version >= 19,
-        """
+        '''
         Ads are not supported in versions before 19 because flutter only support platform views on Android 19 or greater.
-        """,
+        ''',
       );
       // hybrid composition is enabled in android 19 and can't be disabled
       MobileAds.useHybridComposition =
           version == 19 ? true : useHybridComposition ?? false;
 
       if (version >= 29 && MobileAds.useHybridComposition) {
-        print("""
+        print('''
         It is NOT recommended to use hybrid composition on Android 10 or greater. It has some performance drawbacks
-        """);
+        ''');
       }
     }
     _initialized = true;
@@ -98,7 +102,7 @@ class MobileAds {
   ///
   /// Pass null to clear the list
   static Future<void> setTestDeviceIds(List<String> ids) async {
-    await _pluginChannel.invokeMethod("setTestDeviceIds", {"ids": ids});
+    await _pluginChannel.invokeMethod('setTestDeviceIds', {'ids': ids});
   }
 
   // /// Returns `true` if this device will receive test ads.

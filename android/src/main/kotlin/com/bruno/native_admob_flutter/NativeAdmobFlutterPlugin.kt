@@ -1,5 +1,6 @@
 package com.bruno.native_admob_flutter
 
+import android.app.Activity
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
@@ -17,11 +18,14 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 
 import com.bruno.native_admob_flutter.native.*
+import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
-class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
+class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     private lateinit var channel: MethodChannel
 
-    private lateinit var context: Context
+    private lateinit var activity: Activity
 
     private lateinit var messenger: BinaryMessenger
 
@@ -29,7 +33,6 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
         channel = MethodChannel(binding.binaryMessenger, "native_admob_flutter")
         channel.setMethodCallHandler(this)
 
-        context = binding.applicationContext
         messenger = binding.binaryMessenger
 
         binding.platformViewRegistry.registerViewFactory("native_admob", NativeViewFactory())
@@ -39,11 +42,11 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
     override fun onMethodCall(@NonNull call: MethodCall, @NonNull result: Result) {
         when (call.method) {
             "initialize" -> {
-                MobileAds.initialize(context) { result.success(Build.VERSION.SDK_INT) }
+                MobileAds.initialize(activity) { result.success(Build.VERSION.SDK_INT) }
             }
             // Native Ads Controller
             "initNativeAdController" -> {
-                NativeAdmobControllerManager.createController(call.argument<String>("id")!!, messenger, context)
+                NativeAdmobControllerManager.createController(call.argument<String>("id")!!, messenger, activity)
                 result.success(null)
             }
             "disposeNativeAdController" -> {
@@ -55,7 +58,7 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
                 BannerAdControllerManager.createController(
                         call.argument<String>("id")!!,
                         messenger,
-                        context)
+                        activity)
                 result.success(null)
             }
             "disposeBannerAdController" -> {
@@ -68,11 +71,28 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
                         call.argument<String>("id")!!,
                         call.argument<String>("unitId")!!,
                         messenger,
-                        context)
+                        activity)
                 result.success(null)
             }
             "disposeInterstitialAd" -> {
                 InterstitialAdControllerManager.removeController(call.argument<String>("id")!!)
+                result.success(null)
+            }
+            // Rewarded
+            "initRewardedAd" -> {
+                val controller = RewardedAdControllerManager.createController(
+                        call.argument<String>("id")!!,
+                        call.argument<String>("unitId")!!,
+                        messenger,
+                        activity)
+                val reward = controller.rewardedAd.rewardItem
+                result.success(hashMapOf(
+                        "amount" to reward?.amount,
+                        "type" to reward?.type
+                ))
+            }
+            "disposeRewardedAd" -> {
+                RewardedAdControllerManager.removeController(call.argument<String>("id")!!)
                 result.success(null)
             }
             // General Controller
@@ -147,5 +167,18 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, MethodCallHandler {
 
     override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel.setMethodCallHandler(null)
+    }
+
+    override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activity = binding.activity
+    }
+
+    override fun onDetachedFromActivityForConfigChanges() {
+    }
+
+    override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+    }
+
+    override fun onDetachedFromActivity() {
     }
 }

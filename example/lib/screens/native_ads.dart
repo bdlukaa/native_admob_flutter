@@ -41,13 +41,8 @@ class _NativeAdsState extends State<NativeAds>
             body: AdTextView(style: TextStyle(color: Colors.black)),
             media: AdMediaView(height: 70, width: 120),
             button: AdButtonView(
-              // width: 70,
-              // height: 40,
               margin: EdgeInsets.only(left: 6, right: 6, bottom: 6),
-              decoration: AdDecoration(
-                gradient: AdLinearGradient(
-                    colors: [Colors.yellow[300], Colors.amber]),
-              ),
+              textStyle: TextStyle(color: Colors.green, fontSize: 14),
             ),
           ),
           NativeAd(
