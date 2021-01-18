@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
+import '../utils.dart';
+
 enum BannerAdEvent {
   /// Called when an impression is recorded for an ad.
   impression,
@@ -37,14 +39,58 @@ class BannerSize {
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#smart-banners)
   @Deprecated('Smart banner is deprecated in favor of adaptive banner')
   static const BannerSize SMART_BANNER = BannerSize(Size(-1, -2));
-  /// Adaptive Banners
+
+  /// Adaptive banners are the next generation of responsive ads,
+  /// maximizing performance by optimizing ad size for each device.
+  /// Improving on smart banners, which only supported fixed heights,
+  /// adaptive banners let developers specify the ad-width and use
+  /// this to determine the optimal ad size.
+  ///
+  /// To pick the best ad size, adaptive banners use fixed aspect ratios
+  /// instead of fixed heights. This results in banner ads that occupy a
+  /// more consistent portion of the screen across devices and provide
+  /// opportunities for improved performance.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#adaptive-banners)
+  ///
+  /// ![Adaptive Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/adaptive_banner.png)
   static const BannerSize ADAPTIVE = BannerSize(Size(-1, -1));
+
+  /// Standart banner.\
+  /// Creates a banner of `320w`x`50h`
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
+  ///
+  /// ![Standart Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/standart_banner.png)
   static const BannerSize BANNER = BannerSize(Size(320, 50));
+
+  /// Large banner.\
+  /// Creates a banner of `320w`x`100h`
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   static const BannerSize LARGE_BANNER = BannerSize(Size(320, 100));
+
+  /// Medium Rectangle.\
+  /// Creates a banner of `320w`x`250h`\
+  /// Avaiable only on Tablets
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   static const BannerSize MEDIUM_RECTANGLE = BannerSize(Size(320, 250));
+
+  /// Full banner.\
+  /// Creates a banner of `468w`x`60h`\
+  /// Avaiable only on Tablets
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   static const BannerSize FULL_BANNER = BannerSize(Size(468, 60));
+
+  /// LEADERBOARD.\
+  /// Creates a banner of `728w`x`90h`
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   static const BannerSize LEADERBOARD = BannerSize(Size(728, 90));
 
+  /// Creates banner ad with a custom size from `width` and `height`
   factory BannerSize.fromWH(double width, double height) {
     return BannerSize(Size(width, height));
   }
@@ -128,7 +174,8 @@ class BannerAdController {
     _attached = true;
   }
 
-  /// Dispose the controller. Once disposed, the controller can not be used anymore
+  /// Dispose the controller to free up resources.
+  /// Once disposed, the controller can not be used anymore
   ///
   /// Usage:
   /// ```dart
@@ -150,7 +197,8 @@ class BannerAdController {
         _onEvent.add({BannerAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add({BannerAdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent
+            .add({BannerAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
         _onEvent.add({BannerAdEvent.loaded: call.arguments});
@@ -168,8 +216,14 @@ class BannerAdController {
     }
   }
 
-  /// Load the ad.
+  /// Load the ad. The ad needs to be loaded to be rendered.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#reloading-the-ad)
   void load() {
+    assert(
+      isAttached,
+      'You can NOT use a diposed controller',
+    );
     // assert(
     //   NativeAds.isInitialized,
     //   'You MUST initialize the ADMOB before requesting any ads',

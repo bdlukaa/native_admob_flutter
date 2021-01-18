@@ -1,6 +1,7 @@
 package com.bruno.native_admob_flutter.native
 
 import android.content.Context
+import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.formats.NativeAdOptions
 import com.google.android.gms.ads.formats.UnifiedNativeAd
@@ -111,7 +112,7 @@ class NativeAdmobController(
 
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         super.onAdFailedToLoad(error)
-                        channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                        channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                     }
 
                     override fun onAdLoaded() {

@@ -1,3 +1,10 @@
+## 0.3.1
+
+- **NEW**: `AdError` instead of only `errorCode`
+- You can now `await` the `show()` method from `RewardedAd` and `InterstitialAd`
+- Improved documentation
+- Now disposed controllers throw an `AssertionError` if used  
+
 ## 0.3.0
 
 - **NEW**: Rewarded ads

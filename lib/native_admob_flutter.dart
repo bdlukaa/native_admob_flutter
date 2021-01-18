@@ -1,4 +1,5 @@
 export 'src/mobile_ads.dart';
+export 'src/utils.dart' show AdError;
 
 export 'src/native/native_ad_widget.dart';
 export 'src/native/controller/controller.dart';

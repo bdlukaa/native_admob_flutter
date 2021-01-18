@@ -65,3 +65,28 @@ Widget buildAndroidPlatformView(
       },
     );
 }
+
+class AdError {
+
+  final int code;
+  final String message;
+  final String domain;
+  final AdError cause;
+
+  const AdError({
+    @required this.code,
+    @required this.message,
+    @required this.domain,
+    this.cause,
+  });
+
+  factory AdError.fromJson(Map<String, dynamic> json) {
+    return AdError(
+      code: json['code'],
+      message: json['message'],
+      domain: json['domain'],
+      cause: AdError.fromJson(json['cause'])
+    );
+  }
+
+}

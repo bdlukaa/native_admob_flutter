@@ -1,6 +1,7 @@
 package com.bruno.native_admob_flutter.interstitial
 
 import android.content.Context
+import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
@@ -36,7 +37,7 @@ class InterstitialAdController(
                     }
 
                     override fun onAdFailedToLoad(error: LoadAdError) {
-                        channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                        channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)
                     }
 
@@ -59,6 +60,32 @@ class InterstitialAdController(
             }
             "show" -> {
                 mInterstitialAd.show()
+                mInterstitialAd.adListener = object : AdListener() {
+                    override fun onAdLoaded() {
+                        channel.invokeMethod("onAdLoaded", null)
+                    }
+
+                    override fun onAdFailedToLoad(error: LoadAdError) {
+                        channel.invokeMethod("onAdFailedToLoad", encodeError(error))
+                    }
+
+                    override fun onAdOpened() {
+                        channel.invokeMethod("onAdOpened", null)
+                    }
+
+                    override fun onAdClicked() {
+                        channel.invokeMethod("onAdClicked", null)
+                    }
+
+                    override fun onAdLeftApplication() {
+                        channel.invokeMethod("onAdLeftApplication", null)
+                    }
+
+                    override fun onAdClosed() {
+                        channel.invokeMethod("onAdClosed", null)
+                        result.success(true)
+                    }
+                }
             }
             else -> result.notImplemented()
         }

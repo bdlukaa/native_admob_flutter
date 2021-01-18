@@ -39,7 +39,12 @@ class _FullScreenAdsState extends State<FullScreenAds> {
           onPressed: () async {
             // Load only if not loaded
             if (!interstitialAd.isLoaded) await interstitialAd.load();
-            if (interstitialAd.isLoaded) interstitialAd.show();
+            if (interstitialAd.isLoaded) {
+              await interstitialAd.show();
+              /// You can also load a new ad here, because the `show()` will
+              /// only complete when the ad gets closed
+              // interstitialAd.load();
+            }
           },
         ),
         FlatButton(

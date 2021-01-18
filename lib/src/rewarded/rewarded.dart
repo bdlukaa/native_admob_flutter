@@ -37,7 +37,10 @@ enum RewardedAdEvent {
 }
 
 class RewardItem {
+  /// Returns the reward amount.
   int amount;
+
+  /// Returns the type of the reward.
   String type;
 
   RewardItem({this.amount, this.type});
@@ -51,14 +54,15 @@ class RewardItem {
 }
 
 class RewardedAd {
-  /// Create and load a new ad without extra code.
-  ///
-  /// #### Do NOT use this if it needs to be fast. If it does, use pre-loading
+  /// Create and load a new ad without extra code.\
+  /// #### Do NOT use this if it needs to be fast. If it does, use [pre-loading](https://github.com/bdlukaa/native_admob_flutter/wiki/Pre-load-a-rewarded-ad)
   ///
   /// Usage:
   /// ```dart
-  /// (await createAndLoad()).show();
+  /// await (await createAndLoad()).show();
   /// ```
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#using-rewarded-ads-more-than-once)
   static Future<RewardedAd> createAndLoad([String unitId]) async {
     final ad = RewardedAd(unitId);
     await ad.load();
@@ -108,6 +112,8 @@ class RewardedAd {
   ///   }
   /// });
   /// ```
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
   Stream<Map<RewardedAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
   RewardItem _item;
@@ -145,14 +151,17 @@ class RewardedAd {
     _item = RewardItem.fromJson(reward);
   }
 
-  /// Dispose the controller. Once disposed, the controller can not be used anymore
+  /// Dispose the ad. Once disposed, this ad can not be used anymore.
+  ///
+  /// The ad gets disposed automatically when closed, so you do NOT
+  /// need to worry about it.
   ///
   /// Usage:
   /// ```dart
   /// @override
   /// void dispose() {
   ///   super.dispose();
-  ///   controller?.dispose();
+  ///   rewardedAd?.dispose();
   /// }
   /// ```
   void dispose() {
@@ -167,7 +176,8 @@ class RewardedAd {
         _onEvent.add({RewardedAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add({RewardedAdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent.add(
+            {RewardedAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
         _onEvent.add({RewardedAdEvent.loaded: null});
@@ -180,10 +190,13 @@ class RewardedAd {
         dispose();
         break;
       case 'onUserEarnedReward':
-        _onEvent.add({RewardedAdEvent.earnedReward: RewardItem.fromJson(call.arguments)});
+        _onEvent.add({
+          RewardedAdEvent.earnedReward: RewardItem.fromJson(call.arguments)
+        });
         break;
       case 'onRewardedAdFailedToShow':
-        _onEvent.add({RewardedAdEvent.showFailed: call.arguments['errorCode']});
+        _onEvent.add(
+            {RewardedAdEvent.showFailed: AdError.fromJson(call.arguments)});
         break;
       case 'undefined':
       default:
@@ -192,7 +205,16 @@ class RewardedAd {
     }
   }
 
-  /// Load the ad.
+  /// Load the ad. The ad must be loaded so it can be shown.
+  /// You can verify if the ad is loaded calling `rewardedAd.isLoaded`
+  ///
+  /// Usage:
+  /// ```dart
+  /// (await rewardedAd.load());
+  /// if (rewardedAd.isLoaded) rewardedAd.show();
+  /// ```
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#load-the-ad)
   Future<void> load() async {
     // assert(
     //   MobileAds.isInitialized,
@@ -201,17 +223,29 @@ class RewardedAd {
     _loaded = await _channel.invokeMethod<bool>('loadAd', null);
   }
 
-  /// Show the rewarded ad.
+  /// Show the rewarded ad. This returns a `Future` that will complete when
+  /// the ad gets closed
   ///
   /// The ad must be loaded. To check if the ad is loaded, call
-  /// `controller.isLoaded`. If it's not loaded, throws an `AssertionError`
-  void show() {
+  /// `rewardedAd.isLoaded`. If it's not loaded, throws an `AssertionError`
+  ///
+  /// This can be shown only once. If you try to show it more than once,
+  /// it'll fail. If you `need` to show it more than once, read
+  /// [this](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#using-rewarded-ads-more-than-once)
+  ///
+  /// Usage
+  /// ```dart
+  /// print('showing the ad');
+  /// await (await rewardedAd.load()).show();
+  /// print('ad showed');
+  /// ```
+  Future<void> show() {
     assert(
       isLoaded,
       '''The ad must be loaded to show. 
       Call controller.load() to load the ad. 
       Call controller.isLoaded to check if the ad is loaded before showing.''',
     );
-    _channel.invokeMethod('show');
+    return _channel.invokeMethod('show');
   }
 }

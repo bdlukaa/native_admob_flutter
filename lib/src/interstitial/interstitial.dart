@@ -76,6 +76,8 @@ class InterstitialAd {
   ///   }
   /// });
   /// ```
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
   Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
   /// Channel to communicate with plugin
@@ -110,14 +112,14 @@ class InterstitialAd {
     });
   }
 
-  /// Dispose the controller. Once disposed, the controller can not be used anymore
+  /// Dispose the ad. Once disposed, the ad can not be used anymore
   ///
   /// Usage:
   /// ```dart
   /// @override
   /// void dispose() {
   ///   super.dispose();
-  ///   controller?.dispose();
+  ///   interstitialAd?.dispose();
   /// }
   /// ```
   void dispose() {
@@ -132,8 +134,8 @@ class InterstitialAd {
         _onEvent.add({InterstitialAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent
-            .add({InterstitialAdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent.add(
+            {InterstitialAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
         _onEvent.add({InterstitialAdEvent.loaded: null});
@@ -157,7 +159,12 @@ class InterstitialAd {
     }
   }
 
-  /// Load the ad.
+  /// In order to show an ad, it needs to be loaded first. Use `load()` to load.
+  ///
+  /// To check if the ad is loaded, call `interstitialAd.isLoaded`. You can't `show()`
+  /// an ad if it's not loaded.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
   Future<void> load() async {
     // assert(
     //   MobileAds.isInitialized,
@@ -166,19 +173,17 @@ class InterstitialAd {
     _loaded = await _channel.invokeMethod<bool>('loadAd', null);
   }
 
-  /// Show the interstitial ad.
+  /// Show the interstitial ad. This returns a `Future` that will complete when
+  /// the ad gets closed
   ///
   /// The ad must be loaded. To check if the ad is loaded, call
-  /// `controller.isLoaded`. If it's not loaded, throws an `AssertionError`
-  void show() {
-    assert(
-      isLoaded,
-      '''
-      The ad must be loaded to show. 
-      Call controller.load() to load the ad. 
-      Call controller.isLoaded to check if the ad is loaded before showing.
-      ''',
-    );
-    _channel.invokeMethod('show');
+  /// `interstitialAd.isLoaded`. If it's not loaded, throws an `AssertionError`
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#show-the-ad)
+  Future<void> show() {
+    assert(isLoaded, '''The ad must be loaded to show. 
+      Call interstitialAd.load() to load the ad. 
+      Call interstitialAd.isLoaded to check if the ad is loaded before showing.''');
+    return _channel.invokeMethod('show');
   }
 }

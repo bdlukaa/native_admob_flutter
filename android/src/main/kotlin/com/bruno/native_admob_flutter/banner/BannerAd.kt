@@ -2,6 +2,7 @@ package com.bruno.native_admob_flutter.banner
 
 import android.content.Context
 import android.view.View
+import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
@@ -50,7 +51,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
             override fun onAdFailedToLoad(error: LoadAdError) {
                 super.onAdFailedToLoad(error)
-                controller.channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                controller.channel.invokeMethod("onAdFailedToLoad", encodeError(error))
             }
 
             override fun onAdLoaded() {

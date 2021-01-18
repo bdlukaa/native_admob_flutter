@@ -45,6 +45,7 @@ class _NativeAdsState extends State<NativeAds>
               textStyle: TextStyle(color: Colors.green, fontSize: 14),
             ),
           ),
+          SizedBox(height: 10),
           NativeAd(
             height: 100,
             buildLayout: secondBuilder,
@@ -61,6 +62,7 @@ class _NativeAdsState extends State<NativeAds>
             ),
             media: AdMediaView(height: 80, width: 120),
           ),
+          SizedBox(height: 10),
           NativeAd(
             height: 300,
             buildLayout: fullBuilder,

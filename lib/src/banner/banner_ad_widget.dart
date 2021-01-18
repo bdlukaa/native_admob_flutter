@@ -96,15 +96,15 @@ class BannerAd extends StatefulWidget {
   ///
   /// ## Sizes
   ///
-  /// | Name             | `Width`x`Height` | Availability       |
-  /// | ---------------- | ---------------- | ------------------ |
-  /// | BANNER           | 320x50           | Phones and Tablets |
-  /// | LARGE_BANNER     | 320x100          | Phones and Tablets |
-  /// | MEDIUM_RECTANGLE | 320x250          | Phones and Tablets |
-  /// | FULL_BANNER      | 468x60           | Tablets            |
-  /// | LEADERBOARD      | 728x90           | Tablets            |
-  /// | SMART_BANNER     | `?`x(32, 50, 90) | Phones and Tablets |
-  /// | ADAPTIVE_BANNER  | `Screen width`x`?` | Phones and Tablets |
+  /// | Name              | `Width`x`Height`   | Availability       |
+  /// | ----------------- | ------------------ | ------------------ |
+  /// | BANNER            | 320x50             | Phones and Tablets |
+  /// | LARGE_BANNER      | 320x100            | Phones and Tablets |
+  /// | MEDIUM_RECTANGLE  | 320x250            | Phones and Tablets |
+  /// | FULL_BANNER       | 468x60             | Tablets            |
+  /// | LEADERBOARD       | 728x90             | Tablets            |
+  /// | SMART_BANNER      | `?`x(32, 50, 90)   | Phones and Tablets |
+  /// | *ADAPTIVE_BANNER* | `Screen width`x`?` | Phones and Tablets |
   ///
   /// ### Usage
   /// ```dart

@@ -215,7 +215,8 @@ class NativeAdController {
         _onEvent.add({NativeAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add({NativeAdEvent.loadFailed: call.arguments['errorCode']});
+        _onEvent
+            .add({NativeAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
         _onEvent.add({NativeAdEvent.loaded: null});
@@ -258,6 +259,10 @@ class NativeAdController {
   ///
   /// If [unitId] is not specified, uses [MobileAds.nativeAdUnitId]
   void load({String unitId, NativeAdOptions options}) {
+    assert(
+      isAttached,
+      'You can NOT use a disposed controller',
+    );
     // assert(
     //   MobileAds.isInitialized,
     //   'You MUST initialize the ADMOB before requesting any ads',
@@ -270,7 +275,7 @@ class NativeAdController {
     });
   }
 
-  /// Request the UI to update when changes happen. This is used for 
+  /// Request the UI to update when changes happen. This is used for
   /// dynamically changing the layout (by hot reload or setState)
   void requestAdUIUpdate(Map<String, dynamic> layout) {
     // print('requested ui update');
@@ -281,6 +286,10 @@ class NativeAdController {
   ///
   /// Use null to Mute This Ad with default reason.
   void muteThisAd([int reason]) {
+    assert(
+      isAttached,
+      'You can NOT use a disposed controller',
+    );
     _channel.invokeMethod('muteAd', {'reason': reason});
   }
 }

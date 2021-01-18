@@ -1,6 +1,7 @@
 package com.bruno.native_admob_flutter.rewarded
 
 import android.app.Activity
+import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError
@@ -39,7 +40,7 @@ class RewardedAdController(
                     }
 
                     override fun onRewardedAdFailedToLoad(error: LoadAdError) {
-                        channel.invokeMethod("onAdFailedToLoad", hashMapOf("errorCode" to error.code))
+                        channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)
                     }
                 }
@@ -53,6 +54,7 @@ class RewardedAdController(
 
                     override fun onRewardedAdClosed() {
                         channel.invokeMethod("onRewardedAdClosed", null)
+                        result.success(null)
                     }
 
                     override fun onUserEarnedReward(reward: RewardItem) {
@@ -63,7 +65,7 @@ class RewardedAdController(
                     }
 
                     override fun onRewardedAdFailedToShow(error: AdError) {
-                        channel.invokeMethod("onRewardedAdFailedToShow", hashMapOf("errorCode" to error.code))
+                        channel.invokeMethod("onRewardedAdFailedToShow", encodeError(error))
                     }
                 }
                 rewardedAd.show(activity, adCallback)

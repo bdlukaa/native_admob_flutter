@@ -19,6 +19,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 import com.bruno.native_admob_flutter.native.*
 import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
+import com.google.android.gms.ads.AdError
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
@@ -181,4 +182,13 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
 
     override fun onDetachedFromActivity() {
     }
+}
+
+fun encodeError(error: AdError?): Map<String, Any?> {
+    return hashMapOf<String, Any?>(
+            "errorCode" to error?.code,
+            "domain" to error?.domain,
+            "message" to error?.message,
+            "cause" to encodeError(error?.cause)
+    )
 }
