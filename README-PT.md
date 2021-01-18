@@ -29,6 +29,7 @@ Para começar com Anúncios Nativos para Flutter, [leia a documentação - Ingl�
 - [x] Anúncios Nativos (Native Ads)
 - [x] Anúncios de Banner (Banner Ads)
 - [x] Anúncios Intersticiais (Interstitial Ads)
+- [x] Anúncios Prêmiados (Rewarded Ads)
 
 ## Problemas e feedback
 
