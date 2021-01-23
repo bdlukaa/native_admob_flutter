@@ -46,20 +46,18 @@ class AdView {
   /// The type of the view. Do not change this manually
   final String viewType;
 
-  final String tooltipText;
-
   /// The id of the view. Used to recognize it
   String id;
 
-  AdView(
-      {@required this.viewType,
-      this.padding = EdgeInsets.zero,
-      this.margin = EdgeInsets.zero,
-      this.width,
-      this.height,
-      this.id,
-      this.tooltipText,
-      this.decoration});
+  AdView({
+    @required this.viewType,
+    this.padding = EdgeInsets.zero,
+    this.margin = EdgeInsets.zero,
+    this.width,
+    this.height,
+    this.id,
+    this.decoration,
+  });
 
   Map<String, dynamic> toJson() {
     double width = this.width;
@@ -85,8 +83,6 @@ class AdView {
       // screen bounds
       'width': width,
       'height': height,
-      // other
-      'tooltipText': tooltipText,
     };
     if (decoration != null) json.addAll(decoration.toJson());
     return json;
@@ -94,20 +90,18 @@ class AdView {
 }
 
 class AdImageView extends AdView {
-  AdImageView(
-      {EdgeInsets padding,
-      EdgeInsets margin,
-      double size,
-      String tooltipText,
-      AdDecoration decoration})
-      : super(
+  AdImageView({
+    EdgeInsets padding,
+    EdgeInsets margin,
+    double size,
+    AdDecoration decoration,
+  }) : super(
           viewType: 'image_view',
           padding: padding,
           margin: margin,
           decoration: decoration,
           width: size ?? 40,
           height: size ?? 40,
-          tooltipText: tooltipText,
         );
 }
 
@@ -118,7 +112,6 @@ class AdMediaView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
-    String tooltipText,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -126,7 +119,6 @@ class AdMediaView extends AdView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          tooltipText: tooltipText,
         );
 }
 
@@ -139,7 +131,6 @@ class AdRatingBarView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
-    String tooltipText,
     // rating
     this.stepSize,
   }) : super(
@@ -149,7 +140,6 @@ class AdRatingBarView extends AdView {
           decoration: decoration,
           width: width ?? WRAP_CONTENT,
           height: height ?? WRAP_CONTENT,
-          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {

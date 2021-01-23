@@ -1,9 +1,27 @@
+## 0.4.0
+
+- **NEW**:
+  - `rewardedAdUnitId` in `MobileAds.initialize()` is now possible
+  - Implementation for `Native and Interstitial Video Ad Ids`
+  - Video ad example
+- **FIXED**: Rating bar size
+- Removed tooltip text
+- Documentation and wiki update
+- Improved error messages
+- Shows an warning if Production Ads are used in debug mode (`kDebugMode`)
+- Version checking is done on build method now because Native and Banner Ads requires Android Api >= 19, but Interstitial and Rewarded requires Android Api >= 16. Required version for iOS is 9
+- Pre-support for iOS:
+  - [Required flutter version >= 1.22.0](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#ios)
+  - [Added iOS test ids getters](https://developers.google.com/admob/ios/test-ads#demo_ad_units)
+  - [Target version needs to be 9 or higher](https://developers.google.com/admob/ios/quick-start#prerequisites)
+  - [Updated wiki with iOS platform setup steps](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup#ios)
+
 ## 0.3.1
 
 - **NEW**: `AdError` instead of only `errorCode`
 - You can now `await` the `show()` method from `RewardedAd` and `InterstitialAd`
 - Improved documentation
-- Now disposed controllers throw an `AssertionError` if used  
+- Now disposed controllers throw an `AssertionError` if used
 
 ## 0.3.0
 
@@ -17,21 +35,21 @@
 ## 0.2.0
 
 - **NEW**:
-    - InterstitialAd
-    - Adaptive Banner Ads
+  - InterstitialAd
+  - Adaptive Banner Ads
 
 ## 0.1.2+1
 
 - Readme update
 - All AdViews are documentated now
 - Deprecate `SMART_BANNER`, as it's deprecated in SDK v20
-    - See [this](https://developers.google.com/admob/android/migration#smart)
+  - See [this](https://developers.google.com/admob/android/migration#smart)
 
 ## 0.1.2
 
 - **NEW**:
-    - `AdSingleChildView`. Equivalent to `SingleChildView`
-    - `AdExpanded`. Equivalent to `Expanded`
+  - `AdSingleChildView`. Equivalent to `SingleChildView`
+  - `AdExpanded`. Equivalent to `Expanded`
 - Use `AdDecoration` for decorating `AdView`s
 - Changed the default native ad layout builder design to make it more like [this](https://developers.google.com/admob/android/banner/adaptive#when_to_use_adaptive_banners)
 - `Loading` and `Error` placeholders are now avaiable on `BannerAd`s
@@ -44,9 +62,9 @@
 ## 0.1.0
 
 - **NEW**: BannerAds
-- **BREAKING**: 
-    - Rename `AdEvent` to `NativeAdEvent`
-    - Rename `NativeAds` to `MobileAds`
+- **BREAKING**:
+  - Rename `AdEvent` to `NativeAdEvent`
+  - Rename `NativeAds` to `MobileAds`
 - Size is only applied to the ad, not the builder
 
 ## 0.0.8+1
@@ -87,23 +105,23 @@
 ## 0.0.6
 
 - Implementation for NativeAdOptions
-    - **HIGHLIGHT**: adChoicesPlacement
-    - **HIGHLIGHT**: mediaAspectRatio
-    - **HIGHLIGHT**: requestCustomMuteThisAd
-    - returnUrlsForImageAssets
-    - requestMultipleImages
-    - videoOptions
+  - **HIGHLIGHT**: adChoicesPlacement
+  - **HIGHLIGHT**: mediaAspectRatio
+  - **HIGHLIGHT**: requestCustomMuteThisAd
+  - returnUrlsForImageAssets
+  - requestMultipleImages
+  - videoOptions
 - Implement custom mute this ad
 - Performance update
 
 ## 0.0.5
 
 - Implementation for new methods
-    - **HIGHLIGHT**: setChildDirected
-    - **HIGHLIGHT**: setTagForUnderAgeOfConsent
-    - **HIGHLIGHT**: setMaxAdContentRating
-    - setAppVolume
-    - setAppMuted
+  - **HIGHLIGHT**: setChildDirected
+  - **HIGHLIGHT**: setTagForUnderAgeOfConsent
+  - **HIGHLIGHT**: setMaxAdContentRating
+  - setAppVolume
+  - setAppMuted
 - Improved documentation
 - Preparation for `Custom Mute this Ad` and `Native Video Ads`
 

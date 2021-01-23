@@ -125,7 +125,7 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
               AdLinearLayout(children: [
                 headline,
                 AdLinearLayout(
-                  children: [attribuition, advertiser],
+                  children: [attribuition, advertiser, ratingBar],
                   orientation: HORIZONTAL,
                   width: MATCH_PARENT,
                 ),

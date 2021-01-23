@@ -185,7 +185,7 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
 }
 
 fun encodeError(error: AdError?): Map<String, Any?> {
-    return hashMapOf<String, Any?>(
+    return mapOf<String, Any?>(
             "errorCode" to error?.code,
             "domain" to error?.domain,
             "message" to error?.message,

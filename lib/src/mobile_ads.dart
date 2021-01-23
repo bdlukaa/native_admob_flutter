@@ -1,37 +1,50 @@
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
+
+import 'utils.dart';
 
 class MobileAds {
   // Unit ids
   static String nativeAdUnitId;
-  static const String nativeAdTestUnitId =
-      'ca-app-pub-3940256099942544/2247696110';
+  static String get nativeAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/2247696110'
+      : 'ca-app-pub-3940256099942544/3986624511';
+  static String get nativeAdVideoTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1044960115'
+      : 'ca-app-pub-3940256099942544/2521693316';
 
   static String bannerAdUnitId;
-  static const String bannerAdTestUnitId =
-      'ca-app-pub-3940256099942544/6300978111';
+  static String get bannerAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/6300978111'
+      : 'ca-app-pub-3940256099942544/2934735716';
 
   static String interstitialAdUnitId;
-  static const String interstitialAdTestUnitId =
-      'ca-app-pub-3940256099942544/1033173712';
+  static String get interstitialAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/1033173712'
+      : 'ca-app-pub-3940256099942544/4411468910';
+  static String get interstitialAdVideoTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/8691691433'
+      : 'ca-app-pub-3940256099942544/5135589807';
 
   static String rewardedAdUnitId;
-  static const String rewardedAdTestUnitId =
-      'ca-app-pub-3940256099942544/5224354917';
+  static String get rewardedAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5224354917'
+      : 'ca-app-pub-3940256099942544/1712485313';
 
   static final _pluginChannel = const MethodChannel('native_admob_flutter');
 
   static bool _initialized = false;
 
-  /// Check if the ADMOB is initialized. To initialize it, use
+  /// Check if the SDK is initialized. To initialize it, use
   /// `MobileAds.initialize()`
   static bool get isInitialized => _initialized;
 
   static bool _useHybridComposition = false;
 
   /// Check if hybrid composition is enabled on android. It's enabled by default if
-  /// the android version is 19. Do NOT set it before `MobileAds.initialize()`.
+  /// the android version is 19 and on iOS. Do NOT set it before `MobileAds.initialize()`.
   /// Note that on Android versions prior to Android 10 Hybrid Composition has some
   /// [performance drawbacks](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#performance).
   ///
@@ -43,52 +56,82 @@ class MobileAds {
   ///   useHybridComposition: true,
   /// )
   /// ```
+  ///
+  /// For more info on hybrid composition, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enabling-hybrid-composition-for-android)
   static bool get useHybridComposition => _useHybridComposition;
   static set useHybridComposition(bool use) {
     assert(use != null);
     _useHybridComposition = use ?? useHybridComposition;
   }
 
-  /// Before creating any native ads, you must initalize the admob. It can be initialized only once:
+  static int _version = 0;
+  static int get osVersion => _version;
+
+  /// Before creating any native ads, you must initalize the admob.
+  /// This can be done only once, ideally at app launch. If you try to
+  /// initialize it more than once, an AssertionError is thrown
   ///
   /// ```dart
   /// void main() async {
-  ///   // Add this line if you will initialize it before runApp
-  ///   WidgetsFlutterBinding.ensureInitialized();
-  ///   // default admob native ad unit id: ca-app-pub-3940256099942544/2247696110
-  ///   MobileAds.initialize(nativeAdUnitId: 'your-native-ad-unit-id');
+  ///   MobileAds.initialize();
   ///   runApp(MyApp());
   /// }
   /// ```
   ///
-  /// This method must be called in the main thread
+  /// This method must be called in the main thread\
+  /// You can find a complete example [here](https://github.com/bdlukaa/native_admob_flutter/blob/master/example/lib/main.dart)\
+  /// For more info on intialization, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#initialize-the-mobile-ads-sdk)
   static Future<void> initialize({
     String nativeAdUnitId,
     String bannerAdUnitId,
     String interstitialAdUnitId,
+    String rewardedAdUnitId,
     bool useHybridComposition,
   }) async {
-    MobileAds.nativeAdUnitId = nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    MobileAds.bannerAdUnitId = bannerAdUnitId ?? MobileAds.bannerAdTestUnitId;
-    MobileAds.interstitialAdUnitId =
-        interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
-    final version = await _pluginChannel.invokeMethod<int>('initialize');
+    assertPlatformIsSupported();
+    WidgetsFlutterBinding.ensureInitialized();
+    assert(
+      !isInitialized,
+      '''The mobile ads sdk is already initialized. It can be initialized only once
+      Check if it's initialized before trying to initialize it using `MobileAds.isInitialized`
+      For more info on initialization, visit https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#initialize-the-mobile-ads-sdk''',
+    );
+    MobileAds.nativeAdUnitId ??= nativeAdUnitId ?? nativeAdTestUnitId;
+    debugCheckIsTestId(MobileAds.nativeAdUnitId, [
+      nativeAdTestUnitId,
+      nativeAdVideoTestUnitId,
+    ]);
+    MobileAds.bannerAdUnitId ??= bannerAdUnitId ?? bannerAdTestUnitId;
+    debugCheckIsTestId(MobileAds.nativeAdUnitId, [bannerAdTestUnitId]);
+    MobileAds.interstitialAdUnitId ??=
+        interstitialAdUnitId ?? interstitialAdTestUnitId;
+    debugCheckIsTestId(MobileAds.nativeAdUnitId, [
+      interstitialAdTestUnitId,
+      interstitialAdVideoTestUnitId,
+    ]);
+    MobileAds.rewardedAdUnitId ??= rewardedAdUnitId ?? rewardedAdTestUnitId;
+    debugCheckIsTestId(MobileAds.nativeAdUnitId, [rewardedAdTestUnitId]);
+    _version = await _pluginChannel.invokeMethod<int>('initialize');
     if (Platform.isAndroid) {
-      assert(
-        version >= 19,
-        '''
-        Ads are not supported in versions before 19 because flutter only support platform views on Android 19 or greater.
-        ''',
-      );
       // hybrid composition is enabled in android 19 and can't be disabled
       MobileAds.useHybridComposition =
-          version == 19 ? true : useHybridComposition ?? false;
+          osVersion == 19 ? true : useHybridComposition ?? false;
 
-      if (version >= 29 && MobileAds.useHybridComposition) {
-        print('''
-        It is NOT recommended to use hybrid composition on Android 10 or greater. It has some performance drawbacks
-        ''');
+      if (osVersion >= 29 && MobileAds.useHybridComposition) {
+        print(
+          'It is NOT recommended to use hybrid composition on Android 10 or greater. '
+          'It has some performance drawbacks',
+        );
       }
+    } else {
+      assertVersionIsSupported();
+      assert(
+        osVersion >= 9,
+        'The required version to use the AdMOB SDk is 9 or higher',
+      );
+      if (!(useHybridComposition ?? true))
+        print(
+            'Virtual display is not avaiable on iOS. Using hybrid composition');
     }
     _initialized = true;
   }
@@ -98,11 +141,11 @@ class MobileAds {
   /// logged in logcat when the first ad request is made. Be sure to remove
   /// the code that sets these test device IDs before you release your app.
   ///
-  /// [Learn more](https://developers.google.com/admob/android/test-ads#enable_test_devices)
+  /// [Learn more](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enable-test-devices)
   ///
   /// Pass null to clear the list
-  static Future<void> setTestDeviceIds(List<String> ids) async {
-    await _pluginChannel.invokeMethod('setTestDeviceIds', {'ids': ids});
+  static Future<void> setTestDeviceIds(List<String> ids) {
+    return _pluginChannel.invokeMethod('setTestDeviceIds', {'ids': ids});
   }
 
   // /// Returns `true` if this device will receive test ads.

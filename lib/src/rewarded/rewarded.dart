@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
+import '../utils.dart';
 
 enum RewardedAdEvent {
   /// Called when an ad request failed.
@@ -45,17 +46,17 @@ class RewardItem {
 
   RewardItem({this.amount, this.type});
 
+  @override
+  String toString() => '$amount $type';
+
   factory RewardItem.fromJson(Map j) {
-    return RewardItem(
-      amount: j['amount'],
-      type: j['type'],
-    );
+    return RewardItem(amount: j['amount'], type: j['type']);
   }
 }
 
 class RewardedAd {
   /// Create and load a new ad without extra code.\
-  /// #### Do NOT use this if it needs to be fast. If it does, use [pre-loading](https://github.com/bdlukaa/native_admob_flutter/wiki/Pre-load-a-rewarded-ad)
+  /// **WARNING** Do NOT use this if it needs to be fast. If it does, use [pre-loading](https://github.com/bdlukaa/native_admob_flutter/wiki/Pre-load-a-rewarded-ad)
   ///
   /// Usage:
   /// ```dart
@@ -151,7 +152,8 @@ class RewardedAd {
     _item = RewardItem.fromJson(reward);
   }
 
-  /// Dispose the ad. Once disposed, this ad can not be used anymore.
+  /// Dispose the ad to free up resources.
+  /// Once disposed, this ad can not be used anymore.
   ///
   /// The ad gets disposed automatically when closed, so you do NOT
   /// need to worry about it.
@@ -216,10 +218,7 @@ class RewardedAd {
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#load-the-ad)
   Future<void> load() async {
-    // assert(
-    //   MobileAds.isInitialized,
-    //   'You MUST initialize the ADMOB before requesting any ads',
-    // );
+    assertMobileAdsIsInitialized();
     _loaded = await _channel.invokeMethod<bool>('loadAd', null);
   }
 

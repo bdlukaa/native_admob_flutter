@@ -17,7 +17,7 @@
     </a>
   </p>
 
-Easy-to-make native ads in flutter with Google's AdMob SDK.\
+Anúncios fáceis-de-fazer em Flutter usando o AdMob SDK do Google.\
 [English](README.md) | Português
 
 </div>

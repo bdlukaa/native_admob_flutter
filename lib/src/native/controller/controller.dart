@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../native_admob_flutter.dart';
+import '../../utils.dart';
 import 'options.dart';
 import 'media_content.dart';
 
@@ -255,28 +256,26 @@ class NativeAdController {
     }
   }
 
-  /// Load the ad.
+  /// Load the ad. If the controller is disposed or not attached,
+  /// or the Mobile Ads SDK (ADMOB SDK) is not initialized,
+  /// an `AssertionError` is thrown.
   ///
   /// If [unitId] is not specified, uses [MobileAds.nativeAdUnitId]
   void load({String unitId, NativeAdOptions options}) {
-    assert(
-      isAttached,
-      'You can NOT use a disposed controller',
-    );
-    // assert(
-    //   MobileAds.isInitialized,
-    //   'You MUST initialize the ADMOB before requesting any ads',
-    // );
-    final id = unitId ?? MobileAds.nativeAdUnitId;
-    assert(id != null, 'The ad unit id can NOT be null');
+    assertControllerIsAttached(isAttached);
+    assertMobileAdsIsInitialized();
+    // The id will never be null, so you don't need to check
+    unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
     _channel.invokeMethod('loadAd', {
-      'unitId': id ?? MobileAds.nativeAdUnitId,
+      'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     });
   }
 
   /// Request the UI to update when changes happen. This is used for
   /// dynamically changing the layout (by hot reload or setState)
+  ///
+  /// You'll rarely need to call this method
   void requestAdUIUpdate(Map<String, dynamic> layout) {
     // print('requested ui update');
     _channel.invokeMethod('updateUI', {'layout': layout ?? {}});

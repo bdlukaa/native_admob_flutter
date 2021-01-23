@@ -21,7 +21,6 @@ class AdTextView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
-    String tooltipText,
     // text
     this.style,
     this.minLines,
@@ -38,7 +37,6 @@ class AdTextView extends AdView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {
@@ -67,7 +65,6 @@ class AdButtonView extends AdTextView {
     double height,
     AdDecoration decoration,
     this.pressColor,
-    String tooltipText,
     // text
     int minLines,
     int maxLines,
@@ -80,7 +77,6 @@ class AdButtonView extends AdTextView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          tooltipText: tooltipText,
           // text
           maxLines: maxLines,
           minLines: minLines,

@@ -93,7 +93,9 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                     view = MediaView(context)
                     view.setImageScaleType(ImageView.ScaleType.FIT_START)
                 }
-                "rating_bar" -> view = RatingBar(context)
+                "rating_bar" -> {
+                    view = RatingBar(context, null, android.R.attr.ratingBarStyleSmall)
+                }
                 "button_view" -> {
                     view = Button(context)
 //                view.isClickable = true
@@ -138,11 +140,6 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             }
         }
 
-        (data["tooltipText"] as? String).let {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                view.tooltipText = it
-            }
-        }
         view.setOnLongClickListener {
             controller?.undefined()
             true
@@ -323,5 +320,5 @@ fun TextView.applyText(data: Map<*, *>) {
     (data["minLines"] as? Int?)?.let { view.minLines = it }
     (data["bold"] as? Boolean)?.let { if (it) view.setTypeface(view.typeface, Typeface.BOLD) }
     (data["text"] as? String)?.let { view.text = it }
-    view.ellipsize = TextUtils.TruncateAt.END;
+    view.ellipsize = TextUtils.TruncateAt.END
 }

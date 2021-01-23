@@ -134,7 +134,7 @@ class NativeAd extends StatefulWidget {
 }
 
 class _NativeAdState extends State<NativeAd>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin<NativeAd> {
   NativeAdController controller;
   NativeAdEvent state = NativeAdEvent.loading;
 
@@ -184,6 +184,7 @@ class _NativeAdState extends State<NativeAd>
   Widget build(BuildContext context) {
     super.build(context);
     assertPlatformIsSupported();
+    assertVersionIsSupported();
 
     if (state == NativeAdEvent.loading) return widget.loading ?? SizedBox();
     if (state == NativeAdEvent.loadFailed) return widget.error ?? SizedBox();

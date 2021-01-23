@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import 'mobile_ads.dart';
+
 /// Assert the running platform is supported.
+/// The supported platforms are: Android
 void assertPlatformIsSupported() {
   // Google Native ads are only supported in Android and iOS
   assert(
@@ -16,6 +19,51 @@ void assertPlatformIsSupported() {
 
   // TODO: Support iOS
   assert(Platform.isAndroid, 'Android is the only supported platform for now');
+}
+
+/// Assert the Mobile Ads SDK is initialized.
+/// It must be initialized before any ads can be loaded and must be initialized once.
+///
+/// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize)
+void assertMobileAdsIsInitialized() {
+  assert(
+    MobileAds.isInitialized,
+    'The Mobile Ads SDK must be initialized before any ads can be loaded',
+  );
+}
+
+/// Assert the Native or Banner Ad controller is attached and
+/// isn't disposed.
+void assertControllerIsAttached(bool attached) {
+  assert(attached, 'You can NOT use a disposed controller');
+}
+
+void debugCheckIsTestId(String id, List<String> testIds) {
+  assert(id != null);
+  assert(testIds != null);
+  if (!testIds.contains(id) && kDebugMode)
+    print(
+      'It is highly recommended to use test ads in for testing instead of production ads'
+      'Failure to do so can lead in to the suspension of your account',
+    );
+}
+
+/// Assert the current version is supported.
+/// The min versions are:
+///  - iOS: 9
+///  - Android: 16 (19 for Native and Banner Ads)
+void assertVersionIsSupported() {
+  if (Platform.isAndroid)
+    assert(
+      MobileAds.osVersion >= 19,
+      'Native and Banner Ads are not supported in versions before 19 because'
+      ' flutter only support platform views on Android 19 or greater.',
+    );
+  else
+    assert(
+      MobileAds.osVersion >= 9,
+      'The required version to use the AdMOB SDk is 9 or higher',
+    );
 }
 
 typedef AdBuilder = Widget Function(BuildContext context, Widget child);
@@ -67,10 +115,25 @@ Widget buildAndroidPlatformView(
 }
 
 class AdError {
-
+  /// Gets the error code. Possible error codes:
+  /// - App Id Missing (The ad request was not made due to a missing app ID): 8
+  /// - Internal error (Something happened internally; for instance, an invalid response was received from the ad server): 0
+  /// - Invalid request (The ad request was invalid; for instance, the ad unit ID was incorrect): 1
+  /// - Network error (The ad request was unsuccessful due to network connectivity): 2
+  /// - No fill (The ad request was successful, but no ad was returned due to lack of ad inventory): 3
+  ///
+  /// See [this](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#constant-summary) for more info
   final int code;
+
+  /// Gets an error message. For example "Account not approved yet".
+  /// See [this](https://support.google.com/admob/answer/9905175) for explanations of
+  /// common errors
   final String message;
+
+  /// Gets the domain from which the error came.
   final String domain;
+
+  /// Gets the cause of the error, if available.
   final AdError cause;
 
   const AdError({
@@ -80,13 +143,16 @@ class AdError {
     this.cause,
   });
 
+  /// Retrieve this from a json
   factory AdError.fromJson(Map<String, dynamic> json) {
     return AdError(
       code: json['code'],
       message: json['message'],
       domain: json['domain'],
-      cause: AdError.fromJson(json['cause'])
+      cause: AdError.fromJson(json['cause']),
     );
   }
 
+  @override
+  String toString() => '#$code from $domain. $message. Cause: $cause';
 }

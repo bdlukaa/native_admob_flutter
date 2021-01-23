@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
-InterstitialAd interstitialAd = InterstitialAd()..load();
+final interstitialAd = InterstitialAd()..load();
+final interstitialVideoAd =
+    InterstitialAd(MobileAds.interstitialAdVideoTestUnitId)..load();
 
 class FullScreenAds extends StatefulWidget {
   const FullScreenAds({Key key}) : super(key: key);
@@ -35,15 +37,28 @@ class _FullScreenAdsState extends State<FullScreenAds> {
         Spacer(),
         FlatButton(
           child: Text('Show interstitial ad'),
-          color: Colors.amber,
+          color: Colors.yellow,
           onPressed: () async {
             // Load only if not loaded
             if (!interstitialAd.isLoaded) await interstitialAd.load();
             if (interstitialAd.isLoaded) {
               await interstitialAd.show();
+
               /// You can also load a new ad here, because the `show()` will
               /// only complete when the ad gets closed
               // interstitialAd.load();
+            }
+          },
+        ),
+        FlatButton(
+          child: Text('Show interstitial video ad'),
+          color: Colors.amber,
+          onPressed: () async {
+            // Load only if not loaded
+            if (!interstitialVideoAd.isLoaded) await interstitialVideoAd.load();
+            if (interstitialVideoAd.isLoaded) {
+              await interstitialVideoAd.show();
+              interstitialVideoAd.load();
             }
           },
         ),
@@ -58,5 +73,4 @@ class _FullScreenAdsState extends State<FullScreenAds> {
       ],
     );
   }
-
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
+import '../utils.dart';
 
 enum InterstitialAdEvent {
   /// Called when a click is recorded for an ad.
@@ -92,6 +93,9 @@ class InterstitialAd {
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
+  /// 
+  /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or 
+  /// `MobileAds.interstitialAdTestUnitId` is used
   InterstitialAd([String unitId]) {
     _channel = MethodChannel(id);
     _channel.setMethodCallHandler(_handleMessages);
@@ -102,17 +106,16 @@ class InterstitialAd {
 
   /// Initialize the controller. This can be called only by the controller
   void _init(String unitId) {
-    final uId = unitId ??
-        MobileAds.interstitialAdUnitId ??
-        MobileAds.interstitialAdTestUnitId;
-    assert(uId != null);
+    unitId ??=
+        MobileAds.interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
     _pluginChannel.invokeMethod('initInterstitialAd', {
       'id': id,
-      'unitId': uId,
+      'unitId': unitId,
     });
   }
 
-  /// Dispose the ad. Once disposed, the ad can not be used anymore
+  /// Dispose the ad to free up resources. 
+  /// Once disposed, the ad can not be used anymore
   ///
   /// Usage:
   /// ```dart
@@ -166,10 +169,7 @@ class InterstitialAd {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
   Future<void> load() async {
-    // assert(
-    //   MobileAds.isInitialized,
-    //   'You MUST initialize the ADMOB before requesting any ads',
-    // );
+    assertMobileAdsIsInitialized();
     _loaded = await _channel.invokeMethod<bool>('loadAd', null);
   }
 

@@ -17,7 +17,6 @@ class AdLinearLayout extends AdView {
     AdDecoration decoration,
     double width,
     double height,
-    String tooltipText,
     this.gravity,
   })  : assert(orientation != null),
         super(
@@ -28,7 +27,6 @@ class AdLinearLayout extends AdView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
-          tooltipText: tooltipText,
         );
 
   Map<String, dynamic> toJson() {

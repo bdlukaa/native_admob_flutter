@@ -134,7 +134,8 @@ class BannerAd extends StatefulWidget {
   _BannerAdState createState() => _BannerAdState();
 }
 
-class _BannerAdState extends State<BannerAd> {
+class _BannerAdState extends State<BannerAd>
+    with AutomaticKeepAliveClientMixin<BannerAd> {
   BannerAdController controller;
   BannerAdEvent state = BannerAdEvent.loading;
 
@@ -174,7 +175,9 @@ class _BannerAdState extends State<BannerAd> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     assertPlatformIsSupported();
+    assertVersionIsSupported();
 
     return LayoutBuilder(
       builder: (context, consts) {
@@ -243,4 +246,7 @@ class _BannerAdState extends State<BannerAd> {
       },
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

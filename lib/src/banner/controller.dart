@@ -220,14 +220,8 @@ class BannerAdController {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#reloading-the-ad)
   void load() {
-    assert(
-      isAttached,
-      'You can NOT use a diposed controller',
-    );
-    // assert(
-    //   NativeAds.isInitialized,
-    //   'You MUST initialize the ADMOB before requesting any ads',
-    // );
+    assertControllerIsAttached(isAttached);
+    assertMobileAdsIsInitialized();
     _channel.invokeMethod('loadAd', null);
   }
 }
