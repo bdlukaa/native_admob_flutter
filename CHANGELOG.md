@@ -1,10 +1,16 @@
+## 0.4.1
+
+- **NEW**: Native Video Ad gif
+- Code refactor
+
 ## 0.4.0
 
 - **NEW**:
   - `rewardedAdUnitId` in `MobileAds.initialize()` is now possible
   - Implementation for `Native and Interstitial Video Ad Ids`
-  - Video ad example
-- **FIXED**: Rating bar size
+- **FIXED**: 
+  - Rating bar sizes
+  - AdError compiling issue when coming from android
 - Removed tooltip text
 - Documentation and wiki update
 - Improved error messages

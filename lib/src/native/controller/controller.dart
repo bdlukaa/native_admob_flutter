@@ -162,11 +162,7 @@ class NativeAdController {
   ///
   /// You should NOT call this function
   void attach() {
-    assert(
-      !_attached,
-      'This controller has already been attached to a native ad. You need one controller for each native ad.',
-    );
-    if (_attached) return;
+    assertControllerIsNotAttached(isAttached);
     _attached = true;
   }
 

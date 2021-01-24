@@ -38,6 +38,13 @@ void assertControllerIsAttached(bool attached) {
   assert(attached, 'You can NOT use a disposed controller');
 }
 
+void assertControllerIsNotAttached(bool attached) {
+  assert(
+    !attached,
+    'This controller has already been attached to a native or banner ad. You need one controller for each',
+  );
+}
+
 void debugCheckIsTestId(String id, List<String> testIds) {
   assert(id != null);
   assert(testIds != null);

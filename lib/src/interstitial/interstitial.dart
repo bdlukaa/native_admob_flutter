@@ -93,8 +93,8 @@ class InterstitialAd {
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
-  /// 
-  /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or 
+  ///
+  /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or
   /// `MobileAds.interstitialAdTestUnitId` is used
   InterstitialAd([String unitId]) {
     _channel = MethodChannel(id);
@@ -114,7 +114,7 @@ class InterstitialAd {
     });
   }
 
-  /// Dispose the ad to free up resources. 
+  /// Dispose the ad to free up resources.
   /// Once disposed, the ad can not be used anymore
   ///
   /// Usage:

@@ -91,6 +91,8 @@ class BannerSize {
   static const BannerSize LEADERBOARD = BannerSize(Size(728, 90));
 
   /// Creates banner ad with a custom size from `width` and `height`
+  /// 
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#custom-size)
   factory BannerSize.fromWH(double width, double height) {
     return BannerSize(Size(width, height));
   }
@@ -167,10 +169,7 @@ class BannerAdController {
   ///
   /// You should NOT call this function
   void attach() {
-    assert(
-      !isAttached,
-      'This controller has already been attached to a native ad. You need one controller for each native ad.',
-    );
+    assertControllerIsNotAttached(isAttached);
     _attached = true;
   }
 
