@@ -1,3 +1,8 @@
+## 0.4.2
+
+- Add declarative support for iOS, even tho it's not supported
+- Internet permission documentated
+
 ## 0.4.1
 
 - **NEW**: Native Video Ad gif
@@ -14,7 +19,7 @@
 - Removed tooltip text
 - Documentation and wiki update
 - Improved error messages
-- Shows an warning if Production Ads are used in debug mode (`kDebugMode`)
+- Shows a warning if Production Ads are used in debug mode (`kDebugMode`)
 - Version checking is done on build method now because Native and Banner Ads requires Android Api >= 19, but Interstitial and Rewarded requires Android Api >= 16. Required version for iOS is 9
 - Pre-support for iOS:
   - [Required flutter version >= 1.22.0](https://flutter.dev/docs/development/platform-integration/platform-views?tab=android-platform-views-kotlin-tab#ios)
