@@ -2,6 +2,7 @@
 
 - **NEW**:
   - Implementation for [AppOpenAd](https://developers.google.com/admob/android/app-open-ads)s
+  - [Wiki page for AppOpenAds](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad)
   - New mixin [UniqueKeyMixin] to implement a unique id to classes
   - `MobileAds.isTestDevice` method
     <!-- This has been done to improve performance. -->
@@ -10,8 +11,7 @@
   - The plugin channel is now public accessible in `MobileAds.pluginChannel`
 - **Fixed**: showing warning when a production ad was used in testing (debug)
 - Improved documentation on `AdError`s to support `AppOpenAd`s error codes
-<!-- The gif was too big -->
-- Removed the native video ad gif
+- Removed the native video ad gif <!-- The gif was too big -->
 - Updated example:
   - Now it shows an example of how to use a Banner ad in the bottom of the screen with a bottom bar
   - The example is now fully documentated

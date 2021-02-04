@@ -177,3 +177,11 @@ mixin UniqueKeyMixin {
   final _key = UniqueKey();
   String get id => _key.toString();
 }
+
+// abstract class LoadShowAd<T> with UniqueKeyMixin {
+
+//   Future<bool> load();
+//   Future<bool> show();
+//   void dispose();
+
+// }
