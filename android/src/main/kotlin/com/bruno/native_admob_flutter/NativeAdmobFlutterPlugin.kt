@@ -186,17 +186,13 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
         activity = binding.activity
     }
 
-    override fun onDetachedFromActivityForConfigChanges() {
-        activity = null
-    }
+    override fun onDetachedFromActivityForConfigChanges() {}
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
         activity = binding.activity
     }
 
-    override fun onDetachedFromActivity() {
-        activity = null
-    }
+    override fun onDetachedFromActivity() {}
 }
 
 fun encodeError(error: AdError?): Map<String, Any?> {

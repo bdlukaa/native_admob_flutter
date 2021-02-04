@@ -31,9 +31,49 @@ enum NativeAdEvent {
   undefined,
 }
 
-enum AdVideoEvent { start, play, pause, end, mute }
+enum AdVideoEvent {
+  /// Called when the video starts. This is called only once
+  start,
 
-class NativeAdController with UniqueKeyMixin {
+  /// Called when the video is played. This can be called multiple times
+  /// while the video is running
+  play,
+
+  /// Called when the video is somehow paused, either for user interaction
+  /// or programatically
+  pause,
+
+  /// Called when the video reachs the end
+  end,
+
+  /// Called when the video is somhow muted, either for user interaction
+  /// or programatically
+  mute,
+}
+
+/// An Native Ad Controller model to communicate with the model on the platform side.
+/// It gives you methods to help in the implementation and event tracking.
+/// It's supposed to work alongside `NativeAd`, the class used to show the ad in
+/// the UI and add it to the widget tree.
+/// 
+/// For more info, see:
+///   - https://developers.google.com/admob/android/native/start
+///   - https://developers.google.com/admob/ios/native/start
+class NativeAdController extends LoadShowAd<NativeAdEvent> {
+  /// The test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/2247696110
+  ///   - iOS: ca-app-pub-3940256099942544/3986624511
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
+  static String get testUnitId => MobileAds.nativeAdTestUnitId;
+
+  /// The video test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/1044960115
+  ///   - iOS: ca-app-pub-3940256099942544/2521693316
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
+  static String get videoTestUnitId => MobileAds.nativeAdVideoTestUnitId;
+
   MediaContent _mediaContent;
 
   /// Provides media content information.
@@ -55,8 +95,6 @@ class NativeAdController with UniqueKeyMixin {
   ///
   /// Use `options` in `NativeAd` to enable Custom Mute This Ad
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
-
-  final _onEvent = StreamController<Map<NativeAdEvent, dynamic>>.broadcast();
 
   /// Listen to the events the controller throws
   ///
@@ -92,7 +130,9 @@ class NativeAdController with UniqueKeyMixin {
   ///   }
   /// });
   /// ```
-  Stream<Map<NativeAdEvent, dynamic>> get onEvent => _onEvent.stream;
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-events)
+  Stream<Map<NativeAdEvent, dynamic>> get onEvent => super.onEvent;
 
   final _onVideoEvent =
       StreamController<Map<AdVideoEvent, dynamic>>.broadcast();
@@ -124,10 +164,9 @@ class NativeAdController with UniqueKeyMixin {
   ///   }
   /// });
   /// ```
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-video-events)
   Stream<Map<AdVideoEvent, dynamic>> get onVideoEvent => _onVideoEvent.stream;
-
-  /// Channel to communicate with controller
-  MethodChannel _channel;
 
   bool _attached = false;
 
@@ -135,16 +174,11 @@ class NativeAdController with UniqueKeyMixin {
   bool get isAttached => _attached;
 
   /// Creates a new native ad controller
-  NativeAdController() {
-    _channel = MethodChannel(id);
-    _channel.setMethodCallHandler(_handleMessages);
-
-    // Let the plugin know there is a new controller
-    _init();
-  }
+  NativeAdController() : super();
 
   /// Initialize the controller. This can be called only by the controller
-  void _init() {
+  void init() {
+    channel.setMethodCallHandler(_handleMessages);
     MobileAds.pluginChannel.invokeMethod('initNativeAdController', {'id': id});
   }
 
@@ -168,15 +202,18 @@ class NativeAdController with UniqueKeyMixin {
   /// }
   /// ```
   void dispose() {
-    MobileAds.pluginChannel
-        .invokeMethod('disposeNativeAdController', {'id': id});
-    _onEvent.close();
+    super.dispose();
+    MobileAds.pluginChannel.invokeMethod(
+      'disposeNativeAdController',
+      {'id': id},
+    );
     _onVideoEvent.close();
     _attached = false;
   }
 
   /// Handle the messages the channel sends
   Future<void> _handleMessages(MethodCall call) async {
+    if (isDisposed) return;
     if (call.method.startsWith('onVideo')) {
       switch (call.method) {
         case 'onVideoStart':
@@ -201,27 +238,27 @@ class NativeAdController with UniqueKeyMixin {
     }
     switch (call.method) {
       case 'loading':
-        _onEvent.add({NativeAdEvent.loading: null});
+        onEventController.add({NativeAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent
+        onEventController
             .add({NativeAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
-        _onEvent.add({NativeAdEvent.loaded: null});
+        onEventController.add({NativeAdEvent.loaded: null});
         break;
       case 'onAdClicked':
-        _onEvent.add({NativeAdEvent.clicked: null});
+        onEventController.add({NativeAdEvent.clicked: null});
         break;
       case 'onAdImpression':
-        _onEvent.add({NativeAdEvent.impression: null});
+        onEventController.add({NativeAdEvent.impression: null});
         break;
       case 'onAdMuted':
-        _onEvent.add({NativeAdEvent.muted: null});
+        onEventController.add({NativeAdEvent.muted: null});
         break;
       case 'undefined':
       default:
-        _onEvent.add({NativeAdEvent.undefined: null});
+        onEventController.add({NativeAdEvent.undefined: null});
         break;
     }
 
@@ -249,12 +286,14 @@ class NativeAdController with UniqueKeyMixin {
   /// an `AssertionError` is thrown.
   ///
   /// If [unitId] is not specified, uses [MobileAds.nativeAdUnitId]
-  void load({String unitId, NativeAdOptions options}) {
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#reloading-the-ad)
+  Future<bool> load({String unitId, NativeAdOptions options}) {
     assertControllerIsAttached(isAttached);
     assertMobileAdsIsInitialized();
     // The id will never be null, so you don't need to check
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    _channel.invokeMethod('loadAd', {
+    return channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     });
@@ -266,18 +305,20 @@ class NativeAdController with UniqueKeyMixin {
   /// You'll rarely need to call this method
   void requestAdUIUpdate(Map<String, dynamic> layout) {
     // print('requested ui update');
-    _channel.invokeMethod('updateUI', {'layout': layout ?? {}});
+    channel.invokeMethod('updateUI', {'layout': layout ?? {}});
   }
 
   /// Mutes This Ad programmatically.
   ///
   /// Use null to Mute This Ad with default reason.
+  ///
+  /// Fore more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad)
   void muteThisAd([int reason]) {
     assert(
       isAttached,
       'You can NOT use a disposed controller',
     );
-    _channel.invokeMethod('muteAd', {'reason': reason});
+    channel.invokeMethod('muteAd', {'reason': reason});
   }
 }
 

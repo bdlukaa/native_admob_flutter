@@ -30,8 +30,7 @@ class NativeAdmobController(
             "loadAd" -> {
                 val unitId = call.argument<String>("unitId") ?: "ca-app-pub-3940256099942544/2247696110"
                 val options = call.argument<Map<String, Any>>("options")
-                loadAd(unitId, options!!)
-                result.success(null)
+                loadAd(unitId, options!!, result)
             }
             "updateUI" -> {
                 val data = call.argument<Map<String, Any?>>("layout") ?: return
@@ -53,7 +52,7 @@ class NativeAdmobController(
         channel.invokeMethod("undefined", null)
     }
 
-    private fun loadAd(unitId: String, options: Map<String, Any>) {
+    private fun loadAd(unitId: String, options: Map<String, Any>, result: MethodChannel.Result) {
         channel.invokeMethod("loading", null)
         // ad options
         val adOptions = NativeAdOptions.Builder()
@@ -113,6 +112,7 @@ class NativeAdmobController(
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         super.onAdFailedToLoad(error)
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))
+                        result.success(false)
                     }
 
                     override fun onAdLoaded() {
@@ -130,6 +130,7 @@ class NativeAdmobController(
                                         "hasVideoContent" to mediaContent.hasVideoContent()
                                 )
                         ))
+                        result.success(true)
                     }
                 })
                 .withNativeAdOptions(adOptions.build())

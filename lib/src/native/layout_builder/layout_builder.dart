@@ -29,6 +29,7 @@ const double MATCH_PARENT = -1;
 const double WRAP_CONTENT = -2;
 
 class AdView {
+  /// The Decoration of the AdView. 
   final AdDecoration decoration;
 
   /// The padding applied to the view. Default to none

@@ -53,12 +53,12 @@ class AppOpenAdController(
                     override fun onAppOpenAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
                         channel.invokeMethod("onAppOpenAdLoaded", null)
-                        result.success(null)
+                        result.success(true)
                     }
 
                     override fun onAppOpenAdFailedToLoad(loadAdError: LoadAdError) {
                         channel.invokeMethod("onAppOpenAdFailedToLoad", encodeError(loadAdError))
-                        result.error(loadAdError.code.toString(), loadAdError.message, null)
+                        result.success(false)
                     }
                 }
                 fetchAd(unitId, orientation, loadCallback)
@@ -70,17 +70,18 @@ class AppOpenAdController(
                         appOpenAd = null
                         isShowingAd = false
                         channel.invokeMethod("onAdDismissedFullScreenContent", null)
+                        result.success(true)
                     }
 
                     override fun onAdFailedToShowFullScreenContent(adError: AdError) {
                         channel.invokeMethod("onAdFailedToShowFullScreenContent", encodeError(adError))
-                        result.error(adError.code.toString(), adError.message, null)
+                        result.success(false)
                     }
 
                     override fun onAdShowedFullScreenContent() {
                         isShowingAd = true
                         channel.invokeMethod("onAdShowedFullScreenContent", null)
-                        result.success(null)
+//                        result.success(null)
                     }
                 }
                 showAdIfAvailable(fullScreenContentCallback)

@@ -102,8 +102,21 @@ class BannerSize {
   String toString() => '${size.width}x${size.height}';
 }
 
-class BannerAdController with UniqueKeyMixin {
-  final _onEvent = StreamController<Map<BannerAdEvent, dynamic>>.broadcast();
+/// An Banner Ad Controller model to communicate with the model on the platform side.
+/// It gives you methods to help in the implementation and event tracking.
+/// It's supposed to work alongside `BannerAd`, the class used to show the ad in
+/// the UI and add it to the widget tree.
+/// 
+/// For more info, see:
+///   - https://developers.google.com/admob/android/banner
+///   - https://developers.google.com/admob/ios/banner
+class BannerAdController extends LoadShowAd<BannerAdEvent> {
+  /// The test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/6300978111
+  ///   - iOS: ca-app-pub-3940256099942544/2934735716
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
+  static String get testUnitId => MobileAds.bannerAdTestUnitId;
 
   /// Listen to the events the controller throws
   ///
@@ -133,10 +146,9 @@ class BannerAdController with UniqueKeyMixin {
   ///   }
   /// });
   /// ```
-  Stream<Map<BannerAdEvent, dynamic>> get onEvent => _onEvent.stream;
-
-  /// Channel to communicate with controller
-  MethodChannel _channel;
+  /// 
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#listening-to-events)
+  Stream<Map<BannerAdEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _attached = false;
 
@@ -144,16 +156,11 @@ class BannerAdController with UniqueKeyMixin {
   bool get isAttached => _attached;
 
   /// Creates a new native ad controller
-  BannerAdController() {
-    _channel = MethodChannel(id);
-    _channel.setMethodCallHandler(_handleMessages);
-
-    // Let the plugin know there is a new controller
-    _init();
-  }
+  BannerAdController() : super();
 
   /// Initialize the controller. This can be called only by the controller
-  void _init() {
+  void init() {
+    channel.setMethodCallHandler(_handleMessages);
     MobileAds.pluginChannel.invokeMethod('initBannerAdController', {'id': id});
   }
 
@@ -162,6 +169,7 @@ class BannerAdController with UniqueKeyMixin {
   ///
   /// You should NOT call this function
   void attach() {
+    ensureAdNotDisposed();
     assertControllerIsNotAttached(isAttached);
     _attached = true;
   }
@@ -178,34 +186,36 @@ class BannerAdController with UniqueKeyMixin {
   /// }
   /// ```
   void dispose() {
-    MobileAds.pluginChannel
-        .invokeMethod('disposeBannerAdController', {'id': id});
-    _onEvent.close();
-    _attached = false;
+    super.dispose();
+    MobileAds.pluginChannel.invokeMethod(
+      'disposeBannerAdController',
+      {'id': id},
+    );
   }
 
   Future<dynamic> _handleMessages(MethodCall call) async {
+    if (isDisposed) return;
     switch (call.method) {
       case 'loading':
-        _onEvent.add({BannerAdEvent.loading: null});
+        onEventController.add({BannerAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add({
+        onEventController.add({
           BannerAdEvent.loadFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdLoaded':
-        _onEvent.add({BannerAdEvent.loaded: call.arguments});
+        onEventController.add({BannerAdEvent.loaded: call.arguments});
         break;
       case 'onAdClicked':
-        _onEvent.add({BannerAdEvent.clicked: null});
+        onEventController.add({BannerAdEvent.clicked: null});
         break;
       case 'onAdImpression':
-        _onEvent.add({BannerAdEvent.impression: null});
+        onEventController.add({BannerAdEvent.impression: null});
         break;
       case 'undefined':
       default:
-        _onEvent.add({BannerAdEvent.undefined: null});
+        onEventController.add({BannerAdEvent.undefined: null});
         break;
     }
   }
@@ -213,9 +223,10 @@ class BannerAdController with UniqueKeyMixin {
   /// Load the ad. The ad needs to be loaded to be rendered.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#reloading-the-ad)
-  void load() {
+  Future<bool> load() {
+    ensureAdNotDisposed();
     assertControllerIsAttached(isAttached);
     assertMobileAdsIsInitialized();
-    _channel.invokeMethod('loadAd', null);
+    return channel.invokeMethod<bool>('loadAd', null);
   }
 }

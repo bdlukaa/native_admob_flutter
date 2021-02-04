@@ -10,7 +10,7 @@ class AdRadialGradient extends AdGradient {
   /// - You must specify at least two [colors]. 
   /// - The default value for [radius] is 1000
   /// - The default value for [center] is `Alignment(0.5, 0.5)`
-  const AdRadialGradient({
+  AdRadialGradient({
     @required List<Color> colors,
     double radius,
     Alignment center,

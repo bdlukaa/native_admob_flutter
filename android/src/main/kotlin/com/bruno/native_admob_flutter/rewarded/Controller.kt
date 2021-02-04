@@ -54,7 +54,7 @@ class RewardedAdController(
 
                     override fun onRewardedAdClosed() {
                         channel.invokeMethod("onRewardedAdClosed", null)
-                        result.success(null)
+                        result.success(true)
                     }
 
                     override fun onUserEarnedReward(reward: RewardItem) {
@@ -66,6 +66,7 @@ class RewardedAdController(
 
                     override fun onRewardedAdFailedToShow(error: AdError) {
                         channel.invokeMethod("onRewardedAdFailedToShow", encodeError(error))
+                        result.success(false)
                     }
                 }
                 rewardedAd.show(activity, adCallback)

@@ -53,7 +53,18 @@ class RewardItem {
   }
 }
 
-class RewardedAd with UniqueKeyMixin {
+/// An InterstitialAd model to communicate with the model on the platform side.
+/// It gives you methods to help in the implementation and event tracking.
+/// 
+/// For more info, see:
+///   - https://developers.google.com/admob/android/rewarded-fullscreen
+///   - https://developers.google.com/admob/ios/rewarded-ads
+class RewardedAd extends LoadShowAd<RewardedAdEvent> {
+  /// The test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/5224354917
+  ///   - iOS: ca-app-pub-3940256099942544/1712485313
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
   static String get testUnitId => MobileAds.rewardedAdTestUnitId;
 
   /// Create and load a new ad without extra code.\
@@ -70,8 +81,6 @@ class RewardedAd with UniqueKeyMixin {
     await ad.load();
     return ad;
   }
-
-  final _onEvent = StreamController<Map<RewardedAdEvent, dynamic>>.broadcast();
 
   /// Listen to the events the ad throws
   ///
@@ -111,30 +120,24 @@ class RewardedAd with UniqueKeyMixin {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
-  Stream<Map<RewardedAdEvent, dynamic>> get onEvent => _onEvent.stream;
+  Stream<Map<RewardedAdEvent, dynamic>> get onEvent => super.onEvent;
 
   RewardItem _item;
   RewardItem get item => _item;
-
-  /// Channel to communicate with controller
-  MethodChannel _channel;
 
   bool _loaded = false;
 
   /// Returns true if the ad was successfully loaded and is ready to be shown.
   bool get isLoaded => _loaded;
 
-  /// Creates a new native ad controller
-  RewardedAd([String unitId]) {
-    _channel = MethodChannel(id);
-    _channel.setMethodCallHandler(_handleMessages);
+  final String unitId;
 
-    // Let the plugin know there is a new controller
-    _init(unitId);
-  }
+  /// Creates a new native ad controller
+  RewardedAd([this.unitId]) : super();
 
   /// Initialize the controller. This can be called only by the controller
-  void _init(String unitId) async {
+  void init() async {
+    channel.setMethodCallHandler(_handleMessages);
     final uId =
         unitId ?? MobileAds.rewardedAdUnitId ?? MobileAds.rewardedAdTestUnitId;
     assert(uId != null);
@@ -161,42 +164,42 @@ class RewardedAd with UniqueKeyMixin {
   /// }
   /// ```
   void dispose() {
+    super.dispose();
     MobileAds.pluginChannel.invokeMethod('disposeRewardedAd', {'id': id});
-    _onEvent.close();
   }
 
   /// Handle the messages the channel sends
   Future<void> _handleMessages(MethodCall call) async {
     switch (call.method) {
       case 'loading':
-        _onEvent.add({RewardedAdEvent.loading: null});
+        onEventController.add({RewardedAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add(
+        onEventController.add(
             {RewardedAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
-        _onEvent.add({RewardedAdEvent.loaded: null});
+        onEventController.add({RewardedAdEvent.loaded: null});
         break;
       case 'onRewardedAdOpened':
-        _onEvent.add({RewardedAdEvent.opened: null});
+        onEventController.add({RewardedAdEvent.opened: null});
         break;
       case 'onRewardedAdClosed':
-        _onEvent.add({RewardedAdEvent.closed: null});
+        onEventController.add({RewardedAdEvent.closed: null});
         dispose();
         break;
       case 'onUserEarnedReward':
-        _onEvent.add({
+        onEventController.add({
           RewardedAdEvent.earnedReward: RewardItem.fromJson(call.arguments)
         });
         break;
       case 'onRewardedAdFailedToShow':
-        _onEvent.add(
+        onEventController.add(
             {RewardedAdEvent.showFailed: AdError.fromJson(call.arguments)});
         break;
       case 'undefined':
       default:
-        _onEvent.add({RewardedAdEvent.undefined: null});
+        onEventController.add({RewardedAdEvent.undefined: null});
         break;
     }
   }
@@ -211,9 +214,10 @@ class RewardedAd with UniqueKeyMixin {
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#load-the-ad)
-  Future<void> load() async {
+  Future<bool> load() async {
     assertMobileAdsIsInitialized();
-    _loaded = await _channel.invokeMethod<bool>('loadAd', null);
+    _loaded = await channel.invokeMethod<bool>('loadAd', null);
+    return _loaded;
   }
 
   /// Show the rewarded ad. This returns a `Future` that will complete when
@@ -232,13 +236,13 @@ class RewardedAd with UniqueKeyMixin {
   /// await (await rewardedAd.load()).show();
   /// print('ad showed');
   /// ```
-  Future<void> show() {
+  Future<bool> show() {
     assert(
       isLoaded,
       '''The ad must be loaded to show. 
       Call controller.load() to load the ad. 
       Call controller.isLoaded to check if the ad is loaded before showing.''',
     );
-    return _channel.invokeMethod('show');
+    return channel.invokeMethod<bool>('show');
   }
 }

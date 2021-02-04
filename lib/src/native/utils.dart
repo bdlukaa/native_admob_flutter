@@ -3,7 +3,7 @@ import 'layout_builder/layout_builder.dart';
 
 /// Default banner ad layout
 ///
-/// ![adBannerLayoutBuilder screenshot](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/default_banner_screenshot.png)
+/// ![adBannerLayoutBuilder screenshot](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/native/banner_size_ad.png?raw=true)
 ///
 /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
 AdLayoutBuilder get adBannerLayoutBuilder => (ratingBar, media, icon, headline,

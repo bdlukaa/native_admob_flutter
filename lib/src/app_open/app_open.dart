@@ -36,16 +36,16 @@ enum AppOpenEvent {
 }
 
 /// An AppOpenAd model to communicate with the model in the platform side.
+/// It gives you methods to help in the implementation and event tracking.
+/// 
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/app-open-ads
 ///   - https://developers.google.com/admob/ios/app-open-ads
-class AppOpenAd with UniqueKeyMixin {
+class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// The test id for this ad.
   ///   - Android: ca-app-pub-3940256099942544/3419835294
   ///   - iOS: ca-app-pub-3940256099942544/5662855259
   static String get testUnitId => MobileAds.appOpenAdTestUnitId;
-
-  final _onEvent = StreamController<Map<AppOpenEvent, dynamic>>.broadcast();
 
   /// Listen to the events the ad throws
   ///
@@ -79,9 +79,9 @@ class AppOpenAd with UniqueKeyMixin {
   ///   }
   /// });
   /// ```
-  Stream<Map<AppOpenEvent, dynamic>> get onEvent => _onEvent.stream;
-
-  bool _disposed = false;
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
+  Stream<Map<AppOpenEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _isAvaiable = false;
 
@@ -106,50 +106,50 @@ class AppOpenAd with UniqueKeyMixin {
   /// Check if the ad is currently showing.
   bool get isShowing => _isShowing;
 
-  /// Channel to communicate with controller
-  MethodChannel _channel;
-
   /// The duration a ad can be kept loaded. Default to 1 hour
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
   Duration timeout;
 
   /// Creates a new AppOpenAd instance. Don't forget to dipose
   /// it when you finish using it to free up resources
-  AppOpenAd([this.timeout = const Duration(hours: 1)]) {
-    assert(timeout != null, 'The timeout time can NOT be null');
-    _channel = MethodChannel(id);
-    _channel.setMethodCallHandler(_handleMessages);
+  AppOpenAd([this.timeout = const Duration(hours: 1)])
+      : assert(timeout != null, 'The timeout time can NOT be null'),
+        super();
 
+  void init() {
+    channel.setMethodCallHandler(_handleMessages);
     MobileAds.pluginChannel.invokeMethod('initAppOpenAd', {'id': id});
   }
 
   Future<void> _handleMessages(MethodCall call) async {
-    if (_disposed) return;
+    if (isDisposed) return;
     switch (call.method) {
       case 'loading':
-        _onEvent.add({AppOpenEvent.loading: null});
+        onEventController.add({AppOpenEvent.loading: null});
         break;
       case 'onAppOpenAdFailedToLoad':
-        _onEvent.add({
+        onEventController.add({
           AppOpenEvent.loadFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAppOpenAdLoaded':
         _isAvaiable = true;
-        _onEvent.add({AppOpenEvent.loaded: null});
+        onEventController.add({AppOpenEvent.loaded: null});
         break;
       case 'onAdDismissedFullScreenContent':
         _isAvaiable = false;
         _isShowing = false;
-        _onEvent.add({AppOpenEvent.dismissed: null});
+        onEventController.add({AppOpenEvent.dismissed: null});
         break;
       case 'onAdFailedToShowFullScreenContent':
-        _onEvent.add({
+        onEventController.add({
           AppOpenEvent.showFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdShowedFullScreenContent':
         _isShowing = true;
-        _onEvent.add({AppOpenEvent.showed: null});
+        onEventController.add({AppOpenEvent.showed: null});
         break;
     }
   }
@@ -158,6 +158,8 @@ class AppOpenAd with UniqueKeyMixin {
   ///
   /// Returns `true` if the ad was loaded successfully or `false`
   /// if an error happened
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
   Future<bool> load({
     /// The ad unit id
     String unitId,
@@ -169,7 +171,7 @@ class AppOpenAd with UniqueKeyMixin {
     /// Failure to use them will result in an `AssertionError`
     int orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT,
   }) async {
-    _ensureAdNotDisposed();
+    ensureAdNotDisposed();
     if (isAvaiable) {
       print('An ad is already avaiable, no need to load another');
       return false;
@@ -180,18 +182,13 @@ class AppOpenAd with UniqueKeyMixin {
             .contains(orientation),
         'The orientation must be a valid orientation: $APP_OPEN_AD_ORIENTATION_PORTRAIT, $APP_OPEN_AD_ORIENTATION_LANDSCAPE',
       );
-    try {
-      await _channel.invokeMethod('loadAd', {
-        'unitId': unitId ??
-            MobileAds.appOpenAdUnitId ??
-            MobileAds.appOpenAdTestUnitId,
-        'orientation': orientation ?? APP_OPEN_AD_ORIENTATION_PORTRAIT,
-      });
-      _lastLoadedTime = DateTime.now();
-      return true;
-    } catch (e) {
-      return false;
-    }
+    bool loaded = await channel.invokeMethod<bool>('loadAd', {
+      'unitId':
+          unitId ?? MobileAds.appOpenAdUnitId ?? MobileAds.appOpenAdTestUnitId,
+      'orientation': orientation ?? APP_OPEN_AD_ORIENTATION_PORTRAIT,
+    });
+    if (loaded) _lastLoadedTime = DateTime.now();
+    return loaded;
   }
 
   /// Make sure to check if the ad is avaiable using the getter `isAvaiable`
@@ -205,13 +202,15 @@ class AppOpenAd with UniqueKeyMixin {
   ///   }
   /// }
   /// ```
-  Future<void> show() {
-    _ensureAdNotDisposed();
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#show-the-ad)
+  Future<bool> show() {
+    ensureAdNotDisposed();
     assert(
       isAvaiable,
       'Can NOT show an ad that is not loaded. Call await appOpenAd.load() before showing it',
     );
-    return _channel.invokeMethod('showAd');
+    return channel.invokeMethod<bool>('showAd');
   }
 
   /// Dispose the ad to free up resouces.
@@ -219,14 +218,7 @@ class AppOpenAd with UniqueKeyMixin {
   ///
   /// If you try to use a disposed ad, an `AssertionError will be thrown`
   void dispose() {
-    _ensureAdNotDisposed();
-    _disposed = true;
-    _onEvent.close();
+    super.dispose();
     MobileAds.pluginChannel.invokeMethod('disposeAppOpenAd', {'id': id});
-  }
-
-  /// Make sure the ad is not disposed when using it
-  void _ensureAdNotDisposed() {
-    assert(!_disposed, 'You can NOT use a disposed ad');
   }
 }

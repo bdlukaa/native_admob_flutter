@@ -1,4 +1,21 @@
-## 0.5.0
+Date format: DD/MM/YYYY
+
+## 0.6.0 - [04/02/2021]
+
+- **NEW**:
+  - `MediaContent.copyWith()`
+  - Ads and Controllers are now inherited from `LoadShowAd` to avoid boilerplate code
+  - All `load()` and `show()` methods returns a `Future<bool>` where `true` is success and `false` is error
+  - Add all test ids in its respective ad classes
+- **FIXED**:
+  - Error that controllers could keep receiving events from the platform side after being disposed
+  - Bug that media aspect ratio was not set when trying to set
+  - Fixed [adBannerLayoutBuilder] screenshot on the documentation
+  - Null issue on the android side when releasing an activity
+- Throws an `AssertionError` if you try to use a different type in `AdGradient`
+- Highly improved the documentation and wiki
+
+## 0.5.0 - [04/02/2021]
 
 - **NEW**:
   - Implementation for [AppOpenAd](https://developers.google.com/admob/android/app-open-ads)s
@@ -17,17 +34,17 @@
   - The example is now fully documentated
   - Added `AppOpenAd` to full-screen ads
 
-## 0.4.2
+## 0.4.2 - [29/01/2021]
 
 - Add declarative support for iOS, even tho it's not supported
 - Internet permission documentated
 
-## 0.4.1
+## 0.4.1 - [23/01/2021]
 
 - **NEW**: Native Video Ad gif
 - Code refactor
 
-## 0.4.0
+## 0.4.0 - [23/01/2021]
 
 - **NEW**:
   - `rewardedAdUnitId` in `MobileAds.initialize()` is now possible
@@ -46,36 +63,36 @@
   - [Target version needs to be 9 or higher](https://developers.google.com/admob/ios/quick-start#prerequisites)
   - [Updated wiki with iOS platform setup steps](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup#ios)
 
-## 0.3.1
+## 0.3.1 - [18/91/2021]
 
 - **NEW**: `AdError` instead of only `errorCode`
 - You can now `await` the `show()` method from `RewardedAd` and `InterstitialAd`
 - Improved documentation
 - Now disposed controllers throw an `AssertionError` if used
 
-## 0.3.0
+## 0.3.0 - [17/01/2021]
 
 - **NEW**: Rewarded ads
 - Removed unused methods from interstitial
 
-## 0.2.0+1
+## 0.2.0+1 - [17/01/2021]
 
 - Banner Ad Builder is only applied if loaded
 
-## 0.2.0
+## 0.2.0 - [17/01/2021]
 
 - **NEW**:
   - InterstitialAd
   - Adaptive Banner Ads
 
-## 0.1.2+1
+## 0.1.2+1 - [15/01/2021]
 
 - Readme update
 - All AdViews are documentated now
 - Deprecate `SMART_BANNER`, as it's deprecated in SDK v20
   - See [this](https://developers.google.com/admob/android/migration#smart)
 
-## 0.1.2
+## 0.1.2 - [15/01/2021]
 
 - **NEW**:
   - `AdSingleChildView`. Equivalent to `SingleChildView`
@@ -85,11 +102,11 @@
 - `Loading` and `Error` placeholders are now avaiable on `BannerAd`s
 - Updated example app. It's more clear and more intuitive to use
 
-## 0.1.1
+## 0.1.1 - [14/01/2021]
 
 - Documentation improvement
 
-## 0.1.0
+## 0.1.0 - [14/01/2021]
 
 - **NEW**: BannerAds
 - **BREAKING**:
@@ -97,16 +114,16 @@
   - Rename `NativeAds` to `MobileAds`
 - Size is only applied to the ad, not the builder
 
-## 0.0.8+1
+## 0.0.8+1 - [11/01/2021]
 
 - Implement ad builder
 
-## 0.0.8
+## 0.0.8 - [11/01/2021]
 
 - Implement MediaContent
 - Fixed mute this ad info
 
-## 0.0.7
+## 0.0.7 - [06/01/2021]
 
 - **HIGHLIGHT**: Automatic support for Hybrid Composition on android
 - Removed custom mute this button from native side
@@ -114,25 +131,25 @@
 - Improved readme
 - Improve view size calculation and warnings
 
-## 0.0.6+4
+## 0.0.6+4 - [05/01/2021]
 
 - Improved documentation
 
-## 0.0.6+3
+## 0.0.6+3 - [04/01/2021]
 
 - Update the documentation
 - Created the wiki
 
-## 0.0.6+2
+## 0.0.6+2 - [03/01/2021]
 
 - Fix custom this ad reasons
 - Implemented `isCustomMuteThisAdEnabled` on controller
 
-## 0.0.6+1
+## 0.0.6+1 - [03/01/2021]
 
 - Custom mute this ad is still avaiable but you can't use a `AdView` for it
 
-## 0.0.6
+## 0.0.6 - [02/01/2021]
 
 - Implementation for NativeAdOptions
   - **HIGHLIGHT**: adChoicesPlacement
@@ -144,7 +161,7 @@
 - Implement custom mute this ad
 - Performance update
 
-## 0.0.5
+## 0.0.5 - [02/01/2021]
 
 - Implementation for new methods
   - **HIGHLIGHT**: setChildDirected
@@ -155,13 +172,13 @@
 - Improved documentation
 - Preparation for `Custom Mute this Ad` and `Native Video Ads`
 
-## 0.0.4+1
+## 0.0.4+1 - [01/01/2021]
 
 - Portuguese translation
 - Improvoved documentation
 - Remove useless files
 
-## 0.0.4
+## 0.0.4 - [31/12/2020]
 
 - Button text style is now customizable
 - Fixed `Colors.transparent` color bug
@@ -171,19 +188,19 @@
 - Added layout gravity
 - Changed examples to support hot reload
 
-## 0.0.3
+## 0.0.3 - [31/12/2020]
 
 - Remove context from builder
 - Changing the layout during runtime is now supported 🥳🥳🎉
 
-## 0.0.2
+## 0.0.2 - [30/12/2020]
 
 - Add Linear and Radial Gradient
 
-## 0.0.1+1
+## 0.0.1+1 - [30/12/2020]
 
 - Fix some issues
 
-## 0.0.1
+## 0.0.1 - [29/12/2020]
 
 - Initial release

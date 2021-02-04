@@ -56,13 +56,13 @@ class NativeAdOptions {
   /// Setting NativeMediaAspectRatio to one of the following constants will cause only
   /// ads with media of the specified aspect ratio to be returned:
   ///
-  /// 1. NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE *default*
-  /// 2. NATIVE_MEDIA_ASPECT_RATIO_PORTRAIT
-  /// 3. NATIVE_MEDIA_ASPECT_RATIO_SQUARE
-  /// 4. NATIVE_MEDIA_ASPECT_RATIO_ANY
+  /// 1. `NATIVE_MEDIA_ASPECT_RATIO_LANDSCAPE` *default*
+  /// 2. `NATIVE_MEDIA_ASPECT_RATIO_PORTRAIT`
+  /// 3. `NATIVE_MEDIA_ASPECT_RATIO_SQUARE`
+  /// 4. `NATIVE_MEDIA_ASPECT_RATIO_ANY`
   int get mediaAspectRatio => _mediaAspectRatio;
   set mediaAspectRatio(int aspect) {
-    if (aspect != null)
+    if (aspect != null) {
       assert(
         [
           MEDIA_ASPECT_RATIO_ANY,
@@ -72,6 +72,8 @@ class NativeAdOptions {
         ].contains(aspect),
         'The entered value is not accepted. Accepted values: 1, 2, 3, 4',
       );
+      _mediaAspectRatio = aspect;
+    }
   }
 
   VideoOptions _videoOptions = VideoOptions();
@@ -95,6 +97,8 @@ class NativeAdOptions {
 
 class VideoOptions {
   bool _startMuted = true;
+
+  /// Wheter if the video start muted or not. Defaults to `true`
   bool get startMuted => _startMuted;
   set startMuted(bool start) => _startMuted = start ?? true;
 
@@ -104,6 +108,6 @@ class VideoOptions {
   }
 
   Map<String, dynamic> toJson() {
-    return {'startMuted': startMuted ?? false};
+    return {'startMuted': startMuted ?? true};
   }
 }

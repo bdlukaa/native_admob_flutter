@@ -36,11 +36,26 @@ enum InterstitialAdEvent {
   leftApplication,
 }
 
-class InterstitialAd with UniqueKeyMixin {
-  String get testUnitId => MobileAds.interstitialAdTestUnitId;
-  
-  final _onEvent =
-      StreamController<Map<InterstitialAdEvent, dynamic>>.broadcast();
+/// An InterstitialAd model to communicate with the model in the platform side.
+/// It gives you methods to help in the implementation and event tracking.
+/// 
+/// For more info, see:
+///   - https://developers.google.com/admob/android/interstitial-fullscreen
+///   - https://developers.google.com/admob/ios/interstitial
+class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
+  /// The test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/1033173712
+  ///   - iOS: ca-app-pub-3940256099942544/4411468910
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
+  static String get testUnitId => MobileAds.interstitialAdTestUnitId;
+
+  /// The video test id for this ad.
+  ///   - Android: ca-app-pub-3940256099942544/8691691433
+  ///   - iOS: ca-app-pub-3940256099942544/5135589807
+  ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
+  static String get videoTestUnitId => MobileAds.interstitialAdVideoTestUnitId;
 
   /// Listen to the events the ad throws
   ///
@@ -75,30 +90,24 @@ class InterstitialAd with UniqueKeyMixin {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
-  Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => _onEvent.stream;
-
-  /// Channel to communicate with controller
-  MethodChannel _channel;
+  Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _loaded = false;
 
   /// Returns true if the ad was successfully loaded and is ready to be shown.
   bool get isLoaded => _loaded;
 
+  String unitId;
+
   /// Creates a new native ad controller
   ///
   /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or
   /// `MobileAds.interstitialAdTestUnitId` is used
-  InterstitialAd([String unitId]) {
-    _channel = MethodChannel(id);
-    _channel.setMethodCallHandler(_handleMessages);
-
-    // Let the plugin know there is a new controller
-    _init(unitId);
-  }
+  InterstitialAd([this.unitId]) : super();
 
   /// Initialize the controller. This can be called only by the controller
-  void _init(String unitId) {
+  void init() {
+    channel.setMethodCallHandler(_handleMessages);
     unitId ??=
         MobileAds.interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
     MobileAds.pluginChannel.invokeMethod('initInterstitialAd', {
@@ -119,38 +128,39 @@ class InterstitialAd with UniqueKeyMixin {
   /// }
   /// ```
   void dispose() {
+    super.dispose();
     MobileAds.pluginChannel.invokeMethod('disposeInterstitialAd', {'id': id});
-    _onEvent.close();
   }
 
   /// Handle the messages the channel sends
   Future<void> _handleMessages(MethodCall call) async {
+    if (isDisposed) return;
     switch (call.method) {
       case 'loading':
-        _onEvent.add({InterstitialAdEvent.loading: null});
+        onEventController.add({InterstitialAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent.add(
+        onEventController.add(
             {InterstitialAdEvent.loadFailed: AdError.fromJson(call.arguments)});
         break;
       case 'onAdLoaded':
-        _onEvent.add({InterstitialAdEvent.loaded: null});
+        onEventController.add({InterstitialAdEvent.loaded: null});
         break;
       case 'onAdClicked':
-        _onEvent.add({InterstitialAdEvent.clicked: null});
+        onEventController.add({InterstitialAdEvent.clicked: null});
         break;
       case 'onAdOpened':
-        _onEvent.add({InterstitialAdEvent.opened: null});
+        onEventController.add({InterstitialAdEvent.opened: null});
         break;
       case 'onAdClosed':
-        _onEvent.add({InterstitialAdEvent.closed: null});
+        onEventController.add({InterstitialAdEvent.closed: null});
         break;
       case 'onAdLeftApplication':
-        _onEvent.add({InterstitialAdEvent.leftApplication: null});
+        onEventController.add({InterstitialAdEvent.leftApplication: null});
         break;
       case 'undefined':
       default:
-        _onEvent.add({InterstitialAdEvent.undefined: null});
+        onEventController.add({InterstitialAdEvent.undefined: null});
         break;
     }
   }
@@ -161,9 +171,10 @@ class InterstitialAd with UniqueKeyMixin {
   /// an ad if it's not loaded.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
-  Future<void> load() async {
+  Future<bool> load() async {
     assertMobileAdsIsInitialized();
-    _loaded = await _channel.invokeMethod<bool>('loadAd', null);
+    _loaded = await channel.invokeMethod<bool>('loadAd', null);
+    return _loaded;
   }
 
   /// Show the interstitial ad. This returns a `Future` that will complete when
@@ -173,10 +184,10 @@ class InterstitialAd with UniqueKeyMixin {
   /// `interstitialAd.isLoaded`. If it's not loaded, throws an `AssertionError`
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#show-the-ad)
-  Future<void> show() {
+  Future<bool> show() {
     assert(isLoaded, '''The ad must be loaded to show. 
       Call interstitialAd.load() to load the ad. 
       Call interstitialAd.isLoaded to check if the ad is loaded before showing.''');
-    return _channel.invokeMethod('show');
+    return channel.invokeMethod<bool>('show');
   }
 }

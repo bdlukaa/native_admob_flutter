@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
+import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -18,7 +19,6 @@ class BannerAdViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
 class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
-    private lateinit var adView: AdView
     private var controller: BannerAdController = BannerAdControllerManager.getController(data!!["controllerId"] as String)!!
     private var adSize: AdSize
 
@@ -31,14 +31,14 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     init {
         adSize = getAdSize(controller.context, (data!!["size_width"] as Double).toFloat())
         generateAdView(context, data)
-        controller.loadRequested = { load() }
-        load()
+        controller.loadRequested = { load(it) }
+        load(null)
     }
 
-    private fun load() {
+    private fun load(result: MethodChannel.Result?) {
         val adRequest = AdRequest.Builder().build()
-        adView.loadAd(adRequest)
-        adView.adListener = object : AdListener() {
+        controller.adView.loadAd(adRequest)
+        controller.adView.adListener = object : AdListener() {
             override fun onAdImpression() {
                 super.onAdImpression()
                 controller.channel.invokeMethod("onAdImpression", null)
@@ -52,29 +52,31 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
             override fun onAdFailedToLoad(error: LoadAdError) {
                 super.onAdFailedToLoad(error)
                 controller.channel.invokeMethod("onAdFailedToLoad", encodeError(error))
+                result?.success(false)
             }
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                controller.channel.invokeMethod("onAdLoaded", adView.adSize.height)
+                controller.channel.invokeMethod("onAdLoaded", controller.adView.adSize.height)
+                result?.success(true)
             }
         }
     }
 
     private fun generateAdView(context: Context, data: Map<String?, Any?>?) {
-        adView = AdView(context)
+        controller.adView = AdView(context)
         val width: Int = (data!!["size_width"] as Double).toInt()
         val height: Int = (data["size_height"] as Double).toInt()
-        if (height != -1) adView.adSize = AdSize(width, height)
-        else adView.adSize = adSize
-        adView.adUnitId = data["unitId"] as String
+        if (height != -1) controller.adView.adSize = AdSize(width, height)
+        else controller.adView.adSize = adSize
+        controller.adView.adUnitId = data["unitId"] as String
     }
 
     override fun getView(): View {
-        return adView
+        return controller.adView
     }
 
     override fun dispose() {
-        adView.destroy()
+        controller.adView.destroy()
     }
 }

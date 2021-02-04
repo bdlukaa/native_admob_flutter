@@ -275,5 +275,4 @@ class MobileAds {
 
   static const _pluginChannel = const MethodChannel('native_admob_flutter');
   static MethodChannel get pluginChannel => _pluginChannel;
-
 }

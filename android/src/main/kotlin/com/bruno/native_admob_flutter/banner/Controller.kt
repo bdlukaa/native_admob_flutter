@@ -1,6 +1,10 @@
 package com.bruno.native_admob_flutter.banner
 
 import android.content.Context
+import com.bruno.native_admob_flutter.encodeError
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.LoadAdError
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -11,8 +15,10 @@ class BannerAdController(
         val context: Context
 ) : MethodChannel.MethodCallHandler {
 
+    lateinit var adView: AdView
+
     /// New native ad when loaded
-    var loadRequested: (() -> Unit)? = null
+    var loadRequested: ((MethodChannel.Result) -> Unit)? = null
 
     init {
         channel.setMethodCallHandler(this)
@@ -22,8 +28,7 @@ class BannerAdController(
         when (call.method) {
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
-                loadRequested?.let { it() }
-                result.success(null)
+                loadRequested?.let { it(result) }
             }
             else -> result.notImplemented()
         }

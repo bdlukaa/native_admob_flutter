@@ -5,13 +5,16 @@ part 'linear.dart';
 part 'radial.dart';
 
 class AdGradient {
-  /// Linear gradient
+  /// Linear gradient. Used by [AdLinearGradient]
   static const LINEAR = 'linear';
 
-  /// Radial gradient
+  /// Radial gradient. Used by [AdRadialGradient]
   static const RADIAL = 'radial';
+
+  // /// Sweep gradient. Used by [AdSweepGradient]
   // static const SWEEP = 'sweep';
 
+  /// The type of the gradient.
   final String type;
 
   /// The colors of the gradients. There must be at least two colors
@@ -31,15 +34,20 @@ class AdGradient {
   /// The default center point is `Alignment(0.5, 0.5)`
   final Alignment gradientCenter;
 
-  const AdGradient({
+  AdGradient({
     @required this.type,
     this.colors,
     this.orientation,
     this.gradientCenter = const Alignment(0.5, 0.5),
     this.radialGradientRadius,
-  })  : assert(type != null),
-        assert(colors != null),
-        assert(colors.length >= 2);
+  })  : assert(
+          type != null && [LINEAR, RADIAL].contains(type),
+          'You must specify a valid gradient type. It can be: $LINEAR or $RADIAL',
+        ),
+        assert(
+          colors != null && colors.length >= 2,
+          'You must specify at least two colors',
+        );
 
   Map<String, dynamic> toJson() {
     return {

@@ -79,6 +79,7 @@ class _FullScreenAdsState extends State<FullScreenAds> {
             if (!appOpenAd.isAvaiable) await appOpenAd.load();
             if (appOpenAd.isAvaiable) {
               await appOpenAd.show();
+              print('dismissed');
               appOpenAd.load();
             }
           },

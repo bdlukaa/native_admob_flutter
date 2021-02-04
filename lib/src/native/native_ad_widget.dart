@@ -17,7 +17,7 @@ class NativeAd extends StatefulWidget {
   /// How the views should be presented to the user.
   ///
   /// Use [adBannerLayoutBuilder] as a default banner layout\
-  /// ![adBannerLayoutBuilder screenshot](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/default_banner_screenshot.png)
+  /// ![adBannerLayoutBuilder screenshot](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/native/banner_size_ad.png?raw=true)
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
   final AdLayoutBuilder buildLayout;

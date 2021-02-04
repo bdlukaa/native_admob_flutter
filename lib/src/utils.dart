@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
@@ -152,6 +153,7 @@ class AdError {
   /// Gets the cause of the error, if available.
   final AdError cause;
 
+  /// Creates a new AdError
   const AdError({
     @required this.code,
     @required this.message,
@@ -175,13 +177,45 @@ class AdError {
 
 mixin UniqueKeyMixin {
   final _key = UniqueKey();
+
+  /// The unique key of the class
   String get id => _key.toString();
 }
 
-// abstract class LoadShowAd<T> with UniqueKeyMixin {
+abstract class LoadShowAd<T> with UniqueKeyMixin {
+  @protected
+  final onEventController = StreamController<Map<T, dynamic>>.broadcast();
+  Stream get onEvent => onEventController.stream;
 
-//   Future<bool> load();
-//   Future<bool> show();
-//   void dispose();
+  /// Channel to communicate with controller
+  @protected
+  MethodChannel channel;
 
-// }
+  bool _disposed = false;
+  bool get isDisposed => _disposed;
+
+  @mustCallSuper
+  LoadShowAd() {
+    channel = MethodChannel(id);
+    init();
+  }
+
+  @protected
+  void init();
+  Future<bool> load();
+  Future<bool> show() {
+    throw UnimplementedError('This was not implemented yet');
+  }
+
+  @mustCallSuper
+  void dispose() {
+    ensureAdNotDisposed();
+    _disposed = true;
+    onEventController.close();
+  }
+
+  @protected
+  void ensureAdNotDisposed() {
+    assert(!_disposed, 'You can NOT use a disposed ad');
+  }
+}
