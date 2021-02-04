@@ -33,7 +33,10 @@ class MobileAds {
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
 
-  static final _pluginChannel = const MethodChannel('native_admob_flutter');
+  static String appOpenAdUnitId;
+  static String get appOpenAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/3419835294'
+      : 'ca-app-pub-3940256099942544/5662855259';
 
   static bool _initialized = false;
 
@@ -86,6 +89,7 @@ class MobileAds {
     String bannerAdUnitId,
     String interstitialAdUnitId,
     String rewardedAdUnitId,
+    String appOpenAdUnitId,
     bool useHybridComposition,
   }) async {
     assertPlatformIsSupported();
@@ -96,21 +100,27 @@ class MobileAds {
       Check if it's initialized before trying to initialize it using `MobileAds.isInitialized`
       For more info on initialization, visit https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#initialize-the-mobile-ads-sdk''',
     );
+
+    // Ad Ids
     MobileAds.nativeAdUnitId ??= nativeAdUnitId ?? nativeAdTestUnitId;
     debugCheckIsTestId(MobileAds.nativeAdUnitId, [
       nativeAdTestUnitId,
       nativeAdVideoTestUnitId,
     ]);
     MobileAds.bannerAdUnitId ??= bannerAdUnitId ?? bannerAdTestUnitId;
-    debugCheckIsTestId(MobileAds.nativeAdUnitId, [bannerAdTestUnitId]);
+    debugCheckIsTestId(MobileAds.bannerAdUnitId, [bannerAdTestUnitId]);
     MobileAds.interstitialAdUnitId ??=
         interstitialAdUnitId ?? interstitialAdTestUnitId;
-    debugCheckIsTestId(MobileAds.nativeAdUnitId, [
+    debugCheckIsTestId(MobileAds.interstitialAdUnitId, [
       interstitialAdTestUnitId,
       interstitialAdVideoTestUnitId,
     ]);
     MobileAds.rewardedAdUnitId ??= rewardedAdUnitId ?? rewardedAdTestUnitId;
-    debugCheckIsTestId(MobileAds.nativeAdUnitId, [rewardedAdTestUnitId]);
+    debugCheckIsTestId(MobileAds.rewardedAdUnitId, [rewardedAdTestUnitId]);
+    MobileAds.appOpenAdUnitId ??= appOpenAdUnitId ?? appOpenAdTestUnitId;
+    debugCheckIsTestId(MobileAds.appOpenAdUnitId, [appOpenAdTestUnitId]);
+
+    // Make sure the version is supported
     _version = await _pluginChannel.invokeMethod<int>('initialize');
     if (Platform.isAndroid) {
       // hybrid composition is enabled in android 19 and can't be disabled
@@ -131,7 +141,8 @@ class MobileAds {
       );
       if (!(useHybridComposition ?? true))
         print(
-            'Virtual display is not avaiable on iOS. Using hybrid composition');
+          'Virtual display is not avaiable on iOS. Using hybrid composition',
+        );
     }
     _initialized = true;
   }
@@ -148,11 +159,11 @@ class MobileAds {
     return _pluginChannel.invokeMethod('setTestDeviceIds', {'ids': ids});
   }
 
-  // /// Returns `true` if this device will receive test ads.
-  // ///
-  // static Future<bool> isTestDevice() {
-  //   return _pluginChannel.invokeMethod<bool>('isTestDevice');
-  // }
+  /// Returns `true` if this device will receive test ads.
+  ///
+  static Future<bool> isTestDevice() {
+    return _pluginChannel.invokeMethod<bool>('isTestDevice');
+  }
 
   /// For purposes of the Children's Online Privacy Protection Act (COPPA),
   /// there is a setting called "tag for child-directed treatment". By setting this tag,
@@ -261,4 +272,8 @@ class MobileAds {
     return _pluginChannel
         .invokeMethod('setAppMuted', {'muted', muted ?? false});
   }
+
+  static const _pluginChannel = const MethodChannel('native_admob_flutter');
+  static MethodChannel get pluginChannel => _pluginChannel;
+
 }

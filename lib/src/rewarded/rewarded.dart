@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
@@ -54,7 +53,9 @@ class RewardItem {
   }
 }
 
-class RewardedAd {
+class RewardedAd with UniqueKeyMixin {
+  static String get testUnitId => MobileAds.rewardedAdTestUnitId;
+
   /// Create and load a new ad without extra code.\
   /// **WARNING** Do NOT use this if it needs to be fast. If it does, use [pre-loading](https://github.com/bdlukaa/native_admob_flutter/wiki/Pre-load-a-rewarded-ad)
   ///
@@ -69,11 +70,6 @@ class RewardedAd {
     await ad.load();
     return ad;
   }
-
-  final _key = UniqueKey();
-
-  /// The unique id of the controller
-  String get id => _key.toString();
 
   final _onEvent = StreamController<Map<RewardedAdEvent, dynamic>>.broadcast();
 
@@ -120,9 +116,6 @@ class RewardedAd {
   RewardItem _item;
   RewardItem get item => _item;
 
-  /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel('native_admob_flutter');
-
   /// Channel to communicate with controller
   MethodChannel _channel;
 
@@ -145,7 +138,8 @@ class RewardedAd {
     final uId =
         unitId ?? MobileAds.rewardedAdUnitId ?? MobileAds.rewardedAdTestUnitId;
     assert(uId != null);
-    final reward = await _pluginChannel.invokeMethod('initRewardedAd', {
+    final reward =
+        await MobileAds.pluginChannel.invokeMethod('initRewardedAd', {
       'id': id,
       'unitId': uId,
     });
@@ -167,7 +161,7 @@ class RewardedAd {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod('disposeRewardedAd', {'id': id});
+    MobileAds.pluginChannel.invokeMethod('disposeRewardedAd', {'id': id});
     _onEvent.close();
   }
 

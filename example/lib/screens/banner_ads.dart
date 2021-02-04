@@ -46,6 +46,7 @@ class _BannerAdsState extends State<BannerAds>
             },
             loading: Text('loading'),
             error: Text('error'),
+            // ignore: deprecated_member_use
             size: BannerSize.SMART_BANNER,
           ),
           SizedBox(height: 10),

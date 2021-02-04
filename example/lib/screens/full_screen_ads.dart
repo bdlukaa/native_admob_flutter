@@ -5,6 +5,8 @@ final interstitialAd = InterstitialAd()..load();
 final interstitialVideoAd =
     InterstitialAd(MobileAds.interstitialAdVideoTestUnitId)..load();
 
+final AppOpenAd appOpenAd = AppOpenAd(Duration(seconds: 5))..load();
+
 class FullScreenAds extends StatefulWidget {
   const FullScreenAds({Key key}) : super(key: key);
 
@@ -27,14 +29,15 @@ class _FullScreenAdsState extends State<FullScreenAds> {
           break;
       }
     });
+    appOpenAd.onEvent.listen((e) => print(e));
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Spacer(),
         FlatButton(
           child: Text('Show interstitial ad'),
           color: Colors.yellow,
@@ -69,7 +72,17 @@ class _FullScreenAdsState extends State<FullScreenAds> {
             (await RewardedAd.createAndLoad()).show();
           },
         ),
-        Spacer(),
+        FlatButton(
+          child: Text('Show App Open Ad'),
+          color: Colors.lime,
+          onPressed: () async {
+            if (!appOpenAd.isAvaiable) await appOpenAd.load();
+            if (appOpenAd.isAvaiable) {
+              await appOpenAd.show();
+              appOpenAd.load();
+            }
+          },
+        ),
       ],
     );
   }

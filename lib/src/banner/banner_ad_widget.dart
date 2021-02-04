@@ -92,7 +92,7 @@ class BannerAd extends StatefulWidget {
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events)
   final BannerAdController controller;
 
-  /// The size of the Ad
+  /// The size of the Ad. `BannerSize.ADAPTIVE` is the default
   ///
   /// ## Sizes
   ///

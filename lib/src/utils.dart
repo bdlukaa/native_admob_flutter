@@ -124,12 +124,21 @@ Widget buildAndroidPlatformView(
 class AdError {
   /// Gets the error code. Possible error codes:
   /// - App Id Missing (The ad request was not made due to a missing app ID): 8
-  /// - Internal error (Something happened internally; for instance, an invalid response was received from the ad server): 0
   /// - Invalid request (The ad request was invalid; for instance, the ad unit ID was incorrect): 1
   /// - Network error (The ad request was unsuccessful due to network connectivity): 2
   /// - No fill (The ad request was successful, but no ad was returned due to lack of ad inventory): 3
   ///
   /// See [this](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#constant-summary) for more info
+  ///
+  /// If this comes from [OpenAds], the possible error codes are:
+  /// - Ad Reused (You're reusing an ad. This will rarely happen because this error is handled by the plugin): 1
+  /// - App Not In Foreground (The app must be in foreground so the ad can be shown): 3
+  /// - Ad not ready (The ad is not ready to be shown): 2
+  ///
+  /// See [this](https://developers.google.com/android/reference/com/google/android/gms/ads/FullScreenContentCallback#constants) for more info
+  ///
+  /// Global error codes:
+  /// - Internal error (Something happened internally; for instance, an invalid response was received from the ad server): 0
   final int code;
 
   /// Gets an error message. For example "Account not approved yet".
@@ -162,4 +171,9 @@ class AdError {
 
   @override
   String toString() => '#$code from $domain. $message. Cause: $cause';
+}
+
+mixin UniqueKeyMixin {
+  final _key = UniqueKey();
+  String get id => _key.toString();
 }

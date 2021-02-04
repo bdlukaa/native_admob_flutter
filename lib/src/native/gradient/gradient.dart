@@ -24,10 +24,10 @@ class AdGradient {
   final double radialGradientRadius;
 
   /// The center point of the gadient used by [AdRadialGradient].
-  /// 
+  ///
   /// The top-left point is `Alignment(0, 0)` and the
   /// bottom-right point is `Alignment(1, 1)`
-  /// 
+  ///
   /// The default center point is `Alignment(0.5, 0.5)`
   final Alignment gradientCenter;
 

@@ -1,3 +1,22 @@
+## 0.5.0
+
+- **NEW**:
+  - Implementation for [AppOpenAd](https://developers.google.com/admob/android/app-open-ads)s
+  - New mixin [UniqueKeyMixin] to implement a unique id to classes
+  - `MobileAds.isTestDevice` method
+    <!-- This has been done to improve performance. -->
+    <!-- Previously, each Ad (Banner, Interstitial...) had to create its own -->
+    <!-- Channel instance. That would cause a lot of unnecessary use of resources -->
+  - The plugin channel is now public accessible in `MobileAds.pluginChannel`
+- **Fixed**: showing warning when a production ad was used in testing (debug)
+- Improved documentation on `AdError`s to support `AppOpenAd`s error codes
+<!-- The gif was too big -->
+- Removed the native video ad gif
+- Updated example:
+  - Now it shows an example of how to use a Banner ad in the bottom of the screen with a bottom bar
+  - The example is now fully documentated
+  - Added `AppOpenAd` to full-screen ads
+
 ## 0.4.2
 
 - Add declarative support for iOS, even tho it's not supported
@@ -13,7 +32,7 @@
 - **NEW**:
   - `rewardedAdUnitId` in `MobileAds.initialize()` is now possible
   - Implementation for `Native and Interstitial Video Ad Ids`
-- **FIXED**: 
+- **FIXED**:
   - Rating bar sizes
   - AdError compiling issue when coming from android
 - Removed tooltip text

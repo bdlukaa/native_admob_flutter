@@ -9,6 +9,11 @@ public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-    result(UIDevice.current.systemVersion)
+    switch call.method {
+      case "initialize":
+        result(UIDevice.current.systemVersion)
+      default:
+      
+    }
   }
 }

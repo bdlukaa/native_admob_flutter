@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.os.Build
 import androidx.annotation.NonNull
+import com.bruno.native_admob_flutter.app_open.AppOpenAdControllerManager
 import com.bruno.native_admob_flutter.banner.*
 import com.bruno.native_admob_flutter.interstitial.InterstitialAdControllerManager
 import com.google.android.gms.ads.MobileAds
@@ -20,6 +21,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 import com.bruno.native_admob_flutter.native.*
 import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
 import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
@@ -96,9 +98,19 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
                 RewardedAdControllerManager.removeController(call.argument<String>("id")!!)
                 result.success(null)
             }
+            // App Open
+            "initAppOpenAd" -> {
+                AppOpenAdControllerManager.createController(
+                        call.argument<String>("id")!!,
+                        messenger,
+                        activity
+                )
+            }
+            "disposeAppOpenAd" -> {
+                AppOpenAdControllerManager.removeController(call.argument<String>("id")!!)
+            }
             // General Controller
-            // isTestDevice method is not found. Idk why
-//            "isTestDevice" -> result.success(AdRequest.isTestDevice(context))
+            "isTestDevice" -> result.success(AdRequest.Builder().build().isTestDevice(activity))
             "setTestDeviceIds" -> {
                 val configuration = MobileAds
                         .getRequestConfiguration()

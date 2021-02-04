@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
@@ -37,12 +36,9 @@ enum InterstitialAdEvent {
   leftApplication,
 }
 
-class InterstitialAd {
-  final _key = UniqueKey();
-
-  /// The unique id of the controller
-  String get id => _key.toString();
-
+class InterstitialAd with UniqueKeyMixin {
+  String get testUnitId => MobileAds.interstitialAdTestUnitId;
+  
   final _onEvent =
       StreamController<Map<InterstitialAdEvent, dynamic>>.broadcast();
 
@@ -81,9 +77,6 @@ class InterstitialAd {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
   Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
-  /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel('native_admob_flutter');
-
   /// Channel to communicate with controller
   MethodChannel _channel;
 
@@ -108,7 +101,7 @@ class InterstitialAd {
   void _init(String unitId) {
     unitId ??=
         MobileAds.interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
-    _pluginChannel.invokeMethod('initInterstitialAd', {
+    MobileAds.pluginChannel.invokeMethod('initInterstitialAd', {
       'id': id,
       'unitId': unitId,
     });
@@ -126,7 +119,7 @@ class InterstitialAd {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod('disposeInterstitialAd', {'id': id});
+    MobileAds.pluginChannel.invokeMethod('disposeInterstitialAd', {'id': id});
     _onEvent.close();
   }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter/services.dart';
 
+import '../mobile_ads.dart';
 import '../utils.dart';
 
 enum BannerAdEvent {
@@ -91,7 +92,7 @@ class BannerSize {
   static const BannerSize LEADERBOARD = BannerSize(Size(728, 90));
 
   /// Creates banner ad with a custom size from `width` and `height`
-  /// 
+  ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#custom-size)
   factory BannerSize.fromWH(double width, double height) {
     return BannerSize(Size(width, height));
@@ -101,12 +102,7 @@ class BannerSize {
   String toString() => '${size.width}x${size.height}';
 }
 
-class BannerAdController {
-  final _key = UniqueKey();
-
-  /// The unique id of the controller
-  String get id => _key.toString();
-
+class BannerAdController with UniqueKeyMixin {
   final _onEvent = StreamController<Map<BannerAdEvent, dynamic>>.broadcast();
 
   /// Listen to the events the controller throws
@@ -139,9 +135,6 @@ class BannerAdController {
   /// ```
   Stream<Map<BannerAdEvent, dynamic>> get onEvent => _onEvent.stream;
 
-  /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel('native_admob_flutter');
-
   /// Channel to communicate with controller
   MethodChannel _channel;
 
@@ -161,7 +154,7 @@ class BannerAdController {
 
   /// Initialize the controller. This can be called only by the controller
   void _init() {
-    _pluginChannel.invokeMethod('initBannerAdController', {'id': id});
+    MobileAds.pluginChannel.invokeMethod('initBannerAdController', {'id': id});
   }
 
   /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
@@ -185,7 +178,8 @@ class BannerAdController {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod('disposeBannerAdController', {'id': id});
+    MobileAds.pluginChannel
+        .invokeMethod('disposeBannerAdController', {'id': id});
     _onEvent.close();
     _attached = false;
   }
@@ -196,8 +190,9 @@ class BannerAdController {
         _onEvent.add({BannerAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _onEvent
-            .add({BannerAdEvent.loadFailed: AdError.fromJson(call.arguments)});
+        _onEvent.add({
+          BannerAdEvent.loadFailed: AdError.fromJson(call.arguments),
+        });
         break;
       case 'onAdLoaded':
         _onEvent.add({BannerAdEvent.loaded: call.arguments});

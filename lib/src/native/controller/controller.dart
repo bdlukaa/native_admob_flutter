@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../../../native_admob_flutter.dart';
@@ -34,12 +33,7 @@ enum NativeAdEvent {
 
 enum AdVideoEvent { start, play, pause, end, mute }
 
-class NativeAdController {
-  final _key = UniqueKey();
-
-  /// The unique id of the controller
-  String get id => _key.toString();
-
+class NativeAdController with UniqueKeyMixin {
   MediaContent _mediaContent;
 
   /// Provides media content information.
@@ -132,9 +126,6 @@ class NativeAdController {
   /// ```
   Stream<Map<AdVideoEvent, dynamic>> get onVideoEvent => _onVideoEvent.stream;
 
-  /// Channel to communicate with plugin
-  final _pluginChannel = const MethodChannel('native_admob_flutter');
-
   /// Channel to communicate with controller
   MethodChannel _channel;
 
@@ -154,7 +145,7 @@ class NativeAdController {
 
   /// Initialize the controller. This can be called only by the controller
   void _init() {
-    _pluginChannel.invokeMethod('initNativeAdController', {'id': id});
+    MobileAds.pluginChannel.invokeMethod('initNativeAdController', {'id': id});
   }
 
   /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
@@ -177,7 +168,8 @@ class NativeAdController {
   /// }
   /// ```
   void dispose() {
-    _pluginChannel.invokeMethod('disposeNativeAdController', {'id': id});
+    MobileAds.pluginChannel
+        .invokeMethod('disposeNativeAdController', {'id': id});
     _onEvent.close();
     _onVideoEvent.close();
     _attached = false;
