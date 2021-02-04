@@ -106,7 +106,7 @@ class BannerSize {
 /// It gives you methods to help in the implementation and event tracking.
 /// It's supposed to work alongside `BannerAd`, the class used to show the ad in
 /// the UI and add it to the widget tree.
-/// 
+///
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/banner
 ///   - https://developers.google.com/admob/ios/banner
@@ -146,7 +146,7 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   ///   }
   /// });
   /// ```
-  /// 
+  ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#listening-to-events)
   Stream<Map<BannerAdEvent, dynamic>> get onEvent => super.onEvent;
 

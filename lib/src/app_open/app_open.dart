@@ -37,7 +37,7 @@ enum AppOpenEvent {
 
 /// An AppOpenAd model to communicate with the model in the platform side.
 /// It gives you methods to help in the implementation and event tracking.
-/// 
+///
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/app-open-ads
 ///   - https://developers.google.com/admob/ios/app-open-ads

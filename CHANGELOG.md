@@ -1,4 +1,7 @@
 Date format: DD/MM/YYYY
+## 0.6.0+1 - [04/02/2021]
+
+- Improve pub score
 
 ## 0.6.0 - [04/02/2021]
 
