@@ -6,6 +6,16 @@ import 'package:flutter/services.dart';
 import '../mobile_ads.dart';
 import '../utils.dart';
 
+/// The events a [BannerAdController] can receive. Listen
+/// to the events using `controller.onEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - impression (When the ad is rendered on the screen)
+///   - clicked (When the ad is clicked by the user)
+///   - loading (When the ad starts loading)
+///   - loaded (When the ad is loaded)
+///   - loadFailed (When the ad failed to load)
+///   - undefined (When an unknown event arrives)
 enum BannerAdEvent {
   /// Called when an impression is recorded for an ad.
   impression,
@@ -26,10 +36,14 @@ enum BannerAdEvent {
   undefined,
 }
 
+/// The size of a [BannerAd]. It's highly recommended to use
+/// [BannerSize.ADAPTIVE] when creating your [BannerAd]s
 class BannerSize {
   /// The Size of the Banner.
   final Size size;
 
+  /// Creates a new Banner Size. To create a custom size from
+  /// height and width, use [BannerSize.fromWH(width, height)]
   const BannerSize(this.size);
 
   /// Smart Banners are ad units that render screen-width banner
@@ -91,7 +105,8 @@ class BannerSize {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   static const BannerSize LEADERBOARD = BannerSize(Size(728, 90));
 
-  /// Creates banner ad with a custom size from `width` and `height`
+  /// Creates banner ad with a custom size from `width` and `height`.
+  /// Keep in mind that the ad may not fit well with custom sizes
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#custom-size)
   factory BannerSize.fromWH(double width, double height) {
@@ -229,4 +244,10 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
     assertMobileAdsIsInitialized();
     return channel.invokeMethod<bool>('loadAd', null);
   }
+
+  // @protected
+  // void changeController(String id) {
+  //   channel.invokeMethod('changeController', {'id': id});
+  // }
+
 }

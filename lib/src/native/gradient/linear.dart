@@ -3,7 +3,7 @@ part of 'gradient.dart';
 class AdLinearGradient extends AdGradient {
   /// Creates a LinearGradient.
   ///
-  /// Uses a [GradientDrawable](https://developer.android.com/reference/android/graphics/drawable/GradientDrawable)
+  /// Uses [GradientDrawable](https://developer.android.com/reference/android/graphics/drawable/GradientDrawable)
   /// on Android
   ///
   /// - You must specify at least two colors.

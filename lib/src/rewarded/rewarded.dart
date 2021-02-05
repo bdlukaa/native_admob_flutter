@@ -5,6 +5,16 @@ import 'package:flutter/services.dart';
 import '../../native_admob_flutter.dart';
 import '../utils.dart';
 
+/// The events a [RewardedAd] can receive. Listen
+/// to the events using `rewardedAd.onEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - loading (When the ad starts loading)
+///   - loaded (When the ad is loaded)
+///   - loadFailed (When the ad failed to load)
+///   - opened (When the ad is opened)
+///   - showFailed (When the ad failed to show)
+///   - undefined (When it receives an unknown error)
 enum RewardedAdEvent {
   /// Called when an ad request failed.
   ///
@@ -55,7 +65,7 @@ class RewardItem {
 
 /// An InterstitialAd model to communicate with the model on the platform side.
 /// It gives you methods to help in the implementation and event tracking.
-/// 
+///
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/rewarded-fullscreen
 ///   - https://developers.google.com/admob/ios/rewarded-ads

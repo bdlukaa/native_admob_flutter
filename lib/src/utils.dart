@@ -192,6 +192,7 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   MethodChannel channel;
 
   bool _disposed = false;
+  /// Check if the ad is loaded
   bool get isDisposed => _disposed;
 
   @mustCallSuper
@@ -204,7 +205,7 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   void init();
   Future<bool> load();
   Future<bool> show() {
-    throw UnimplementedError('This was not implemented yet');
+    throw UnimplementedError('This was not implemented for this ad');
   }
 
   @mustCallSuper

@@ -11,6 +11,16 @@ const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
 /// Landscape orientation
 const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
 
+/// The events a [AppOpenAd] can receive. Listen
+/// to the events using `appOpenAd.onEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - loading (When the ad starts loading)
+///   - loaded (When the ad is loaded)
+///   - loadFailed (When the ad failed to load)
+///   - showed (When the ad showed successfully)
+///   - showFailed (When it failed on showing)
+///   - dimissed (When the ad is closed)
 enum AppOpenEvent {
   /// Called when the ad starts loading
   loading,
@@ -111,8 +121,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
   Duration timeout;
 
-  /// Creates a new AppOpenAd instance. Don't forget to dipose
-  /// it when you finish using it to free up resources
+  /// Creates a new AppOpenAd instance.
   AppOpenAd([this.timeout = const Duration(hours: 1)])
       : assert(timeout != null, 'The timeout time can NOT be null'),
         super();
@@ -161,7 +170,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
   Future<bool> load({
-    /// The ad unit id
+    /// The ad unit id. If null, `MobileAds.appOpenAdUnitId` is used
     String unitId,
 
     /// The orientation. Avaiable orientations:\
@@ -182,7 +191,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
             .contains(orientation),
         'The orientation must be a valid orientation: $APP_OPEN_AD_ORIENTATION_PORTRAIT, $APP_OPEN_AD_ORIENTATION_LANDSCAPE',
       );
-    bool loaded = await channel.invokeMethod<bool>('loadAd', {
+    final loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId':
           unitId ?? MobileAds.appOpenAdUnitId ?? MobileAds.appOpenAdTestUnitId,
       'orientation': orientation ?? APP_OPEN_AD_ORIENTATION_PORTRAIT,
@@ -191,6 +200,9 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
     return loaded;
   }
 
+  /// Show the ad. It must be loaded in order to be showed.
+  /// You can use the `load()` method to load it
+  ///
   /// Make sure to check if the ad is avaiable using the getter `isAvaiable`
   ///
   /// ```dart

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter/services.dart';
 
 import '../utils.dart';
 import '../../native_admob_flutter.dart';
@@ -102,7 +103,7 @@ class NativeAd extends StatefulWidget {
   final AdBuilder builder;
 
   /// Create a NativeAd
-  /// 
+  ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
   NativeAd({
     Key key,
@@ -214,12 +215,12 @@ class _NativeAdState extends State<NativeAd>
           _viewType,
           MobileAds.useHybridComposition,
         );
-        // } else if (Platform.isIOS) {
-        //   w = UiKitView(
-        //     viewType: _viewType,
-        //     creationParamsCodec: StandardMessageCodec(),
-        //     creationParams: layout,
-        //   );
+      } else if (Platform.isIOS) {
+        w = UiKitView(
+          viewType: _viewType,
+          creationParamsCodec: StandardMessageCodec(),
+          creationParams: params,
+        );
       } else {
         return SizedBox();
       }

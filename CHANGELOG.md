@@ -1,4 +1,12 @@
 Date format: DD/MM/YYYY
+
+## 0.6.1
+
+- `LoadShowAd` and `UniqueKeyMixin` are now public
+- Improved class documentation
+- Formatted code
+- Preview implementation for iOS.
+
 ## 0.6.0+1 - [04/02/2021]
 
 - Improve pub score
@@ -11,9 +19,9 @@ Date format: DD/MM/YYYY
   - All `load()` and `show()` methods returns a `Future<bool>` where `true` is success and `false` is error
   - Add all test ids in its respective ad classes
 - **FIXED**:
-  - Error that controllers could keep receiving events from the platform side after being disposed
-  - Bug that media aspect ratio was not set when trying to set
-  - Fixed [adBannerLayoutBuilder] screenshot on the documentation
+  - Controllers could keep receiving events from the platform side after being disposed
+  - Media aspect ratio was not set when trying to set
+  - Fixed `adBannerLayoutBuilder` screenshot on the documentation
   - Null issue on the android side when releasing an activity
 - Throws an `AssertionError` if you try to use a different type in `AdGradient`
 - Highly improved the documentation and wiki

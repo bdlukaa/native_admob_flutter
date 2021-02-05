@@ -10,6 +10,17 @@ import 'media_content.dart';
 export 'options.dart';
 export 'media_content.dart';
 
+/// The events a [NativeAdController] can receive. Listen
+/// to the events using `controller.onEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - loading (When the ad starts loading)
+///   - loaded (When the ad is loaded)
+///   - loadFailed (When the ad failed to load)
+///   - impression (When the ad is rendered)
+///   - clicked (When the ad is clicked by the user)
+///   - muted (When the ad is dismissed)
+///   - undefined (When it receives an unknown error)
 enum NativeAdEvent {
   /// Called when an impression is recorded for an ad.
   impression,
@@ -31,6 +42,15 @@ enum NativeAdEvent {
   undefined,
 }
 
+/// The video events a [NativeAdController] can receive. Listen
+/// to the events using `controller.onVideoEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - start (When the video starts)
+///   - play (When the video is played)
+///   - pause (When the video is paused)
+///   - end (When the avideo reaches the end)
+///   - mute (When the video is muted)
 enum AdVideoEvent {
   /// Called when the video starts. This is called only once
   start,
@@ -43,7 +63,7 @@ enum AdVideoEvent {
   /// or programatically
   pause,
 
-  /// Called when the video reachs the end
+  /// Called when the video reaches the end
   end,
 
   /// Called when the video is somhow muted, either for user interaction
@@ -55,7 +75,7 @@ enum AdVideoEvent {
 /// It gives you methods to help in the implementation and event tracking.
 /// It's supposed to work alongside `NativeAd`, the class used to show the ad in
 /// the UI and add it to the widget tree.
-/// 
+///
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/native/start
 ///   - https://developers.google.com/admob/ios/native/start

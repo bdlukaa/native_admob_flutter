@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils.dart';
 import 'controller.dart';
@@ -9,6 +10,11 @@ import '../../native_admob_flutter.dart';
 
 const _viewType = 'banner_admob';
 
+/// Creates a BannerAd and add it to the widget tree. Uses
+/// a [PlatformView] to connect to the AdView in the platform
+/// side. Uses:
+///   - https://developers.google.com/admob/android/banner on Android
+///   - https://developers.google.com/admob/ios/banner on iOS
 class BannerAd extends StatefulWidget {
   const BannerAd({
     Key key,
@@ -144,6 +150,21 @@ class _BannerAdState extends State<BannerAd>
   @override
   void initState() {
     super.initState();
+    attachNewController();
+    controller.load();
+  }
+
+  // @override
+  // void didUpdateWidget(BannerAd oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.controller == null && widget.controller != null) {
+  //     attachNewController();
+  //     controller.changeController(controller.id);
+  //     controller.load();
+  //   }
+  // }
+
+  void attachNewController() {
     controller = widget.controller ?? BannerAdController();
     controller.attach();
     controller.onEvent.listen((e) {
@@ -163,8 +184,6 @@ class _BannerAdState extends State<BannerAd>
           break;
       }
     });
-
-    controller.load();
   }
 
   @override
@@ -203,12 +222,12 @@ class _BannerAdState extends State<BannerAd>
             _viewType,
             MobileAds.useHybridComposition,
           );
-          // } else if (Platform.isIOS) {
-          //   w = UiKitView(
-          //     viewType: _viewType,
-          //     creationParamsCodec: StandardMessageCodec(),
-          //     creationParams: layout,
-          //   );
+        } else if (Platform.isIOS) {
+          w = UiKitView(
+            viewType: _viewType,
+            creationParamsCodec: StandardMessageCodec(),
+            creationParams: params,
+          );
         } else {
           return SizedBox();
         }

@@ -5,6 +5,16 @@ import 'package:flutter/services.dart';
 import '../../native_admob_flutter.dart';
 import '../utils.dart';
 
+/// The events a [InterstitialAd] can receive. Listen
+/// to the events using `interstitialAd.onEvent.listen((event) {})`.
+///
+/// Avaiable events:
+///   - loading (When the ad starts loading)
+///   - loaded (When the ad is loaded)
+///   - loadFailed (When the ad failed to load)
+///   - opened (When the ad showed successfully)
+///   - closed (When the ad is closed)
+///   - leftApplication (When the user left the app)
 enum InterstitialAdEvent {
   /// Called when a click is recorded for an ad.
   clicked,
@@ -38,7 +48,7 @@ enum InterstitialAdEvent {
 
 /// An InterstitialAd model to communicate with the model in the platform side.
 /// It gives you methods to help in the implementation and event tracking.
-/// 
+///
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/interstitial-fullscreen
 ///   - https://developers.google.com/admob/ios/interstitial

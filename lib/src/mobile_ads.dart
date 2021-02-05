@@ -5,6 +5,12 @@ import 'package:flutter/widgets.dart';
 
 import 'utils.dart';
 
+/// The basic class to use Ads. It's responsible to initialize
+/// the SDK, make sure you are:
+///   - using the right Ad Unit Id;
+///   - using the right system version;
+///   - using test devices;
+///   - targeting the right people groups.
 class MobileAds {
   // Unit ids
   static String nativeAdUnitId;
@@ -68,6 +74,8 @@ class MobileAds {
   }
 
   static int _version = 0;
+
+  /// Get the current version of the os
   static int get osVersion => _version;
 
   /// Before creating any native ads, you must initalize the admob.
@@ -161,6 +169,7 @@ class MobileAds {
 
   /// Returns `true` if this device will receive test ads.
   ///
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enable-test-devices)
   static Future<bool> isTestDevice() {
     return _pluginChannel.invokeMethod<bool>('isTestDevice');
   }
