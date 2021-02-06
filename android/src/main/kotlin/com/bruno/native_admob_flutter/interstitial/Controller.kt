@@ -1,89 +1,62 @@
 package com.bruno.native_admob_flutter.interstitial
 
-import android.content.Context
+import android.app.Activity
 import com.bruno.native_admob_flutter.encodeError
-import com.google.android.gms.ads.AdListener
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.*
+import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
 class InterstitialAdController(
         val id: String,
-        unitId: String,
         val channel: MethodChannel,
-        context: Context
+        private val context: Activity
 ) : MethodChannel.MethodCallHandler {
 
-    private var mInterstitialAd: InterstitialAd
+    private var mInterstitialAd: InterstitialAd? = null
 
     init {
         channel.setMethodCallHandler(this)
-        mInterstitialAd = InterstitialAd(context)
-        mInterstitialAd.adUnitId = unitId
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
-                mInterstitialAd.loadAd(AdRequest.Builder().build())
-                mInterstitialAd.adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        channel.invokeMethod("onAdLoaded", null)
-                        result.success(true)
-                    }
-
+                val unitId = call.argument<String>("unitId")!!
+                InterstitialAd.load(context, unitId, AdRequest.Builder().build(), object : InterstitialAdLoadCallback() {
                     override fun onAdFailedToLoad(error: LoadAdError) {
+                        mInterstitialAd = null
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)
                     }
 
-                    override fun onAdOpened() {
-                        channel.invokeMethod("onAdOpened", null)
+                    override fun onAdLoaded(interstitialAd: InterstitialAd) {
+                        mInterstitialAd = interstitialAd
+                        channel.invokeMethod("onAdLoaded", null)
+                        result.success(true)
                     }
-
-                    override fun onAdClicked() {
-                        channel.invokeMethod("onAdClicked", null)
-                    }
-
-                    override fun onAdLeftApplication() {
-                        channel.invokeMethod("onAdLeftApplication", null)
-                    }
-
-                    override fun onAdClosed() {
-                        channel.invokeMethod("onAdClosed", null)
-                    }
-                }
+                })
             }
             "show" -> {
-                mInterstitialAd.show()
-                mInterstitialAd.adListener = object : AdListener() {
-                    override fun onAdLoaded() {
-                        channel.invokeMethod("onAdLoaded", null)
-                    }
-
-                    override fun onAdFailedToLoad(error: LoadAdError) {
-                        channel.invokeMethod("onAdFailedToLoad", encodeError(error))
-                    }
-
-                    override fun onAdOpened() {
-                        channel.invokeMethod("onAdOpened", null)
-                    }
-
-                    override fun onAdClicked() {
-                        channel.invokeMethod("onAdClicked", null)
-                    }
-
-                    override fun onAdLeftApplication() {
-                        channel.invokeMethod("onAdLeftApplication", null)
-                    }
-
-                    override fun onAdClosed() {
-                        channel.invokeMethod("onAdClosed", null)
+                if (mInterstitialAd == null) return result.success(false)
+                mInterstitialAd!!.show(context)
+                mInterstitialAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        channel.invokeMethod("onAdDismissedFullScreenContent", null)
                         result.success(true)
+                    }
+
+                    override fun onAdFailedToShowFullScreenContent(error: AdError?) {
+                        channel.invokeMethod("onAdFailedToShowFullScreenContent", encodeError(error))
+                        result.success(false)
+                    }
+
+                    override fun onAdShowedFullScreenContent() {
+                        channel.invokeMethod("onAdShowedFullScreenContent", null)
+                        mInterstitialAd = null
                     }
                 }
             }
@@ -96,10 +69,10 @@ class InterstitialAdController(
 object InterstitialAdControllerManager {
     private val controllers: ArrayList<InterstitialAdController> = arrayListOf()
 
-    fun createController(id: String, unitId: String, binaryMessenger: BinaryMessenger, context: Context) {
+    fun createController(id: String, binaryMessenger: BinaryMessenger, context: Activity) {
         if (getController(id) == null) {
             val methodChannel = MethodChannel(binaryMessenger, id)
-            val controller = InterstitialAdController(id, unitId, methodChannel, context)
+            val controller = InterstitialAdController(id, methodChannel, context)
             controllers.add(controller)
         }
     }

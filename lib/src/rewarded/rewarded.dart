@@ -30,20 +30,17 @@ enum RewardedAdEvent {
   /// Called when the ad starts loading
   loading,
 
-  /// Called when the event is unkown (usually for rebuilding ui)
-  undefined,
+  /// Called when the ad showed
+  showed,
 
-  /// Called when the ad opens
-  opened,
+  /// Called when the ad failed to show
+  showFailed,
 
   /// Called when the ad closes
   closed,
 
   /// Called when the user earns an reward
   earnedReward,
-
-  /// Called when the ad failed to show
-  showFailed,
 }
 
 class RewardItem {
@@ -76,21 +73,6 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
   static String get testUnitId => MobileAds.rewardedAdTestUnitId;
-
-  /// Create and load a new ad without extra code.\
-  /// **WARNING** Do NOT use this if it needs to be fast. If it does, use [pre-loading](https://github.com/bdlukaa/native_admob_flutter/wiki/Pre-load-a-rewarded-ad)
-  ///
-  /// Usage:
-  /// ```dart
-  /// await (await createAndLoad()).show();
-  /// ```
-  ///
-  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#using-rewarded-ads-more-than-once)
-  static Future<RewardedAd> createAndLoad([String unitId]) async {
-    final ad = RewardedAd(unitId);
-    await ad.load();
-    return ad;
-  }
 
   /// Listen to the events the ad throws
   ///
@@ -132,31 +114,18 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
   Stream<Map<RewardedAdEvent, dynamic>> get onEvent => super.onEvent;
 
-  RewardItem _item;
-  RewardItem get item => _item;
-
   bool _loaded = false;
 
   /// Returns true if the ad was successfully loaded and is ready to be shown.
   bool get isLoaded => _loaded;
 
-  final String unitId;
-
-  /// Creates a new native ad controller
-  RewardedAd([this.unitId]) : super();
+  /// Creates a new rewarded ad controller
+  RewardedAd() : super();
 
   /// Initialize the controller. This can be called only by the controller
   void init() async {
     channel.setMethodCallHandler(_handleMessages);
-    final uId =
-        unitId ?? MobileAds.rewardedAdUnitId ?? MobileAds.rewardedAdTestUnitId;
-    assert(uId != null);
-    final reward =
-        await MobileAds.pluginChannel.invokeMethod('initRewardedAd', {
-      'id': id,
-      'unitId': uId,
-    });
-    _item = RewardItem.fromJson(reward);
+    await MobileAds.pluginChannel.invokeMethod('initRewardedAd', {'id': id});
   }
 
   /// Dispose the ad to free up resources.
@@ -185,31 +154,33 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
         onEventController.add({RewardedAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        onEventController.add(
-            {RewardedAdEvent.loadFailed: AdError.fromJson(call.arguments)});
+        _loaded = false;
+        onEventController.add({
+          RewardedAdEvent.loadFailed: AdError.fromJson(call.arguments),
+        });
         break;
       case 'onAdLoaded':
+        _loaded = true;
         onEventController.add({RewardedAdEvent.loaded: null});
-        break;
-      case 'onRewardedAdOpened':
-        onEventController.add({RewardedAdEvent.opened: null});
-        break;
-      case 'onRewardedAdClosed':
-        onEventController.add({RewardedAdEvent.closed: null});
-        dispose();
         break;
       case 'onUserEarnedReward':
         onEventController.add({
           RewardedAdEvent.earnedReward: RewardItem.fromJson(call.arguments)
         });
         break;
-      case 'onRewardedAdFailedToShow':
-        onEventController.add(
-            {RewardedAdEvent.showFailed: AdError.fromJson(call.arguments)});
+      case 'onAdShowedFullScreenContent':
+        _loaded = false;
+        onEventController.add({RewardedAdEvent.showed: null});
         break;
-      case 'undefined':
+      case 'onAdFailedToShowFullScreenContent':
+        onEventController.add({
+          RewardedAdEvent.showFailed: AdError.fromJson(call.arguments),
+        });
+        break;
+      case 'onAdDismissedFullScreenContent':
+        onEventController.add({RewardedAdEvent.closed: null});
+        break;
       default:
-        onEventController.add({RewardedAdEvent.undefined: null});
         break;
     }
   }
@@ -224,9 +195,18 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#load-the-ad)
-  Future<bool> load() async {
+  Future<bool> load({String unitId}) async {
+    ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    _loaded = await channel.invokeMethod<bool>('loadAd', null);
+    if (isLoaded) {
+      print('An ad is already avaiable, no need to load another');
+      return false;
+    }
+    _loaded = await channel.invokeMethod<bool>('loadAd', {
+      'unitId': unitId ??
+          MobileAds.rewardedAdUnitId ??
+          MobileAds.rewardedAdTestUnitId,
+    });
     return _loaded;
   }
 
@@ -247,6 +227,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// print('ad showed');
   /// ```
   Future<bool> show() {
+    ensureAdNotDisposed();
     assert(
       isLoaded,
       '''The ad must be loaded to show. 

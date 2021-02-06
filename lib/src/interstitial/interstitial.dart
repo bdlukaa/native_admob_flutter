@@ -16,9 +16,6 @@ import '../utils.dart';
 ///   - closed (When the ad is closed)
 ///   - leftApplication (When the user left the app)
 enum InterstitialAdEvent {
-  /// Called when a click is recorded for an ad.
-  clicked,
-
   /// Called when an ad request failed.
   ///
   /// **Warning**: Attempting to load a new ad when the load fail
@@ -33,17 +30,14 @@ enum InterstitialAdEvent {
   /// Called when the ad starts loading
   loading,
 
-  /// Called when the event is unkown (usually for rebuilding ui)
-  undefined,
-
   /// Called when the interstitial ad is opened
-  opened,
+  showed,
+
+  /// Called when the ad failed to show
+  failedToShow,
 
   /// Called when the interstitial ad is closed
   closed,
-
-  /// Called when the user has left the app
-  leftApplication,
 }
 
 /// An InterstitialAd model to communicate with the model in the platform side.
@@ -107,23 +101,13 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   /// Returns true if the ad was successfully loaded and is ready to be shown.
   bool get isLoaded => _loaded;
 
-  String unitId;
-
-  /// Creates a new native ad controller
-  ///
-  /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or
-  /// `MobileAds.interstitialAdTestUnitId` is used
-  InterstitialAd([this.unitId]) : super();
+  /// Creates a new interstitial ad controller
+  InterstitialAd() : super();
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
     channel.setMethodCallHandler(_handleMessages);
-    unitId ??=
-        MobileAds.interstitialAdUnitId ?? MobileAds.interstitialAdTestUnitId;
-    MobileAds.pluginChannel.invokeMethod('initInterstitialAd', {
-      'id': id,
-      'unitId': unitId,
-    });
+    MobileAds.pluginChannel.invokeMethod('initInterstitialAd', {'id': id});
   }
 
   /// Dispose the ad to free up resources.
@@ -150,27 +134,29 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
         onEventController.add({InterstitialAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        onEventController.add(
-            {InterstitialAdEvent.loadFailed: AdError.fromJson(call.arguments)});
+        _loaded = false;
+        onEventController.add({
+          InterstitialAdEvent.loadFailed: AdError.fromJson(call.arguments),
+        });
         break;
       case 'onAdLoaded':
+        _loaded = true;
         onEventController.add({InterstitialAdEvent.loaded: null});
         break;
-      case 'onAdClicked':
-        onEventController.add({InterstitialAdEvent.clicked: null});
+      case 'onAdShowedFullScreenContent':
+        _loaded = false;
+        onEventController.add({InterstitialAdEvent.showed: null});
+        _loaded = false;
         break;
-      case 'onAdOpened':
-        onEventController.add({InterstitialAdEvent.opened: null});
+      case 'onAdFailedToShowFullScreenContent':
+        onEventController.add({
+          InterstitialAdEvent.failedToShow: AdError.fromJson(call.arguments),
+        });
         break;
-      case 'onAdClosed':
+      case 'onAdDismissedFullScreenContent':
         onEventController.add({InterstitialAdEvent.closed: null});
         break;
-      case 'onAdLeftApplication':
-        onEventController.add({InterstitialAdEvent.leftApplication: null});
-        break;
-      case 'undefined':
       default:
-        onEventController.add({InterstitialAdEvent.undefined: null});
         break;
     }
   }
@@ -181,9 +167,23 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   /// an ad if it's not loaded.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
-  Future<bool> load() async {
+  ///
+  /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or
+  /// `MobileAds.interstitialAdTestUnitId` is used
+  Future<bool> load({
+    String unitId,
+  }) async {
+    ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    _loaded = await channel.invokeMethod<bool>('loadAd', null);
+    if (isLoaded) {
+      print('An ad is already avaiable, no need to load another');
+      return false;
+    }
+    _loaded = await channel.invokeMethod<bool>('loadAd', {
+      'unitId': unitId ??
+          MobileAds.interstitialAdUnitId ??
+          MobileAds.interstitialAdTestUnitId,
+    });
     return _loaded;
   }
 
@@ -195,6 +195,7 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#show-the-ad)
   Future<bool> show() {
+    ensureAdNotDisposed();
     assert(isLoaded, '''The ad must be loaded to show. 
       Call interstitialAd.load() to load the ad. 
       Call interstitialAd.isLoaded to check if the ad is loaded before showing.''');

@@ -1,6 +1,21 @@
 Date format: DD/MM/YYYY
 
-## 0.6.1
+## 0.7.0 - [06/02/2021]
+
+- Migrated to SDK v20 on Android
+- **BREAKING CHANGES on Interstitial and Rewarded ads**:
+  - Can NOT set the unit id in the constructor anymore.
+  - Removed `undefined`, `leftApplication` and `clicked` from events
+  - Removed `createAndLoad` from Rewarded Ads
+  - Renamed `opened` -> `showed`
+  - Added `showFailed`
+  - Unable to use `rewardedAd.rewardedItem` anymore
+- **FIXED**:
+  - Ads were being loaded forever once it loads once. Now when you show an ad it gets unloaded
+- **NEW**:
+  - Rewarded ads can be reusable now
+
+## 0.6.1 - [05/02/2021]
 
 - `LoadShowAd` and `UniqueKeyMixin` are now public
 - Improved class documentation

@@ -4,37 +4,34 @@ import android.app.Activity
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
-import com.google.android.gms.ads.rewarded.RewardItem
 import com.google.android.gms.ads.rewarded.RewardedAd
-import com.google.android.gms.ads.rewarded.RewardedAdCallback
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 
-
 class RewardedAdController(
         val id: String,
-        unitId: String,
         val channel: MethodChannel,
         private val activity: Activity
 ) : MethodChannel.MethodCallHandler {
 
-    val rewardedAd: RewardedAd
-    private lateinit var callback: RewardedAdLoadCallback
+    private var rewardedAd: RewardedAd? = null
 
     init {
         channel.setMethodCallHandler(this)
-        rewardedAd = RewardedAd(activity, unitId)
     }
 
     override fun onMethodCall(call: MethodCall, result: MethodChannel.Result) {
         when (call.method) {
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
-                callback = object : RewardedAdLoadCallback() {
-                    override fun onRewardedAdLoaded() {
+                val unitId: String = call.argument<String>("unitId")!!
+                RewardedAd.load(activity, unitId, AdRequest.Builder().build(), object : RewardedAdLoadCallback() {
+                    override fun onAdLoaded(ad: RewardedAd) {
+                        rewardedAd = ad
                         channel.invokeMethod("onAdLoaded", null)
                         result.success(true)
                     }
@@ -43,33 +40,32 @@ class RewardedAdController(
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)
                     }
-                }
-                rewardedAd.loadAd(AdRequest.Builder().build(), callback)
+                })
             }
             "show" -> {
-                val adCallback: RewardedAdCallback = object : RewardedAdCallback() {
-                    override fun onRewardedAdOpened() {
-                        channel.invokeMethod("onRewardedAdOpened", null)
-                    }
-
-                    override fun onRewardedAdClosed() {
-                        channel.invokeMethod("onRewardedAdClosed", null)
+                if (rewardedAd == null) return result.success(false)
+                rewardedAd!!.fullScreenContentCallback = object : FullScreenContentCallback() {
+                    override fun onAdDismissedFullScreenContent() {
+                        channel.invokeMethod("onAdDismissedFullScreenContent", null)
                         result.success(true)
                     }
 
-                    override fun onUserEarnedReward(reward: RewardItem) {
-                        channel.invokeMethod("onUserEarnedReward", hashMapOf<String, Any>(
-                                "amount" to reward.amount,
-                                "type" to reward.type
-                        ))
-                    }
-
-                    override fun onRewardedAdFailedToShow(error: AdError) {
-                        channel.invokeMethod("onRewardedAdFailedToShow", encodeError(error))
+                    override fun onAdFailedToShowFullScreenContent(error: AdError?) {
+                        channel.invokeMethod("onAdFailedToShowFullScreenContent", encodeError(error))
                         result.success(false)
                     }
+
+                    override fun onAdShowedFullScreenContent() {
+                        rewardedAd = null
+                        channel.invokeMethod("onAdShowedFullScreenContent", null)
+                    }
                 }
-                rewardedAd.show(activity, adCallback)
+                rewardedAd!!.show(activity) { reward ->
+                    channel.invokeMethod("onUserEarnedReward", hashMapOf<String, Any>(
+                            "amount" to reward.amount,
+                            "type" to reward.type
+                    ))
+                }
             }
             else -> result.notImplemented()
         }
@@ -80,10 +76,10 @@ class RewardedAdController(
 object RewardedAdControllerManager {
     private val controllers: ArrayList<RewardedAdController> = arrayListOf()
 
-    fun createController(id: String, unitId: String, binaryMessenger: BinaryMessenger, activity: Activity): RewardedAdController {
+    fun createController(id: String, binaryMessenger: BinaryMessenger, activity: Activity): RewardedAdController {
         if (getController(id) == null) {
             val methodChannel = MethodChannel(binaryMessenger, id)
-            val controller = RewardedAdController(id, unitId, methodChannel, activity)
+            val controller = RewardedAdController(id, methodChannel, activity)
             controllers.add(controller)
             return controller
         }

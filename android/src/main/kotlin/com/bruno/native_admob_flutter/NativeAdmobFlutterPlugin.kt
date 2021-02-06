@@ -72,7 +72,6 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
             "initInterstitialAd" -> {
                 InterstitialAdControllerManager.createController(
                         call.argument<String>("id")!!,
-                        call.argument<String>("unitId")!!,
                         messenger,
                         activity)
                 result.success(null)
@@ -83,16 +82,11 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
             }
             // Rewarded
             "initRewardedAd" -> {
-                val controller = RewardedAdControllerManager.createController(
+                RewardedAdControllerManager.createController(
                         call.argument<String>("id")!!,
-                        call.argument<String>("unitId")!!,
                         messenger,
                         activity)
-                val reward = controller.rewardedAd.rewardItem
-                result.success(hashMapOf(
-                        "amount" to reward?.amount,
-                        "type" to reward?.type
-                ))
+                result.success(null)
             }
             "disposeRewardedAd" -> {
                 RewardedAdControllerManager.removeController(call.argument<String>("id")!!)

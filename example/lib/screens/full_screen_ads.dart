@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
-final interstitialAd = InterstitialAd()..load();
-final interstitialVideoAd =
-    InterstitialAd(MobileAds.interstitialAdVideoTestUnitId)..load();
+final interstitialAd = InterstitialAd();
+final interstitialVideoAd = InterstitialAd()
+  ..load(unitId: MobileAds.interstitialAdVideoTestUnitId);
+
+final rewardedAd = RewardedAd()..load();
 
 final AppOpenAd appOpenAd = AppOpenAd(Duration(seconds: 5))..load();
 
@@ -24,6 +26,7 @@ class _FullScreenAdsState extends State<FullScreenAds> {
         case InterstitialAdEvent.closed:
           // Here is a handy place to load a new interstitial after displaying the previous one
           interstitialAd.load();
+          // Do not show an ad here
           break;
         default:
           break;
@@ -58,10 +61,13 @@ class _FullScreenAdsState extends State<FullScreenAds> {
           color: Colors.amber,
           onPressed: () async {
             // Load only if not loaded
-            if (!interstitialVideoAd.isLoaded) await interstitialVideoAd.load();
+            if (!interstitialVideoAd.isLoaded)
+              await interstitialVideoAd.load(
+                  unitId: MobileAds.interstitialAdVideoTestUnitId);
             if (interstitialVideoAd.isLoaded) {
               await interstitialVideoAd.show();
-              interstitialVideoAd.load();
+              interstitialVideoAd.load(
+                  unitId: MobileAds.interstitialAdVideoTestUnitId);
             }
           },
         ),
@@ -69,7 +75,9 @@ class _FullScreenAdsState extends State<FullScreenAds> {
           child: Text('Show rewarded ad'),
           color: Colors.redAccent,
           onPressed: () async {
-            (await RewardedAd.createAndLoad()).show();
+            if (!rewardedAd.isLoaded) await rewardedAd.load();
+            await rewardedAd.show();
+            rewardedAd.load();
           },
         ),
         FlatButton(
@@ -79,7 +87,6 @@ class _FullScreenAdsState extends State<FullScreenAds> {
             if (!appOpenAd.isAvaiable) await appOpenAd.load();
             if (appOpenAd.isAvaiable) {
               await appOpenAd.show();
-              print('dismissed');
               appOpenAd.load();
             }
           },
