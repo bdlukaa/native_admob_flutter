@@ -3,8 +3,8 @@ package com.bruno.native_admob_flutter.native
 import android.content.Context
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
-import com.google.android.gms.ads.formats.NativeAdOptions
-import com.google.android.gms.ads.formats.UnifiedNativeAd
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdOptions
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -17,9 +17,9 @@ class NativeAdmobController(
 ) : MethodChannel.MethodCallHandler {
 
     /// New native ad when loaded
-    var nativeAdChanged: ((UnifiedNativeAd?) -> Unit)? = null
-    var nativeAdUpdateRequested: ((Map<String, Any?>, UnifiedNativeAd?) -> Unit)? = null
-    var nativeAd: UnifiedNativeAd? = null
+    var nativeAdChanged: ((NativeAd?) -> Unit)? = null
+    var nativeAdUpdateRequested: ((Map<String, Any?>, NativeAd?) -> Unit)? = null
+    var nativeAd: NativeAd? = null
 
     init {
         channel.setMethodCallHandler(this)
@@ -68,7 +68,7 @@ class NativeAdmobController(
 
         // load ad
         AdLoader.Builder(context, unitId)
-                .forUnifiedNativeAd {
+                .forNativeAd {
                     nativeAd = it
                     nativeAd!!.setMuteThisAdListener {
                         channel.invokeMethod("onAdMuted", null)
@@ -99,15 +99,6 @@ class NativeAdmobController(
                     }
                 }
                 .withAdListener(object : AdListener() {
-                    override fun onAdImpression() {
-                        super.onAdImpression()
-                        channel.invokeMethod("onAdImpression", null)
-                    }
-
-                    override fun onAdClicked() {
-                        super.onAdClicked()
-                        channel.invokeMethod("onAdClicked", null)
-                    }
 
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         super.onAdFailedToLoad(error)

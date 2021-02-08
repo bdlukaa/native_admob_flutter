@@ -17,9 +17,9 @@ import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
 import com.bruno.native_admob_flutter.R
-import com.google.android.gms.ads.formats.MediaView
-import com.google.android.gms.ads.formats.UnifiedNativeAd
-import com.google.android.gms.ads.formats.UnifiedNativeAdView
+import com.google.android.gms.ads.nativead.MediaView
+import com.google.android.gms.ads.nativead.NativeAd
+import com.google.android.gms.ads.nativead.NativeAdView
 import io.flutter.plugin.common.StandardMessageCodec
 import io.flutter.plugin.platform.PlatformView
 import io.flutter.plugin.platform.PlatformViewFactory
@@ -28,13 +28,13 @@ class NativeViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 
     override fun create(context: Context, id: Int, args: Any?): PlatformView {
         val creationParams = args as Map<String?, Any?>?
-        return NativeAdView(context, creationParams)
+        return NativeAdPlatformView(context, creationParams)
     }
 
 }
 
-class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
-    private val adView: UnifiedNativeAdView
+class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : PlatformView {
+    private var adView: NativeAdView
 
     private var ratingBar: RatingBar? = RatingBar(context)
 
@@ -216,7 +216,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         val inflater = LayoutInflater.from(context)
         val viewRoot = inflater.inflate(R.layout.ad_unified_native_ad, null)
 
-        adView = viewRoot.findViewById(R.id.native_ad_view) as UnifiedNativeAdView
+        adView = viewRoot.findViewById(R.id.native_ad_view) as NativeAdView
         adView.setBackgroundColor(Color.TRANSPARENT)
 
         val view: View = build(data!!, context)
@@ -227,7 +227,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         (data["controllerId"] as? String)?.let { id ->
             val controller = NativeAdmobControllerManager.getController(id)
             controller?.nativeAdChanged = { setNativeAd(it) }
-            controller?.nativeAdUpdateRequested = { layout: Map<String, Any?>, ad: UnifiedNativeAd? ->
+            controller?.nativeAdUpdateRequested = { layout: Map<String, Any?>, ad: NativeAd? ->
                 adView.removeAllViews()
                 adView.addView(build(layout, context))
                 define()
@@ -258,7 +258,7 @@ class NativeAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         adView.advertiserView = adAdvertiser
     }
 
-    private fun setNativeAd(nativeAd: UnifiedNativeAd?) {
+    private fun setNativeAd(nativeAd: NativeAd?) {
         if (nativeAd == null) return
 
         // Some assets are guaranteed to be in every UnifiedNativeAd.

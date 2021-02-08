@@ -8,11 +8,13 @@ import 'screens/banner_ads.dart';
 void main() async {
   /// Make sure you add this line here, so the plugin can access the native side
   WidgetsFlutterBinding.ensureInitialized();
+
   /// Make sure to initialize the MobileAds sdk. It returns a future
   /// that will be completed as soon as it initializes
   await MobileAds.initialize();
   // This is my device id. Ad yours here
   MobileAds.setTestDeviceIds(['9345804C1E5B8F0871DFE29CA0758842']);
+
   /// Run the app
   runApp(MyApp());
 }
@@ -43,28 +45,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   /// Init the controller
-  /// 
-  /// You don't need to dispose it, the BannerAd widget will
-  /// do the job for you
   final bannerController = BannerAdController();
 
   /// The banner height
-  double bannerAdHeight = 0;
+  // double _bannerAdHeight = 0;
 
   @override
   void initState() {
     super.initState();
     bannerController.onEvent.listen((e) {
       final event = e.keys.first;
-      final info = e.values.first;
+      // final info = e.values.first;
       switch (event) {
         case BannerAdEvent.loaded:
-          setState(() => bannerAdHeight = (info as int)?.toDouble());
+          // setState(() => _bannerAdHeight = (info as int)?.toDouble());
           break;
         default:
           break;
       }
     });
+    bannerController.load();
+  }
+
+  @override
+  void dispose() {
+    bannerController.dispose();
+    super.dispose();
   }
 
   @override
@@ -77,28 +83,25 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text('Ads demo'),
           centerTitle: true,
         ),
-        body: Stack(
+        body: Column(
           children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: bannerAdHeight),
+            Expanded(
               child: TabBarView(
                 children: [NativeAds(), BannerAds(), FullScreenAds()],
               ),
             ),
+
             /// Here's an example of how you can use a BannerAd in the
-            /// bottom of the screen, since it's the recommended way.
+            /// bottom of the screen and above the navigation bar,
+            /// since it's the recommended way. You can move this widget
+            /// to the top of the list ([]) to use it in the top.
             /// Make sure to use the adaptive banner size (default) to
             /// the banner ad fit the best
-            /// 
+            ///
             /// Sometimes an banner ad can have a black background, that's
             /// expected. Make sure to add an opaque background to your banner
             /// ad (using builder or whatever)
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: BannerAd(controller: bannerController),
-            ),
+            BannerAd(controller: bannerController),
           ],
         ),
         bottomNavigationBar: Container(

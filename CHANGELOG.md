@@ -1,5 +1,27 @@
 Date format: DD/MM/YYYY
 
+## [0.7.1] - [08/02/2021]
+
+- [Banner Ads](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad):
+  - **NEW**: You can now set the unitId in the `BannerAd` constructor using `unitId`
+  - **BREAKING**: Removed `undefined` from `BannerAdEvent`
+- [Native Ads](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad)
+  - Migrate deprecated depedencies. [migration](https://developers.google.com/admob/android/migration)
+  - **NEW**: Added `unmuted` in `NativeAdEvent`
+  - **BREAKING in NativeAdEvent**:
+    - Removed `clicked` and `impression`
+    - Renamed `mute` to `muted`
+  - Make sure to use a valid reason on [Custom Mute This Ad](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad)
+- Only dispose controller if it was created by the ad
+- Disattach the controller when the banner ad is disposed
+- [Wiki (Documentation)](https://github.com/bdlukaa/native_admob_flutter/wiki):
+  - Make sure to follow the new Interstitial and Rewarded Ads apis
+  - Fixed broken links
+  - Removed Native Video Ad
+  - **NEW**: Ad Errors
+- Updated documentation and formatted all the files
+- Simplified example
+
 ## 0.7.0 - [06/02/2021]
 
 - Migrated to SDK v20 on Android

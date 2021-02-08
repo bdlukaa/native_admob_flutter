@@ -12,9 +12,12 @@ import '../utils.dart';
 ///   - loading (When the ad starts loading)
 ///   - loaded (When the ad is loaded)
 ///   - loadFailed (When the ad failed to load)
-///   - opened (When the ad is opened)
+///   - showed (When the ad is opened)
+///   - failedToShow (When it failed to show the ad)
 ///   - showFailed (When the ad failed to show)
-///   - undefined (When it receives an unknown error)
+///   = earnedReward (When the user earns a reward)
+///
+/// For more info on rewarded ad events, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
 enum RewardedAdEvent {
   /// Called when an ad request failed.
   ///
@@ -24,16 +27,22 @@ enum RewardedAdEvent {
   /// situations such as limited network connectivity.
   loadFailed,
 
-  /// Called when an ad is received.
+  /// Called when an ad is loaded.
+  ///
+  /// You can also check if the ad is loaded by calling `ad.isLoaded`.
+  /// If it's not loaded, you can load a new ad by calling `ad.load()`
   loaded,
 
-  /// Called when the ad starts loading
+  /// Called when the ad starts loading.
+  /// This event is usually thrown by `ad.load()`
   loading,
 
-  /// Called when the ad showed
+  /// Called when the ad showed.
+  /// This event is usually thrown by `ad.show()`
   showed,
 
-  /// Called when the ad failed to show
+  /// Called when the ad failed to show.
+  /// This event is usually thrown by `ad.show()`
   showFailed,
 
   /// Called when the ad closes
@@ -91,8 +100,12 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   ///       final errorCode = e.values.first;
   ///       print('load failed $errorCode');
   ///       break;
-  ///     case RewardedAdEvent.opened:
-  ///       print('ad opened');
+  ///     case RewardedAdEvent.showed:
+  ///       print('ad showed');
+  ///       break;
+  ///     case RewardedAdEvent.showFailed:
+  ///       final errorCode = e.values.first;
+  ///       print('show failed $errorCode');
   ///       break;
   ///     case RewardedAdEvent.closed:
   ///       print('ad closed');
@@ -100,10 +113,6 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   ///     case RewardedAdEvent.earnedReward:
   ///       final reward = e.values.first;
   ///       print('earned reward: $reward');
-  ///       break;
-  ///     case RewardedAdEvent.showFailed:
-  ///       final errorCode = e.values.first;
-  ///       print('show failed $errorCode');
   ///       break;
   ///     default:
   ///       break;
@@ -119,10 +128,12 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// Returns true if the ad was successfully loaded and is ready to be shown.
   bool get isLoaded => _loaded;
 
-  /// Creates a new rewarded ad controller
+  /// Creates a new rewarded ad
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#create-a-rewarded-ad)
   RewardedAd() : super();
 
-  /// Initialize the controller. This can be called only by the controller
+  /// Initialize the ad. This can be called only by the ad
   void init() async {
     channel.setMethodCallHandler(_handleMessages);
     await MobileAds.pluginChannel.invokeMethod('initRewardedAd', {'id': id});
@@ -231,8 +242,8 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     assert(
       isLoaded,
       '''The ad must be loaded to show. 
-      Call controller.load() to load the ad. 
-      Call controller.isLoaded to check if the ad is loaded before showing.''',
+      Call ad.load() to load the ad. 
+      Call ad.isLoaded to check if the ad is loaded before showing.''',
     );
     return channel.invokeMethod<bool>('show');
   }

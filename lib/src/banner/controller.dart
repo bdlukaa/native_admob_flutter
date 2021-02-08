@@ -20,9 +20,6 @@ enum BannerAdEvent {
   /// Called when an impression is recorded for an ad.
   impression,
 
-  /// Called when a click is recorded for an ad.
-  clicked,
-
   /// Called when an ad request failed.
   loadFailed,
 
@@ -31,9 +28,6 @@ enum BannerAdEvent {
 
   /// Called when the ad starts loading
   loading,
-
-  /// Called when the event is unkown (usually for rebuilding ui)
-  undefined,
 }
 
 /// The size of a [BannerAd]. It's highly recommended to use
@@ -183,10 +177,11 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   /// is already attached.
   ///
   /// You should NOT call this function
-  void attach() {
+  void attach([bool attach = true]) {
     ensureAdNotDisposed();
     assertControllerIsNotAttached(isAttached);
-    _attached = true;
+    assert(attach != null);
+    _attached = attach;
   }
 
   /// Dispose the controller to free up resources.
@@ -202,10 +197,9 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   /// ```
   void dispose() {
     super.dispose();
-    MobileAds.pluginChannel.invokeMethod(
-      'disposeBannerAdController',
-      {'id': id},
-    );
+    MobileAds.pluginChannel.invokeMethod('disposeBannerAdController', {
+      'id': id,
+    });
   }
 
   Future<dynamic> _handleMessages(MethodCall call) async {
@@ -222,15 +216,10 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
       case 'onAdLoaded':
         onEventController.add({BannerAdEvent.loaded: call.arguments});
         break;
-      case 'onAdClicked':
-        onEventController.add({BannerAdEvent.clicked: null});
-        break;
       case 'onAdImpression':
         onEventController.add({BannerAdEvent.impression: null});
         break;
-      case 'undefined':
       default:
-        onEventController.add({BannerAdEvent.undefined: null});
         break;
     }
   }
@@ -240,14 +229,8 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#reloading-the-ad)
   Future<bool> load() {
     ensureAdNotDisposed();
-    assertControllerIsAttached(isAttached);
+    // assertControllerIsAttached(isAttached);
     assertMobileAdsIsInitialized();
-    return channel.invokeMethod<bool>('loadAd', null);
+    return channel.invokeMethod<bool>('loadAd');
   }
-
-  // @protected
-  // void changeController(String id) {
-  //   channel.invokeMethod('changeController', {'id': id});
-  // }
-
 }

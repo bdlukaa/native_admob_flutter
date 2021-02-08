@@ -30,7 +30,7 @@ class MediaContent {
   });
 
   /// Creates a new [MediaContent] object based on a json.
-  /// 
+  ///
   /// This is usually by the controller to receive the
   /// info from the platform side
   factory MediaContent.fromJson(Map<String, dynamic> map) {

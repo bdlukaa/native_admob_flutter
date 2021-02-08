@@ -12,9 +12,11 @@ import '../utils.dart';
 ///   - loading (When the ad starts loading)
 ///   - loaded (When the ad is loaded)
 ///   - loadFailed (When the ad failed to load)
-///   - opened (When the ad showed successfully)
+///   - showed (When the ad showed successfully)
+///   - failedToShow (When it failed to show the ad)
 ///   - closed (When the ad is closed)
-///   - leftApplication (When the user left the app)
+///
+/// For more info on interstitial ad events, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
 enum InterstitialAdEvent {
   /// Called when an ad request failed.
   ///
@@ -78,14 +80,14 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   ///       final errorCode = e.values.first;
   ///       print('loadFailed $errorCode');
   ///       break;
-  ///     case InterstitialAdEvent.opened:
-  ///       print('ad opened');
+  ///     case InterstitialAdEvent.showed:
+  ///       print('ad showed');
+  ///       break;
+  ///     case InterstitialAdEvent.failedToShow;
+  ///       print('ad failed to show');
   ///       break;
   ///     case InterstitialAdEvent.closed:
   ///       print('ad closed');
-  ///       break;
-  ///     case InterstitialAdEvent.clicked;
-  ///       print('clicked');
   ///       break;
   ///     default:
   ///       break;

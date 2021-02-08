@@ -133,8 +133,8 @@ class AdError {
   ///
   /// If this comes from [OpenAds], the possible error codes are:
   /// - Ad Reused (You're reusing an ad. This will rarely happen because this error is handled by the plugin): 1
-  /// - App Not In Foreground (The app must be in foreground so the ad can be shown): 3
   /// - Ad not ready (The ad is not ready to be shown): 2
+  /// - App Not In Foreground (The app must be in foreground so the ad can be shown): 3
   ///
   /// See [this](https://developers.google.com/android/reference/com/google/android/gms/ads/FullScreenContentCallback#constants) for more info
   ///
@@ -188,7 +188,7 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   Stream get onEvent => onEventController.stream;
 
   /// Channel to communicate with controller
-  @protected
+  // @protected
   MethodChannel channel;
 
   bool _disposed = false;

@@ -148,8 +148,12 @@ class _NativeAdState extends State<NativeAd>
             widget.options?.toJson()?.toString())
       controller.load(options: widget.options);
     if (layout(oldWidget).toString() != layout(widget).toString()) {
-      controller.requestAdUIUpdate(layout(widget));
+      _requestAdUIUpdate(layout(widget));
     }
+  }
+
+  void _requestAdUIUpdate(Map<String, dynamic> layout) {
+    controller.channel.invokeMethod('updateUI', {'layout': layout ?? {}});
   }
 
   @override
@@ -177,7 +181,12 @@ class _NativeAdState extends State<NativeAd>
 
   @override
   void dispose() {
-    controller?.dispose();
+    // dispose the controller only if the controller was
+    // created by the ad.
+    if (widget.controller == null)
+      controller?.dispose();
+    else
+      controller?.attach(false);
     super.dispose();
   }
 

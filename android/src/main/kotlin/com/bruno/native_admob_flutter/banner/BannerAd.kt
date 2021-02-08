@@ -23,8 +23,6 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private var adSize: AdSize
 
     private fun getAdSize(context: Context, width: Float): AdSize {
-//        val density = Resources.getSystem().displayMetrics.density
-//        val adWidth = (width / density).toInt()
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width.toInt())
     }
 

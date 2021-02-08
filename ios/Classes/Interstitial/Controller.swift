@@ -21,6 +21,7 @@ class InterstitialAdController: NSObject {
             case "loadAd":
                 channel.invokeMethod("loading", arguments: nil)
                 // TODO: load the ad
+                
             default:
                 result(FlutterMethodNotImplemented)
         }

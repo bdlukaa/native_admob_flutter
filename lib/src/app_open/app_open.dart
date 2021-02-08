@@ -21,6 +21,8 @@ const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
 ///   - showed (When the ad showed successfully)
 ///   - showFailed (When it failed on showing)
 ///   - dimissed (When the ad is closed)
+///
+/// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#ad-events)
 enum AppOpenEvent {
   /// Called when the ad starts loading
   loading,
@@ -31,17 +33,22 @@ enum AppOpenEvent {
   /// Called when the load failed
   ///
   /// Attempting to load a new ad from the `loadFailed` event is strongly discouraged.
-  /// If you must load an ad from onAppOpenAdFailedToLoad(), limit ad load retries to
-  /// avoid continuous failed ad requests in situations such as limited network connectivity.
+  /// If you must load an ad from this event, limit ad load retries to avoid
+  /// continuous failed ad requests in situations such as limited network connectivity.
   loadFailed,
 
-  /// Called when the ad is closed
+  /// Called when the ad is closed. The same as `await ad.show()`
   dismissed,
 
   /// Called when it failed on showing
+  ///
+  /// Attempting to show the ad again from the `showFailed` event is strongly discouraged.
+  /// If you must show the ad from this event, limit ad show retries to avoid
+  /// continuous failed attempts in situations such as limited network connectivity.
   showFailed,
 
-  /// Called when it showed successfully
+  /// Called when it showed successfully. This event is usually
+  /// thrown by `ad.show()`
   showed,
 }
 
@@ -90,7 +97,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// });
   /// ```
   ///
-  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#ad-events)
   Stream<Map<AppOpenEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _isAvaiable = false;
@@ -116,12 +123,15 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// Check if the ad is currently showing.
   bool get isShowing => _isShowing;
 
-  /// The duration a ad can be kept loaded. Default to 1 hour
+  /// The duration a ad can be kept loaded. Default to 1 hour.
+  /// This can NOT be null. If so, an `AssertionError` is thrown
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
   Duration timeout;
 
   /// Creates a new AppOpenAd instance.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#creating-an-ad-object)
   AppOpenAd([this.timeout = const Duration(hours: 1)])
       : assert(timeout != null, 'The timeout time can NOT be null'),
         super();

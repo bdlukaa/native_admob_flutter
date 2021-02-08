@@ -143,10 +143,6 @@ class MobileAds {
       }
     } else {
       assertVersionIsSupported();
-      assert(
-        osVersion >= 9,
-        'The required version to use the AdMOB SDk is 9 or higher',
-      );
       if (!(useHybridComposition ?? true))
         print(
           'Virtual display is not avaiable on iOS. Using hybrid composition',
