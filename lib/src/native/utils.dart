@@ -75,11 +75,7 @@ class AdBorderRadius {
 
   /// Creates a vertically symmetric border radius where the top
   /// and bottom sides of the rectangle have the same value.
-  static AdBorderRadius vertical({
-    double top,
-    double bottom,
-  }) =>
-      AdBorderRadius(
+  static AdBorderRadius vertical({double top, double bottom}) => AdBorderRadius(
         topLeft: top,
         topRight: top,
         bottomLeft: bottom,
@@ -87,11 +83,8 @@ class AdBorderRadius {
       );
 
   /// Creates a horizontally symmetrical border radius where the left
-  ///  and right sides of the rectangle have the same value.
-  static AdBorderRadius horizontal({
-    double left,
-    double right,
-  }) =>
+  /// and right sides of the rectangle have the same value.
+  static AdBorderRadius horizontal({double left, double right}) =>
       AdBorderRadius(
         topLeft: left,
         bottomLeft: left,

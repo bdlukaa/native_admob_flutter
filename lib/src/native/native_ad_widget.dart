@@ -53,17 +53,18 @@ class NativeAd extends StatefulWidget {
   /// The ad button. This isn't always inclued in the request
   final AdButtonView button;
 
-  /// The ad controller. If not specified, uses a default controller
+  /// The ad controller. If not specified, uses a default controller.
+  /// This can not be changed dynamically
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events)
   final NativeAdController controller;
 
-  /// The widget used in case an error shows up
+  /// The widget used in case of an error shows up
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
   final Widget error;
 
-  /// The widget used when the ad is loading.
+  /// The widget used while the ad is loading.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
   final Widget loading;
@@ -96,16 +97,37 @@ class NativeAd extends StatefulWidget {
   /// `reloadWhenOptionsChange` to false
   final NativeAdOptions options;
 
-  /// If true, the ad will be reloaded whenever `options` change
+  /// If true, the ad will be reloaded whenever `options` changes
   final bool reloadWhenOptionsChange;
 
-  /// Build the ad
+  /// Build the ad background. Basic usage:
+  /// ```dart
+  /// NativeAd(
+  ///   builder: (context, child) {
+  ///     return Container(
+  ///       // Applies a blue color to the background.
+  ///       // You can use anything here to build the ad.
+  ///       // The ad won't be reloaded
+  ///       color: Colors.blue,
+  ///       child: child,
+  ///     );
+  ///   }
+  /// )
+  /// ```
+  ///
+  /// For more info, read the [changelog](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#adbuilder)
   final AdBuilder builder;
 
-  /// Create a NativeAd
+  /// Create a `NativeAd`.
+  /// Uses `NativeAdView` on android and `GADNativeAd` on iOS
   ///
-  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#creating-a-layout-builder)
-  NativeAd({
+  /// Useful links:
+  ///   - https://developers.google.com/admob/ios/native/start
+  ///   - https://developers.google.com/admob/android/native/start
+  ///   - https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad)
+  const NativeAd({
     Key key,
     @required this.buildLayout,
     this.advertiser,

@@ -40,7 +40,7 @@ enum AppOpenEvent {
   /// Called when the ad is closed. The same as `await ad.show()`
   dismissed,
 
-  /// Called when it failed on showing
+  /// Called when it failed on showing. This event is usually thrown by `ad.show()`
   ///
   /// Attempting to show the ad again from the `showFailed` event is strongly discouraged.
   /// If you must show the ad from this event, limit ad show retries to avoid
@@ -126,7 +126,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// The duration a ad can be kept loaded. Default to 1 hour.
   /// This can NOT be null. If so, an `AssertionError` is thrown
   ///
-  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
   Duration timeout;
 
   /// Creates a new AppOpenAd instance.
@@ -191,6 +191,7 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
     int orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT,
   }) async {
     ensureAdNotDisposed();
+    assertMobileAdsIsInitialized();
     if (isAvaiable) {
       print('An ad is already avaiable, no need to load another');
       return false;
@@ -228,9 +229,11 @@ class AppOpenAd extends LoadShowAd<AppOpenEvent> {
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#show-the-ad)
   Future<bool> show() {
     ensureAdNotDisposed();
+    assertMobileAdsIsInitialized();
     assert(
       isAvaiable,
-      'Can NOT show an ad that is not loaded. Call await appOpenAd.load() before showing it',
+      'Can NOT show an ad that is not loaded. '
+      'Call await appOpenAd.load() before showing it',
     );
     return channel.invokeMethod<bool>('showAd');
   }

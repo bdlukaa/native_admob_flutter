@@ -98,7 +98,7 @@ class NativeAdOptions {
 class VideoOptions {
   bool _startMuted = true;
 
-  /// Wheter if the video start muted or not. Defaults to `true`
+  /// Whether the video start muted or not. Defaults to `true`
   bool get startMuted => _startMuted;
   set startMuted(bool start) => _startMuted = start ?? true;
 
@@ -109,5 +109,10 @@ class VideoOptions {
 
   Map<String, dynamic> toJson() {
     return {'startMuted': startMuted ?? true};
+  }
+
+  @override
+  String toString() {
+    return 'start muted: $startMuted';
   }
 }

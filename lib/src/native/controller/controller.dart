@@ -93,7 +93,8 @@ enum AdVideoEvent {
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/native/start
 ///   - https://developers.google.com/admob/ios/native/start
-class NativeAdController extends LoadShowAd<NativeAdEvent> {
+class NativeAdController extends LoadShowAd<NativeAdEvent>
+    with AttachableMixin {
   /// The test id for this ad.
   ///   - Android: ca-app-pub-3940256099942544/2247696110
   ///   - iOS: ca-app-pub-3940256099942544/3986624511
@@ -128,6 +129,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   /// custom implementation of Mute This Ad.
   ///
   /// Use `options` in `NativeAd` to enable Custom Mute This Ad
+  /// 
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad#check-if-custom-mute-this-ad-is-available)
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
   /// Listen to the events the controller throws
@@ -199,10 +202,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-video-events)
   Stream<Map<AdVideoEvent, dynamic>> get onVideoEvent => _onVideoEvent.stream;
 
-  bool _attached = false;
-
   /// Check if the controller is attached to a `NativeAd`
-  bool get isAttached => _attached;
+  bool get isAttached => super.isAttached;
 
   /// Creates a new native ad controller
   NativeAdController() : super();
@@ -211,16 +212,6 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   void init() {
     channel.setMethodCallHandler(_handleMessages);
     MobileAds.pluginChannel.invokeMethod('initNativeAdController', {'id': id});
-  }
-
-  /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
-  /// is already attached.
-  ///
-  /// You should NOT call this function
-  void attach([bool attach = true]) {
-    assertControllerIsNotAttached(isAttached);
-    assert(attach != null);
-    _attached = attach;
   }
 
   /// Dispose the controller to free up resources.
@@ -238,12 +229,11 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   /// ```
   void dispose() {
     super.dispose();
-    MobileAds.pluginChannel.invokeMethod(
-      'disposeNativeAdController',
-      {'id': id},
-    );
+    MobileAds.pluginChannel.invokeMethod('disposeNativeAdController', {
+      'id': id,
+    });
     _onVideoEvent.close();
-    _attached = false;
+    attach(false);
   }
 
   /// Handle the messages the channel sends
@@ -322,9 +312,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#reloading-the-ad)
   Future<bool> load({String unitId, NativeAdOptions options}) {
-    assertControllerIsAttached(isAttached);
+    ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    // The id will never be null, so you don't need to check
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
     return channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
@@ -337,14 +326,11 @@ class NativeAdController extends LoadShowAd<NativeAdEvent> {
   /// Use `null` to Mute This Ad with default reason.
   ///
   /// Fore more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad)
-  void muteThisAd([int reason]) {
-    assert(
-      isAttached,
-      'You can NOT use a disposed controller',
-    );
+  Future<void> muteThisAd([int reason]) {
+    ensureAdNotDisposed();
     if (reason != null)
       assert(!reason.isNegative, 'You must specify a valid reason');
-    channel.invokeMethod('muteAd', {'reason': reason});
+    return channel.invokeMethod('muteAd', {'reason': reason});
   }
 }
 

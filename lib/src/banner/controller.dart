@@ -119,7 +119,8 @@ class BannerSize {
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/banner
 ///   - https://developers.google.com/admob/ios/banner
-class BannerAdController extends LoadShowAd<BannerAdEvent> {
+class BannerAdController extends LoadShowAd<BannerAdEvent>
+    with AttachableMixin {
   /// The test id for this ad.
   ///   - Android: ca-app-pub-3940256099942544/6300978111
   ///   - iOS: ca-app-pub-3940256099942544/2934735716
@@ -159,11 +160,6 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#listening-to-events)
   Stream<Map<BannerAdEvent, dynamic>> get onEvent => super.onEvent;
 
-  bool _attached = false;
-
-  /// Check if the controller is attached to a `BannerAd`
-  bool get isAttached => _attached;
-
   /// Creates a new native ad controller
   BannerAdController() : super();
 
@@ -171,17 +167,6 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   void init() {
     channel.setMethodCallHandler(_handleMessages);
     MobileAds.pluginChannel.invokeMethod('initBannerAdController', {'id': id});
-  }
-
-  /// Attach the controller to a new `BannerAd`. Throws an `AssertionException` if the controller
-  /// is already attached.
-  ///
-  /// You should NOT call this function
-  void attach([bool attach = true]) {
-    ensureAdNotDisposed();
-    assertControllerIsNotAttached(isAttached);
-    assert(attach != null);
-    _attached = attach;
   }
 
   /// Dispose the controller to free up resources.
@@ -200,6 +185,7 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
     MobileAds.pluginChannel.invokeMethod('disposeBannerAdController', {
       'id': id,
     });
+    attach(false);
   }
 
   Future<dynamic> _handleMessages(MethodCall call) async {
@@ -229,7 +215,6 @@ class BannerAdController extends LoadShowAd<BannerAdEvent> {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#reloading-the-ad)
   Future<bool> load() {
     ensureAdNotDisposed();
-    // assertControllerIsAttached(isAttached);
     assertMobileAdsIsInitialized();
     return channel.invokeMethod<bool>('loadAd');
   }

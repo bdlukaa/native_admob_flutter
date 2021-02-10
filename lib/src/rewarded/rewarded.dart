@@ -160,6 +160,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
 
   /// Handle the messages the channel sends
   Future<void> _handleMessages(MethodCall call) async {
+    if (isDisposed) return;
     switch (call.method) {
       case 'loading':
         onEventController.add({RewardedAdEvent.loading: null});
@@ -237,8 +238,11 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// await (await rewardedAd.load()).show();
   /// print('ad showed');
   /// ```
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#show-the-ad)
   Future<bool> show() {
     ensureAdNotDisposed();
+    assertMobileAdsIsInitialized();
     assert(
       isLoaded,
       '''The ad must be loaded to show. 

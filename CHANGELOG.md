@@ -1,5 +1,22 @@
 Date format: DD/MM/YYYY
 
+## [0.7.2] - [10/02/2021]
+
+- Improved documentation and formatted files
+- Make sure to check if the native ad is not disposed instead of attached
+- [profile mode](https://flutter.dev/docs/testing/build-modes#profile) is now considered as test mode
+- Avoid `RewardedAd`s from receiving events if disposed
+- Ensure the SDK is initialized before using it (`MobileAds.initialize`)
+- New `AttachableMixin`
+- Disattach the controller on dispose
+- `MobileAds`
+  - Make constructor private
+  - Add android version checking on initialize (min version is 16)
+  - Fixed `setAppMuted` error
+  - Added `RATING_G`, `RATING_PG`, `RATING_T` and `RATING_MA` consts to support `setMaxAdContentRating`
+  - Param on `setAppMuted` is now optional. `true` by default
+- Added internet permission to example app
+
 ## [0.7.1] - [08/02/2021]
 
 - [Banner Ads](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad):

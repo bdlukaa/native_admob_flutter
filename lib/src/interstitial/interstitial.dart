@@ -172,6 +172,8 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   ///
   /// If `unitId` is null, `MobileAds.interstitialAdUnitId` or
   /// `MobileAds.interstitialAdTestUnitId` is used
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
   Future<bool> load({
     String unitId,
   }) async {
