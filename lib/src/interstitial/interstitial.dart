@@ -176,13 +176,12 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
   Future<bool> load({
     String unitId,
+    bool force = false,
   }) async {
+    assert(force != null);
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    if (isLoaded) {
-      print('An ad is already avaiable, no need to load another');
-      return false;
-    }
+    if (!debugCheckAdWillReload(isLoaded, force)) return false;
     _loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
           MobileAds.interstitialAdUnitId ??

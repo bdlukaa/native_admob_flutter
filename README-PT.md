@@ -26,11 +26,11 @@ Anúncios fáceis-de-fazer em Flutter usando o AdMob SDK do Google.\
 
 Para começar com Anúncios Nativos para Flutter, [leia a documentação - Inglês](https://github.com/bdlukaa/native_admob_flutter/wiki)
 
-- [x] Anúncios Nativos (Native Ads)
-- [x] Anúncios de Banner (Banner Ads)
-- [x] Anúncios Intersticiais (Interstitial Ads)
-- [x] Anúncios Prêmiados (Rewarded Ads)
-- [x] Anúncios de Abertura (App Open Ads)
+- ✔️ Anúncios Nativos (Native Ads)
+- ✔️ Anúncios de Banner (Banner Ads)
+- ✔️ Anúncios Intersticiais (Interstitial Ads)
+- ✔️ Anúncios Prêmiados (Rewarded Ads)
+- ✔️ Anúncios de Abertura (App Open Ads)
 
 ## Problemas e feedback
 

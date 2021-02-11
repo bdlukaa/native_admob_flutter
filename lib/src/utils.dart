@@ -65,6 +65,16 @@ void assertVersionIsSupported([bool usePlatformView = true]) {
   }
 }
 
+bool debugCheckAdWillReload(bool isLoaded, bool force) {
+  isLoaded ??= false;
+  force ??= false;
+  if (isLoaded && !force) {
+    print('An ad is already avaiable, no need to load another');
+    return false;
+  }
+  return true;
+}
+
 /// The Ad Builder
 ///
 /// Useful links:

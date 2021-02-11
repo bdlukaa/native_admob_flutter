@@ -1,5 +1,18 @@
 Date format: DD/MM/YYYY
 
+## [0.8.0] - [11/02/2021]
+
+- **NEW**:
+  - `AdView.copyWith`. Now native ads have default values that will only be overritten if done manually. (Fixes [#4](https://github.com/bdlukaa/native_admob_flutter/issues/4))
+  - `BannerAdOptions`
+  - `force` on load methods
+  - `isLoaded` on banner and native controller
+- **HIGHLIGHT**: Automatically detect the orientation of the device when loading and set App Open Ad orientation accordingly. Previosly, if your app was in landscape mode and the orientation was set to portrait, the app would go to the portrait orientation
+- Example app:
+  - Force reload ads if they're long pressed
+  - Added a `RefreshIndicator` to the full screen ads page
+- Improved documentation and formatted files
+
 ## [0.7.2] - [10/02/2021]
 
 - Improved documentation and formatted files

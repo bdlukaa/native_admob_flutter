@@ -39,15 +39,58 @@ class AdTextView extends AdView {
           height: height ?? WRAP_CONTENT,
         );
 
+  AdTextView copyWith(AdView view) {
+    if (view == null) return this;
+    assert(view is AdTextView);
+    return AdTextView(
+      decoration: view.decoration ?? decoration,
+      height: view.height ?? height,
+      width: view.width ?? width,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+      maxLines: (view as AdTextView).maxLines ?? maxLines,
+      minLines: (view as AdTextView).minLines ?? minLines,
+      style: _copyStylesWithin(this.style, (view as AdTextView).style),
+      text: (view as AdTextView).text ?? text,
+    );
+  }
+
+  TextStyle _copyStylesWithin(TextStyle a, TextStyle b) {
+    if (a == null && b == null)
+      return TextStyle(fontSize: 14, color: Colors.white);
+    if (a == null) return b;
+    if (b == null) return a;
+    return a.copyWith(
+      color: b.color,
+      fontSize: b.fontSize,
+      letterSpacing: b.letterSpacing,
+      fontWeight: b.fontWeight,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    final style = this.style ?? TextStyle(fontSize: 14, color: Colors.white);
+    final defaultColor = () {
+      final b = WidgetsBinding.instance.window.platformBrightness;
+      switch (b) {
+        case Brightness.dark:
+          return Colors.white;
+          break;
+        default:
+          return Colors.black;
+          break;
+      }
+    }();
+    final style = _copyStylesWithin(
+      TextStyle(fontSize: 14, color: defaultColor),
+      this.style,
+    );
     json.addAll({
       'textColor': style.color?.toHex(),
       'textSize': style.fontSize,
       'text': text,
       'letterSpacing': style.letterSpacing,
-      'minLines': minLines,
+      'minLines': minLines ?? 1,
       'maxLines': maxLines,
       'bold': style.fontWeight == FontWeight.bold,
     });
@@ -88,6 +131,23 @@ class AdButtonView extends AdTextView {
               ),
           text: text,
         );
+
+  AdButtonView copyWith(AdView view) {
+    if (view == null) return this;
+    assert(view is AdButtonView);
+    return AdButtonView(
+      decoration: view.decoration ?? decoration,
+      height: view.height ?? height,
+      width: view.width ?? width,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+      maxLines: (view as AdButtonView).maxLines ?? maxLines,
+      minLines: (view as AdButtonView).minLines ?? minLines,
+      textStyle: (view as AdButtonView).style ?? style,
+      text: (view as AdButtonView).text ?? text,
+      pressColor: (view as AdButtonView).pressColor ?? pressColor,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();

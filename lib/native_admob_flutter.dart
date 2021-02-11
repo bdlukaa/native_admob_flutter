@@ -11,6 +11,7 @@ export 'src/native/gradient/gradient.dart';
 
 export 'src/banner/banner_ad_widget.dart';
 export 'src/banner/controller.dart';
+export 'src/banner/options.dart';
 
 export 'src/interstitial/interstitial.dart';
 

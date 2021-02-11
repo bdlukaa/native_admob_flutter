@@ -21,7 +21,7 @@ class AppOpenAdController(
     private var appOpenAd: AppOpenAd? = null
 
     private fun fetchAd(unitId: String, orientation: Int, loadCallback: AppOpenAdLoadCallback) {
-        if (isAdAvailable()) return
+        // if (isAdAvailable()) return
         AdRequest.Builder().build()
         AppOpenAd.load(context, unitId, AdRequest.Builder().build(), orientation, loadCallback)
     }

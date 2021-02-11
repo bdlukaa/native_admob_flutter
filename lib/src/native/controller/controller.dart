@@ -129,7 +129,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// custom implementation of Mute This Ad.
   ///
   /// Use `options` in `NativeAd` to enable Custom Mute This Ad
-  /// 
+  ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad#check-if-custom-mute-this-ad-is-available)
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
@@ -205,6 +205,11 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Check if the controller is attached to a `NativeAd`
   bool get isAttached => super.isAttached;
 
+  bool _loaded = false;
+
+  /// Returns true if the ad was successfully loaded and is ready to be rendered.
+  bool get isLoaded => _loaded;
+
   /// Creates a new native ad controller
   NativeAdController() : super();
 
@@ -267,13 +272,17 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     }
     switch (call.method) {
       case 'loading':
+        _loaded = false;
         onEventController.add({NativeAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        onEventController
-            .add({NativeAdEvent.loadFailed: AdError.fromJson(call.arguments)});
+        _loaded = false;
+        onEventController.add({
+          NativeAdEvent.loadFailed: AdError.fromJson(call.arguments),
+        });
         break;
       case 'onAdLoaded':
+        _loaded = true;
         onEventController.add({NativeAdEvent.loaded: null});
         break;
       case 'onAdMuted':
@@ -304,21 +313,27 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     }
   }
 
-  /// Load the ad. If the controller is disposed or not attached,
-  /// or the Mobile Ads SDK (ADMOB SDK) is not initialized,
-  /// an `AssertionError` is thrown.
-  ///
-  /// If [unitId] is not specified, uses [MobileAds.nativeAdUnitId]
+  /// Load the ad. If the controller is disposed or the Mobile Ads SDK
+  /// (ADMOB SDK) is not initialized, an `AssertionError` is thrown.
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#reloading-the-ad)
-  Future<bool> load({String unitId, NativeAdOptions options}) {
+  Future<bool> load({
+    /// The ad unit id. If null, uses [MobileAds.nativeAdUnitId]
+    String unitId,
+    NativeAdOptions options,
+
+    /// Force to load an ad even if another is already avaiable
+    bool force = false,
+  }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
+    if (!debugCheckAdWillReload(isLoaded, force)) return false;
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    return channel.invokeMethod<bool>('loadAd', {
+    _loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     });
+    return _loaded;
   }
 
   /// Mutes This Ad programmatically.

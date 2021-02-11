@@ -28,7 +28,9 @@ class BannerAd extends StatefulWidget {
     this.error,
     this.loading,
     this.unitId,
+    this.options = const BannerAdOptions(),
   })  : assert(size != null, 'A size must be set'),
+        assert(options != null),
         super(key: key);
 
   /// The builder of the ad. The ad won't be reloaded if this changes
@@ -147,6 +149,8 @@ class BannerAd extends StatefulWidget {
   /// If null, defaults to `MobileAds.bannerAdUnitId`
   final String unitId;
 
+  final BannerAdOptions options;
+
   @override
   _BannerAdState createState() => _BannerAdState();
 }
@@ -157,6 +161,8 @@ class _BannerAdState extends State<BannerAd>
   BannerAdEvent state = BannerAdEvent.loading;
 
   double height;
+  
+  BannerAdOptions get options => widget.options;
 
   @override
   void initState() {
@@ -214,6 +220,7 @@ class _BannerAdState extends State<BannerAd>
     super.build(context);
     assertPlatformIsSupported();
     assertVersionIsSupported();
+    assert(options != null, 'You must set the ad options');
 
     return LayoutBuilder(
       builder: (context, consts) {

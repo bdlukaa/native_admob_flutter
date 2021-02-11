@@ -38,60 +38,76 @@ class _FullScreenAdsState extends State<FullScreenAds> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        FlatButton(
-          child: Text('Show interstitial ad'),
-          color: Colors.yellow,
-          onPressed: () async {
-            // Load only if not loaded
-            if (!interstitialAd.isLoaded) await interstitialAd.load();
-            if (interstitialAd.isLoaded) {
-              await interstitialAd.show();
+    return RefreshIndicator(
+      onRefresh: () async {
+        await interstitialAd.load();
+        await interstitialVideoAd.load(
+            unitId: MobileAds.interstitialAdVideoTestUnitId);
+        await rewardedAd.load(force: true);
+        await appOpenAd.load(force: true);
+      },
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          FlatButton(
+            child: Text('Show interstitial ad'),
+            color: Colors.yellow,
+            onLongPress: () => interstitialAd.load(force: true),
+            onPressed: () async {
+              // Load only if not loaded
+              if (!interstitialAd.isLoaded) await interstitialAd.load();
+              if (interstitialAd.isLoaded) {
+                await interstitialAd.show();
 
-              /// You can also load a new ad here, because the `show()` will
-              /// only complete when the ad gets closed
-              // interstitialAd.load();
-            }
-          },
-        ),
-        FlatButton(
-          child: Text('Show interstitial video ad'),
-          color: Colors.amber,
-          onPressed: () async {
-            // Load only if not loaded
-            if (!interstitialVideoAd.isLoaded)
-              await interstitialVideoAd.load(
-                  unitId: MobileAds.interstitialAdVideoTestUnitId);
-            if (interstitialVideoAd.isLoaded) {
-              await interstitialVideoAd.show();
-              interstitialVideoAd.load(
-                  unitId: MobileAds.interstitialAdVideoTestUnitId);
-            }
-          },
-        ),
-        FlatButton(
-          child: Text('Show rewarded ad'),
-          color: Colors.redAccent,
-          onPressed: () async {
-            if (!rewardedAd.isLoaded) await rewardedAd.load();
-            await rewardedAd.show();
-            rewardedAd.load();
-          },
-        ),
-        FlatButton(
-          child: Text('Show App Open Ad'),
-          color: Colors.lime,
-          onPressed: () async {
-            if (!appOpenAd.isAvaiable) await appOpenAd.load();
-            if (appOpenAd.isAvaiable) {
-              await appOpenAd.show();
-              appOpenAd.load();
-            }
-          },
-        ),
-      ],
+                /// You can also load a new ad here, because the `show()` will
+                /// only complete when the ad gets closed
+                // interstitialAd.load();
+              }
+            },
+          ),
+          FlatButton(
+            child: Text('Show interstitial video ad'),
+            color: Colors.amber,
+            onLongPress: () => interstitialVideoAd.load(
+              unitId: MobileAds.interstitialAdVideoTestUnitId,
+              force: true,
+            ),
+            onPressed: () async {
+              // Load only if not loaded
+              if (!interstitialVideoAd.isLoaded)
+                await interstitialVideoAd.load(
+                    unitId: MobileAds.interstitialAdVideoTestUnitId);
+              if (interstitialVideoAd.isLoaded) {
+                await interstitialVideoAd.show();
+                interstitialVideoAd.load(
+                    unitId: MobileAds.interstitialAdVideoTestUnitId);
+              }
+            },
+          ),
+          FlatButton(
+            child: Text('Show rewarded ad'),
+            color: Colors.redAccent,
+            onLongPress: () => rewardedAd.load(force: true),
+            onPressed: () async {
+              if (!rewardedAd.isLoaded) await rewardedAd.load();
+              await rewardedAd.show();
+              rewardedAd.load();
+            },
+          ),
+          FlatButton(
+            child: Text('Show App Open Ad'),
+            color: Colors.lime,
+            onLongPress: () => appOpenAd.load(force: true),
+            onPressed: () async {
+              if (!appOpenAd.isAvaiable) await appOpenAd.load();
+              if (appOpenAd.isAvaiable) {
+                await appOpenAd.show();
+                appOpenAd.load();
+              }
+            },
+          ),
+        ],
+      ),
     );
   }
 }

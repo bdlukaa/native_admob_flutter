@@ -267,44 +267,38 @@ class _NativeAdState extends State<NativeAd>
 
   Map<String, dynamic> layout(NativeAd widget) {
     // default the layout views
-    final headline = widget.headline ??
-        AdTextView(
-          style: TextStyle(
-              fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
-          maxLines: 1,
-        );
-    final advertiser = widget.advertiser ?? AdTextView();
-    final attribution = widget.attribution ??
-        AdTextView(
-          width: WRAP_CONTENT,
-          height: WRAP_CONTENT,
-          padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
-          style: TextStyle(color: Colors.black),
-          text: 'Ad',
-          margin: EdgeInsets.only(right: 2),
-          maxLines: 1,
-          decoration: AdDecoration(
-            borderRadius: AdBorderRadius.all(10),
-            backgroundColor: Colors.yellow,
-          ),
-        );
-    final body = widget.body ?? AdTextView();
-    final button = widget.button ??
-        AdButtonView(
-          pressColor: Colors.red,
-          decoration: AdDecoration(
-            backgroundColor: Colors.yellow,
-          ),
-          margin: EdgeInsets.only(top: 6),
-        );
-    final icon = widget.icon ??
-        AdImageView(
-          margin: EdgeInsets.only(left: 4),
-        );
-    final media = widget.media ?? AdMediaView();
-    final price = widget.price ?? AdTextView();
-    final ratingBar = widget.ratingBar ?? AdRatingBarView();
-    final store = widget.store ?? AdTextView();
+    final headline = AdTextView(
+      style: TextStyle(
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+      maxLines: 1,
+    ).copyWith(widget.headline);
+    final advertiser = AdTextView().copyWith(widget.advertiser);
+    final attribution = AdTextView(
+      width: WRAP_CONTENT,
+      height: WRAP_CONTENT,
+      padding: EdgeInsets.symmetric(horizontal: 2, vertical: 0),
+      style: TextStyle(color: Colors.black),
+      text: 'Ad',
+      margin: EdgeInsets.only(right: 2),
+      maxLines: 1,
+      decoration: AdDecoration(
+        borderRadius: AdBorderRadius.all(10),
+        backgroundColor: Colors.yellow,
+      ),
+    ).copyWith(widget.attribution);
+    final body = AdTextView().copyWith(widget.body);
+    final button = AdButtonView(
+      pressColor: Colors.red,
+      decoration: AdDecoration(backgroundColor: Colors.yellow),
+      margin: EdgeInsets.only(top: 6),
+    ).copyWith(widget.button);
+    final icon = AdImageView().copyWith(widget.icon);
+    final media = AdMediaView().copyWith(widget.media);
+    final price = AdTextView().copyWith(widget.price);
+    final ratingBar = AdRatingBarView().copyWith(widget.ratingBar);
+    final store = AdTextView().copyWith(widget.store);
 
     // define the layout ids
     advertiser.id = 'advertiser';
@@ -319,20 +313,18 @@ class _NativeAdState extends State<NativeAd>
     store.id = 'store';
 
     // build the layout
-    final layout = (widget.buildLayout ?? adBannerLayoutBuilder)
-        .call(
-          ratingBar,
-          media,
-          icon,
-          headline,
-          advertiser,
-          body,
-          price,
-          store,
-          attribution,
-          button,
-        )
-        ?.toJson();
+    final layout = (widget.buildLayout ?? adBannerLayoutBuilder)(
+      ratingBar,
+      media,
+      icon,
+      headline,
+      advertiser,
+      body,
+      price,
+      store,
+      attribution,
+      button,
+    )?.toJson();
     assert(layout != null, 'The layout must not return null');
 
     return layout;

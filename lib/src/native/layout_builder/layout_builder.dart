@@ -60,6 +60,20 @@ class AdView {
     this.decoration,
   });
 
+  /// Copy [this] with a new [AdView]
+  AdView copyWith(AdView view) {
+    if (view == null) return this;
+    return AdView(
+      viewType: view.viewType ?? viewType,
+      decoration: view.decoration ?? decoration,
+      height: view.height ?? height,
+      width: view.width ?? width,
+      id: view.id ?? id,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+    );
+  }
+
   Map<String, dynamic> toJson() {
     double width = this.width;
     if (width == double.infinity) width = MATCH_PARENT;
@@ -101,9 +115,21 @@ class AdImageView extends AdView {
           padding: padding,
           margin: margin,
           decoration: decoration,
-          width: size ?? 40,
-          height: size ?? 40,
+          width: size ?? 50,
+          height: size ?? 50,
         );
+
+  /// Copy [this] with a new [AdView]
+  AdImageView copyWith(AdView view) {
+    if (view == null) return this;
+    assert(view is AdImageView);
+    return AdImageView(
+      decoration: view.decoration ?? decoration,
+      size: view.height ?? view.width ?? height ?? width,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+    );
+  }
 }
 
 class AdMediaView extends AdView {
@@ -121,6 +147,18 @@ class AdMediaView extends AdView {
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
         );
+
+  /// Copy [this] with a new [AdView]
+  AdMediaView copyWith(AdView view) {
+    if (view == null) return this;
+    return AdMediaView(
+      decoration: view.decoration ?? decoration,
+      height: view.height ?? height,
+      width: view.width ?? width,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+    );
+  }
 }
 
 class AdRatingBarView extends AdView {
@@ -142,6 +180,20 @@ class AdRatingBarView extends AdView {
           width: width ?? WRAP_CONTENT,
           height: height ?? WRAP_CONTENT,
         );
+
+  /// Copy [this] with a new [AdRatingBarView]
+  AdRatingBarView copyWith(AdView view) {
+    if (view == null) return this;
+    assert(view is AdRatingBarView);
+    return AdRatingBarView(
+      decoration: view.decoration ?? decoration,
+      height: view.height ?? height,
+      width: view.width ?? width,
+      margin: view.margin ?? margin,
+      padding: view.padding ?? padding,
+      stepSize: (view as AdRatingBarView).stepSize,
+    );
+  }
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
