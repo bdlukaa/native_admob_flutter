@@ -161,7 +161,7 @@ class AdError {
   /// Gets the cause of the error, if available.
   final AdError cause;
 
-  /// Creates a new AdError
+  /// Creates a new AdError instance
   const AdError({
     @required this.code,
     @required this.message,
@@ -191,7 +191,7 @@ mixin UniqueKeyMixin {
 }
 
 mixin AttachableMixin {
-  bool _attached;
+  bool _attached = false;
 
   /// Check if the controller is attached to an Ad
   bool get isAttached => _attached;
@@ -202,17 +202,16 @@ mixin AttachableMixin {
   /// You should not call this function
   @mustCallSuper
   void attach([bool attach = true]) {
-    _assertControllerIsNotAttached(isAttached);
     assert(attach != null);
+    if (attach) _assertControllerIsNotAttached();
     _attached = attach;
   }
 
   /// Ensure the controller is not attached
-  void _assertControllerIsNotAttached(bool attached) {
-    if (attached == null) return;
+  void _assertControllerIsNotAttached() {
     assert(
-      !attached,
-      'This controller has already been attached to a native or banner ad.'
+      !isAttached,
+      'This controller has already been attached to an ad. '
       'You need one controller for each',
     );
   }
@@ -221,6 +220,14 @@ mixin AttachableMixin {
 abstract class LoadShowAd<T> with UniqueKeyMixin {
   @protected
   final onEventController = StreamController<Map<T, dynamic>>.broadcast();
+
+  /// The events this ad throws. Listen to it using:
+  ///
+  /// ```dart
+  /// ad.onEvent.listen((event) {
+  ///   print(event);
+  /// });
+  /// ```
   Stream get onEvent => onEventController.stream;
 
   /// Channel to communicate with controller

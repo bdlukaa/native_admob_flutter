@@ -1,5 +1,13 @@
 Date format: DD/MM/YYYY
 
+## [0.8.1] - [11/02/2021]
+
+- Make sure the controller is not attached only when trying to attach. (Fixed [#5](https://github.com/bdlukaa/native_admob_flutter/issues/5))
+- Formatted files and improved documentation
+- Example app:
+  - Added Material elevation to native ads
+  - Added an example using Navigator
+
 ## [0.8.0] - [11/02/2021]
 
 - **NEW**:

@@ -1,6 +1,9 @@
 <div>
   <h1 align="center">native_admob_flutter</h1>
   <p align="center" >
+    <a title="Discord" href="https://discord.gg/674gpDQUVq">
+      <img src="https://img.shields.io/discord/809528329337962516?label=discord&logo=discord" />
+    </a>
     <a title="Pub" href="https://pub.dartlang.org/packages/native_admob_flutter" >
       <img src="https://img.shields.io/pub/v/native_admob_flutter.svg?style=popout&include_prereleases" />
     </a>
@@ -26,11 +29,11 @@ English | [Português](README-PT.md)
 
 To get started with Native Ads for Flutter, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki)
 
-- ✔️ Native Ads
-- ✔️ Banner Ads
-- ✔️ Interstitial Ads
-- ✔️ Rewarded Ads
-- ✔️ App Open Ads
+✔️ Native Ads\
+✔️ Banner Ads\
+✔️ Interstitial Ads\
+✔️ Rewarded Ads\
+✔️ App Open Ads
 
 ## Issues and feedback
 

@@ -82,6 +82,19 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text('Ads demo'),
           centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.navigate_next),
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                    appBar: AppBar(title: Text('Native Ads')),
+                    body: NativeAds(),
+                  ),
+                ));
+              },
+            ),
+          ],
         ),
         body: Column(
           children: [

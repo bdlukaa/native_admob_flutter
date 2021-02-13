@@ -161,7 +161,7 @@ class _BannerAdState extends State<BannerAd>
   BannerAdEvent state = BannerAdEvent.loading;
 
   double height;
-  
+
   BannerAdOptions get options => widget.options;
 
   @override

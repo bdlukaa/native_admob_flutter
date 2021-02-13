@@ -27,6 +27,12 @@ class _NativeAdsState extends State<NativeAds>
         children: [
           NativeAd(
             height: 60,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
             buildLayout: adBannerLayoutBuilder,
             loading: Text('loading'),
             error: Text('error'),
@@ -46,6 +52,12 @@ class _NativeAdsState extends State<NativeAds>
           SizedBox(height: 10),
           NativeAd(
             height: 100,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
             buildLayout: secondBuilder,
             loading: Text('loading'),
             error: Text('error'),
@@ -63,6 +75,12 @@ class _NativeAdsState extends State<NativeAds>
           SizedBox(height: 10),
           NativeAd(
             height: 300,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
             buildLayout: fullBuilder,
             loading: Text('loading'),
             error: Text('error'),
