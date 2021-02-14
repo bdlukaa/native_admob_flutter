@@ -193,7 +193,6 @@ fun encodeError(error: AdError?): Map<String, Any?> {
     return mapOf<String, Any?>(
             "errorCode" to error?.code,
             "domain" to error?.domain,
-            "message" to error?.message,
-            "cause" to encodeError(error?.cause)
+            "message" to error?.message
     )
 }

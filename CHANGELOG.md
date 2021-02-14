@@ -1,10 +1,15 @@
 Date format: DD/MM/YYYY
 
-## [0.8.1] - [11/02/2021]
+## [0.8.2] - [14/02/2021]
+
+- **BREAKING**:
+  - Removed `AdError.cause`. It was giving a StackOverflowError on the android side. (Fixed [#6](https://github.com/bdlukaa/native_admob_flutter/issues/6))
+
+## [0.8.1] - [13/02/2021]
 
 - Make sure the controller is not attached only when trying to attach. (Fixed [#5](https://github.com/bdlukaa/native_admob_flutter/issues/5))
 - Formatted files and improved documentation
-- Example app:
+- [Example app](example/):
   - Added Material elevation to native ads
   - Added an example using Navigator
 

@@ -158,15 +158,11 @@ class AdError {
   /// Gets the domain from which the error came.
   final String domain;
 
-  /// Gets the cause of the error, if available.
-  final AdError cause;
-
   /// Creates a new AdError instance
   const AdError({
     @required this.code,
     @required this.message,
     @required this.domain,
-    this.cause,
   });
 
   /// Retrieve an [AdError] from a json
@@ -175,12 +171,11 @@ class AdError {
       code: json['code'],
       message: json['message'],
       domain: json['domain'],
-      cause: AdError.fromJson(json['cause']),
     );
   }
 
   @override
-  String toString() => '#$code from $domain. $message. Cause: $cause';
+  String toString() => '#$code from $domain: $message';
 }
 
 mixin UniqueKeyMixin {
