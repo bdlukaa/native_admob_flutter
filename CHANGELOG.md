@@ -1,8 +1,16 @@
 Date format: DD/MM/YYYY
 
-## [0.9.0] - [00/00/2021]
+## [0.9.1] - [15/02/2021]
 
-- **BREAKING**: Removed `InterstitialAdEvent` and `AppOpenAdEvent`
+- Added a splashscreen to the example app (Fixes [#7](https://github.com/bdlukaa/native_admob_flutter/issues/7))
+- [Wiki](https://github.com/bdlukaa/native_admob_flutter/wiki/):
+  - [Consider adding a splashscreen](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup#consider-adding-a-splash-screen)
+
+## [0.9.0] - [14/02/2021]
+
+- **BREAKING**:
+  - Removed `InterstitialAdEvent` and `AppOpenAdEvent`
+  - Removed `AdError.domain`
 - **NEW**: `FullScreenAdEvent`
 - Improved documentation
 - [Wiki](https://github.com/bdlukaa/native_admob_flutter/wiki)
