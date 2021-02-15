@@ -234,10 +234,9 @@ class _NativeAdState extends State<NativeAd>
       // assert(!width.isInfinite, 'A width must be provided');
       assert(
         height > 32 && width > 32,
-        '''
-        Native ad views that have a width or height smaller than 32 will be demonetized in the future. 
-        Please make sure the ad view has sufficiently large area.
-        ''',
+        'Native ad views that have a width or height smaller than '
+        '32 will be demonetized in the future. '
+        'Please make sure the ad view has sufficiently large area.',
       );
 
       if (Platform.isAndroid) {

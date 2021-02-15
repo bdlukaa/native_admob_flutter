@@ -23,7 +23,7 @@ class _FullScreenAdsState extends State<FullScreenAds> {
     interstitialAd.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
-        case InterstitialAdEvent.closed:
+        case FullScreenAdEvent.closed:
           // Here is a handy place to load a new interstitial after displaying the previous one
           interstitialAd.load();
           // Do not show an ad here
@@ -76,11 +76,13 @@ class _FullScreenAdsState extends State<FullScreenAds> {
               // Load only if not loaded
               if (!interstitialVideoAd.isLoaded)
                 await interstitialVideoAd.load(
-                    unitId: MobileAds.interstitialAdVideoTestUnitId);
+                  unitId: MobileAds.interstitialAdVideoTestUnitId,
+                );
               if (interstitialVideoAd.isLoaded) {
                 await interstitialVideoAd.show();
                 interstitialVideoAd.load(
-                    unitId: MobileAds.interstitialAdVideoTestUnitId);
+                  unitId: MobileAds.interstitialAdVideoTestUnitId,
+                );
               }
             },
           ),

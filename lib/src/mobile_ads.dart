@@ -82,7 +82,10 @@ class MobileAds {
 
   static int _version = 0;
 
-  /// Get the current version of the os
+  /// Get the current version of the os. It's used to define what
+  /// platform view is going to be used.
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enabling-hybrid-composition-for-android)
   static int get osVersion => _version;
 
   /// Before creating any native ads, you must initalize the admob.
@@ -258,6 +261,11 @@ class MobileAds {
   /// | 3          | MA                    | 16+, 18+              | 17+             |
   ///
   /// [Learn more](https://support.google.com/admob/answer/7562142)
+  ///
+  /// Basic usage:
+  /// ```dart
+  /// MobileAds.setMaxAdContentRating(RATING_MA);
+  /// ```
   static Future<void> setMaxAdContentRating(int maxRating) async {
     assert(maxRating != null, 'Max rating must not be null');
     assert(

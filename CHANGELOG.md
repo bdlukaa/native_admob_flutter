@@ -1,5 +1,16 @@
 Date format: DD/MM/YYYY
 
+## [0.9.0] - [00/00/2021]
+
+- **BREAKING**: Removed `InterstitialAdEvent` and `AppOpenAdEvent`
+- **NEW**: `FullScreenAdEvent`
+- Improved documentation
+- [Wiki](https://github.com/bdlukaa/native_admob_flutter/wiki)
+  - Updated wiki about `RewardedAd` latest update
+  - **NEW**: [Consider using Native Ads over Banner Ads](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#consider-using-native-ads-over-banner-ads)
+- **FIXED**:
+  - AdError could not parse json from platform side. Now `loadFailed` and`showFailed` works correctly and the `error` placeholder is shown properly
+
 ## [0.8.2] - [14/02/2021]
 
 - **BREAKING**:

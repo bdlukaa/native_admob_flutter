@@ -37,10 +37,7 @@ class _NativeAdsState extends State<NativeAds>
             loading: Text('loading'),
             error: Text('error'),
             icon: AdImageView(padding: EdgeInsets.only(left: 6)),
-            headline: AdTextView(
-              style: TextStyle(color: Colors.black),
-              maxLines: 1,
-            ),
+            headline: AdTextView(style: TextStyle(color: Colors.black)),
             advertiser: AdTextView(style: TextStyle(color: Colors.black)),
             body: AdTextView(style: TextStyle(color: Colors.black)),
             media: AdMediaView(height: 70, width: 120),

@@ -195,7 +195,7 @@ class _BannerAdState extends State<BannerAd>
         case BannerAdEvent.loading:
         case BannerAdEvent.loadFailed:
         case BannerAdEvent.loaded:
-          height = (info as int)?.toDouble();
+          if (info is int) height = info.toDouble();
           setState(() => state = event);
           break;
         default:

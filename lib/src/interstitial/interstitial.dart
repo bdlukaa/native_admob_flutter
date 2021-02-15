@@ -3,44 +3,8 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 
 import '../../native_admob_flutter.dart';
+import '../events.dart';
 import '../utils.dart';
-
-/// The events a [InterstitialAd] can receive. Listen
-/// to the events using `interstitialAd.onEvent.listen((event) {})`.
-///
-/// Avaiable events:
-///   - loading (When the ad starts loading)
-///   - loaded (When the ad is loaded)
-///   - loadFailed (When the ad failed to load)
-///   - showed (When the ad showed successfully)
-///   - failedToShow (When it failed to show the ad)
-///   - closed (When the ad is closed)
-///
-/// For more info on interstitial ad events, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
-enum InterstitialAdEvent {
-  /// Called when an ad request failed.
-  ///
-  /// **Warning**: Attempting to load a new ad when the load fail
-  /// is strongly discouraged. If you must load an ad when it fails,
-  /// limit ad load retries to avoid continuous failed ad requests in
-  /// situations such as limited network connectivity.
-  loadFailed,
-
-  /// Called when an ad is received.
-  loaded,
-
-  /// Called when the ad starts loading
-  loading,
-
-  /// Called when the interstitial ad is opened
-  showed,
-
-  /// Called when the ad failed to show
-  failedToShow,
-
-  /// Called when the interstitial ad is closed
-  closed,
-}
 
 /// An InterstitialAd model to communicate with the model in the platform side.
 /// It gives you methods to help in the implementation and event tracking.
@@ -48,7 +12,7 @@ enum InterstitialAdEvent {
 /// For more info, see:
 ///   - https://developers.google.com/admob/android/interstitial-fullscreen
 ///   - https://developers.google.com/admob/ios/interstitial
-class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
+class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   /// The test id for this ad.
   ///   - Android: ca-app-pub-3940256099942544/1033173712
   ///   - iOS: ca-app-pub-3940256099942544/4411468910
@@ -70,23 +34,24 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   /// ad.onEvent.listen((e) {
   ///   final event = e.keys.first;
   ///   switch (event) {
-  ///     case InterstitialAdEvent.loading:
+  ///     case FullScreenAdEvent.loading:
   ///       print('loading');
   ///       break;
-  ///     case InterstitialAdEvent.loaded:
+  ///     case FullScreenAdEvent.loaded:
   ///       print('loaded');
   ///       break;
-  ///     case InterstitialAdEvent.loadFailed:
-  ///       final errorCode = e.values.first;
-  ///       print('loadFailed $errorCode');
+  ///     case FullScreenAdEvent.loadFailed:
+  ///       final error = e.values.first;
+  ///       print('loadFailed ${error.code}');
   ///       break;
-  ///     case InterstitialAdEvent.showed:
+  ///     case FullScreenAdEvent.showed:
   ///       print('ad showed');
   ///       break;
-  ///     case InterstitialAdEvent.failedToShow;
-  ///       print('ad failed to show');
+  ///     case FullScreenAdEvent.failedToShow;
+  ///       final error = e.values.first;
+  ///       print('ad failed to show ${error.code}');
   ///       break;
-  ///     case InterstitialAdEvent.closed:
+  ///     case FullScreenAdEvent.closed:
   ///       print('ad closed');
   ///       break;
   ///     default:
@@ -96,7 +61,7 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
-  Stream<Map<InterstitialAdEvent, dynamic>> get onEvent => super.onEvent;
+  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _loaded = false;
 
@@ -133,30 +98,30 @@ class InterstitialAd extends LoadShowAd<InterstitialAdEvent> {
     if (isDisposed) return;
     switch (call.method) {
       case 'loading':
-        onEventController.add({InterstitialAdEvent.loading: null});
+        onEventController.add({FullScreenAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
         _loaded = false;
         onEventController.add({
-          InterstitialAdEvent.loadFailed: AdError.fromJson(call.arguments),
+          FullScreenAdEvent.loadFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdLoaded':
         _loaded = true;
-        onEventController.add({InterstitialAdEvent.loaded: null});
+        onEventController.add({FullScreenAdEvent.loaded: null});
         break;
       case 'onAdShowedFullScreenContent':
         _loaded = false;
-        onEventController.add({InterstitialAdEvent.showed: null});
+        onEventController.add({FullScreenAdEvent.showed: null});
         _loaded = false;
         break;
       case 'onAdFailedToShowFullScreenContent':
         onEventController.add({
-          InterstitialAdEvent.failedToShow: AdError.fromJson(call.arguments),
+          FullScreenAdEvent.showFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdDismissedFullScreenContent':
-        onEventController.add({InterstitialAdEvent.closed: null});
+        onEventController.add({FullScreenAdEvent.closed: null});
         break;
       default:
         break;

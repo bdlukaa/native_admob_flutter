@@ -1,3 +1,4 @@
+export 'src/events.dart';
 export 'src/mobile_ads.dart';
 export 'src/utils.dart' show AdError, LoadShowAd, UniqueKeyMixin;
 

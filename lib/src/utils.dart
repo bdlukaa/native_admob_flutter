@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 import 'mobile_ads.dart';
 
@@ -137,7 +138,7 @@ class AdError {
   ///
   /// See [this](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#constant-summary) for more info
   ///
-  /// If this comes from [OpenAds], the possible error codes are:
+  /// If this comes from Full-screen ads, the possible error codes are:
   /// - Ad Reused (You're reusing an ad. This will rarely happen because this error is handled by the plugin): 1
   /// - Ad not ready (The ad is not ready to be shown): 2
   /// - App Not In Foreground (The app must be in foreground so the ad can be shown): 3
@@ -155,27 +156,22 @@ class AdError {
   /// common errors
   final String message;
 
-  /// Gets the domain from which the error came.
-  final String domain;
-
   /// Creates a new AdError instance
   const AdError({
     @required this.code,
     @required this.message,
-    @required this.domain,
   });
 
   /// Retrieve an [AdError] from a json
-  factory AdError.fromJson(Map<String, dynamic> json) {
+  static AdError fromJson(/* Map<String, dynamic> */ json) {
     return AdError(
-      code: json['code'],
+      code: json['errorCode'],
       message: json['message'],
-      domain: json['domain'],
     );
   }
 
   @override
-  String toString() => '#$code from $domain: $message';
+  String toString() => '#$code: $message';
 }
 
 mixin UniqueKeyMixin {

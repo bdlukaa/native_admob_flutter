@@ -13,7 +13,6 @@ import '../utils.dart';
 ///   - loaded (When the ad is loaded)
 ///   - loadFailed (When the ad failed to load)
 ///   - showed (When the ad is opened)
-///   - failedToShow (When it failed to show the ad)
 ///   - showFailed (When the ad failed to show)
 ///   - earnedReward (When the user earns a reward)
 ///
@@ -194,9 +193,6 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
 
   /// Dispose the ad to free up resources.
   /// Once disposed, this ad can not be used anymore.
-  ///
-  /// The ad gets disposed automatically when closed, so you do NOT
-  /// need to worry about it.
   ///
   /// Usage:
   /// ```dart
