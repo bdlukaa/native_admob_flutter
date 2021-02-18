@@ -35,6 +35,13 @@ To get started with Native Ads for Flutter, [read the documentation](https://git
 ✔️ Rewarded Ads\
 ✔️ App Open Ads
 
+### [Supported platforms](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup)
+
+AdMOB only supports ads on mobile. Web and desktop are out of reach
+
+✔️ Android\
+❌ iOS
+
 ## Issues and feedback
 
 Please file issues, bugs, or feature requests in our [issue tracker](https://github.com/bdlukaa/native_admob_flutter/issues/new).

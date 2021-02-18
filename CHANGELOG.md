@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [0.9.1+1] - [18/02/2021]
+
+- Remove the iOS support label from pub.dev (Fixes [#9](https://github.com/bdlukaa/native_admob_flutter/issues/9#issuecomment-781496080))
+
 ## [0.9.1] - [15/02/2021]
 
 - Added a splashscreen to the example app (Fixes [#7](https://github.com/bdlukaa/native_admob_flutter/issues/7))

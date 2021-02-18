@@ -35,6 +35,13 @@ Para começar com Anúncios Nativos para Flutter, [leia a documentação - Ingl�
 ✔️ Anúncios Prêmiados (Rewarded Ads)\
 ✔️ Anúncios de Abertura (App Open Ads)
 
+### [Plataformas suportadas](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup)
+
+AdMOB só suporta anúncios em dispositivos mobile. Web e desktop estão fora de alcance
+
+✔️ Android\
+❌ iOS
+
 ## Problemas e feedback
 
 Registre problemas, bugs ou solicitações de recursos em nosso [rastreador de problemas](https://github.com/bdlukaa/native_admob_flutter/issues/new).
