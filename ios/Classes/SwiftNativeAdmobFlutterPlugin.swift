@@ -2,17 +2,27 @@ import Flutter
 import UIKit
 import GoogleMobileAds
 
+
+let controllerManager = InterstitialAdControllerManager.shared
+
 public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
+    
+    let messenger: FlutterBinaryMessenger
+    
+    init(messenger: FlutterBinaryMessenger) {
+            self.messenger = messenger
+        }
+
   public static func register(with registrar: FlutterPluginRegistrar) {
+    //messenger = registrar.messenger()
     let channel = FlutterMethodChannel(name: "native_admob_flutter", binaryMessenger: registrar.messenger())
-    let instance = SwiftNativeAdmobFlutterPlugin()
+    let instance = SwiftNativeAdmobFlutterPlugin(messenger: registrar.messenger())
     registrar.addMethodCallDelegate(instance, channel: channel)
 
-    let factory = BannerAdViewFactory(messenger: registrar.messenger)
-    registrar.register(factory, withId: "banner_admob")
-
+    //let factory = BannerAdViewFactory(messenger: registrar.messenger())
+    //registrar.register(factory, withId: "banner_admob")
   }
-
+    
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     let params = call.arguments as? [String: Any]
     switch call.method {
@@ -22,56 +32,59 @@ public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
         result(UIDevice.current.systemVersion)
 
       // Native Ad
-      case "initNativeAdController":
+      //case "initNativeAdController":
         // TODO: initialize the controller
-      case "disposeNativeAdController":
+      //case "disposeNativeAdController":
         // TODO: dispose the controller
 
       // Banner Ad
-      case "initBannerAdController":
+      //case "initBannerAdController":
         // TODO: initialize the controller
-      case "disposeBannerAdController":
+      //case "disposeBannerAdController":
         // TODO: dispose the controller
 
-      // Interstitial Ad
+       //Interstitial Ad
       case "initInterstitialAd":
-        // TODO: initialize the ad
+        controllerManager.createController(forID: params!["id"] as! String, binaryMessenger: messenger)
+        result(true)
+        
       case "disposeInterstitialAd":
-        // TODO: dispose the ad
+        controllerManager.removeController(forID: params!["id"] as! String)
+        result(nil)
       
       // Rewarded Ad
-      case "initRewardedAd":
+      //case "initRewardedAd":
         // TODO: initialize the ad
-      case "disposeRewardedAd":
+      //case "disposeRewardedAd":
         // TODO: dispose the ad
 
       // App Open 
-      case "initAppOpenAd":
+      //case "initAppOpenAd":
         // TODO: initialize the ad
-      case "disposeAppOpenAd":
+      //case "disposeAppOpenAd":
         // TODO: dispose the ad
       
       // General
-      case "isTestDevice":
+//      case "isTestDevice":
         // TODO: isTestDevice
         // ? It seems there's no implementation for this on iOS
-        result(nil)
+//        result(nil)
       
-      case "setTestDeviceIds":
-        GADMobileAds
-          .sharedInstance()
-          .requestConfiguration
-          .testDeviceIdentifiers = params["setTestDeviceIds"]
-        result(nil)
+//      case "setTestDeviceIds":
+//        GADMobileAds
+//          .sharedInstance()
+//          .requestConfiguration
+//          .testDeviceIdentifiers = params["setTestDeviceIds"] as! [String]
+//        result(nil)
 
-      case "setChildDirected":
+//      case "setChildDirected":
         // https://developers.google.com/admob/ios/targeting#child-directed_setting
-        GADMobileAds
-          .sharedInstance()
-          .requestConfiguration
-          .tag(forChildDirectedTreatment: params["directed"])
-      
-      case "setTagForUnderAgeOfConsent":
+//        GADMobileAds
+//          .sharedInstance()
+//          .requestConfiguration
+//          .tag(forChildDirectedTreatment: params["directed"])
+//
+      //case "setTagForUnderAgeOfConsent":
         // https://developers.google.com/admob/ios/targeting#users_under_the_age_of_consent
         // GADMobileAds
         //   .sharedInstance()
@@ -82,18 +95,18 @@ public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
         // comes as an int from the dart side.
         // TODO: setTagForUnderAgeOfConsent
 
-      case "setMaxAdContentRating":
+      //case "setMaxAdContentRating":
         // TODO: setMaxAdContentRating
 
-      case "setAppVolume":
+      //case "setAppVolume":
         // https://developers.google.com/admob/ios/global-settings#video_ad_volume_control
-        GADMobileAds.sharedInstance().applicationVolume = params["volume"]
-        result(nil)
-      
-      case "setAppMuted":
-        // https://developers.google.com/admob/ios/global-settings#video_ad_volume_control
-        GADMobileAds.sharedInstance().applicationMuted = params["muted"]
-        result(nil)
+//        GADMobileAds.sharedInstance().applicationVolume = params["volume"] as! Float
+//        result(nil)
+//
+     // case "setAppMuted":
+//        // https://developers.google.com/admob/ios/global-settings#video_ad_volume_control
+//        GADMobileAds.sharedInstance().applicationMuted = params["muted"]
+//        result(nil)
 
       default:
         result(FlutterMethodNotImplemented)
