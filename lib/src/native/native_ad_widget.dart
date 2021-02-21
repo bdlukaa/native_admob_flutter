@@ -161,6 +161,8 @@ class _NativeAdState extends State<NativeAd>
   NativeAdController controller;
   NativeAdEvent state = NativeAdEvent.loading;
 
+  bool platformVisible = MobileAds.useHybridComposition;
+
   @override
   void didUpdateWidget(NativeAd oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -240,10 +242,21 @@ class _NativeAdState extends State<NativeAd>
       );
 
       if (Platform.isAndroid) {
-        w = buildAndroidPlatformView(
-          params,
-          _viewType,
-          MobileAds.useHybridComposition,
+        w = Opacity(
+          opacity: platformVisible ? 1 : 0,
+          child: buildAndroidPlatformView(
+            params: params,
+            viewType: _viewType,
+            onCreated: (_) async {
+              if (platformVisible) return;
+              // This is the workaround for now until
+              // https://github.com/bdlukaa/native_admob_flutter/issues/11
+              // can be fixed
+              // TODO(bdlukaa): Fix it
+              await Future.delayed(Duration(milliseconds: 250));
+              setState(() => platformVisible = true);
+            },
+          ),
         );
       } else if (Platform.isIOS) {
         w = UiKitView(

@@ -10,13 +10,11 @@ import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
 import android.os.Build
 import android.text.TextUtils
 import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
-import com.bruno.native_admob_flutter.R
 import com.google.android.gms.ads.nativead.MediaView
 import com.google.android.gms.ads.nativead.NativeAd
 import com.google.android.gms.ads.nativead.NativeAdView
@@ -34,7 +32,7 @@ class NativeViewFactory : PlatformViewFactory(StandardMessageCodec.INSTANCE) {
 }
 
 class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : PlatformView {
-    private var adView: NativeAdView
+    private var adView: NativeAdView = NativeAdView(context)
 
     private var ratingBar: RatingBar? = RatingBar(context)
 
@@ -213,10 +211,6 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
     private var controller: NativeAdmobController? = null
 
     init {
-        val inflater = LayoutInflater.from(context)
-        val viewRoot = inflater.inflate(R.layout.ad_unified_native_ad, null)
-
-        adView = viewRoot.findViewById(R.id.native_ad_view) as NativeAdView
         adView.setBackgroundColor(Color.TRANSPARENT)
 
         val view: View = build(data!!, context)

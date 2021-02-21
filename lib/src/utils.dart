@@ -84,12 +84,15 @@ bool debugCheckAdWillReload(bool isLoaded, bool force) {
 typedef AdBuilder = Widget Function(BuildContext context, Widget child);
 
 /// Build the android platform view
-Widget buildAndroidPlatformView(
-  Map<String, dynamic> params,
-  String viewType, [
-  bool useHybridComposition = false,
-]) {
-  assert(useHybridComposition != null);
+Widget buildAndroidPlatformView({
+  @required Map<String, dynamic> params,
+  @required String viewType,
+  bool useHybridComposition,
+  PlatformViewCreatedCallback onCreated,
+}) {
+  assert(params != null);
+  assert(viewType != null);
+  useHybridComposition ??= MobileAds.useHybridComposition;
   final gestures = <Factory<OneSequenceGestureRecognizer>>[
     // Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
     // Factory<OneSequenceGestureRecognizer>(() => TapGestureRecognizer()),
@@ -102,6 +105,7 @@ Widget buildAndroidPlatformView(
       creationParamsCodec: StandardMessageCodec(),
       creationParams: params,
       gestureRecognizers: gestures,
+      onPlatformViewCreated: onCreated,
     );
   else
     // hybrid composition
@@ -123,7 +127,6 @@ Widget buildAndroidPlatformView(
           creationParamsCodec: StandardMessageCodec(),
         )
           ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
-          // ..setSize(Size(width, height))
           ..create();
       },
     );

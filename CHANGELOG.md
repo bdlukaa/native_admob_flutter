@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [0.9.2-pre] - [21/02/2021]
+
+- Do not use xml layout for native ad anymore
+- Fixes [#11](https://github.com/bdlukaa/native_admob_flutter/issues/11)
+
 ## [0.9.1+1] - [18/02/2021]
 
 - Remove the iOS support label from pub.dev (Fixes [#9](https://github.com/bdlukaa/native_admob_flutter/issues/9#issuecomment-781496080))

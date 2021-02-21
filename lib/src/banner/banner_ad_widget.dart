@@ -242,9 +242,8 @@ class _BannerAdState extends State<BannerAd>
         Widget w;
         if (Platform.isAndroid) {
           w = buildAndroidPlatformView(
-            params,
-            _viewType,
-            MobileAds.useHybridComposition,
+            params: params,
+            viewType: _viewType,
           );
         } else if (Platform.isIOS) {
           w = UiKitView(
