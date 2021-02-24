@@ -2,9 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
@@ -82,55 +80,6 @@ bool debugCheckAdWillReload(bool isLoaded, bool force) {
 ///   - https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#adbuilder
 ///   - https://github.com/bdlukaa/native_admob_flutter/wiki/Banner-Ad-builder-and-placeholders#adbuilder
 typedef AdBuilder = Widget Function(BuildContext context, Widget child);
-
-/// Build the android platform view
-Widget buildAndroidPlatformView({
-  @required Map<String, dynamic> params,
-  @required String viewType,
-  bool useHybridComposition,
-  PlatformViewCreatedCallback onCreated,
-}) {
-  assert(params != null);
-  assert(viewType != null);
-  useHybridComposition ??= MobileAds.useHybridComposition;
-  final gestures = <Factory<OneSequenceGestureRecognizer>>[
-    // Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-    // Factory<OneSequenceGestureRecognizer>(() => TapGestureRecognizer()),
-    // Factory<OneSequenceGestureRecognizer>(() => LongPressGestureRecognizer()),
-  ].toSet();
-  if (!useHybridComposition)
-    // virtual display
-    return AndroidView(
-      viewType: viewType,
-      creationParamsCodec: StandardMessageCodec(),
-      creationParams: params,
-      gestureRecognizers: gestures,
-      onPlatformViewCreated: onCreated,
-    );
-  else
-    // hybrid composition
-    return PlatformViewLink(
-      viewType: viewType,
-      surfaceFactory: (context, controller) {
-        return AndroidViewSurface(
-          controller: controller,
-          gestureRecognizers: gestures,
-          hitTestBehavior: PlatformViewHitTestBehavior.opaque,
-        );
-      },
-      onCreatePlatformView: (PlatformViewCreationParams p) {
-        return PlatformViewsService.initSurfaceAndroidView(
-          id: p.id,
-          viewType: viewType,
-          layoutDirection: TextDirection.ltr,
-          creationParams: params,
-          creationParamsCodec: StandardMessageCodec(),
-        )
-          ..addOnPlatformViewCreatedListener(p.onPlatformViewCreated)
-          ..create();
-      },
-    );
-}
 
 class AdError {
   /// Gets the error code. Possible error codes:

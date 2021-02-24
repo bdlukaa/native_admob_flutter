@@ -1,10 +1,12 @@
-import 'dart:io';
+import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
+import '../platform_views.dart';
 import '../utils.dart';
 import '../../native_admob_flutter.dart';
 
@@ -161,8 +163,6 @@ class _NativeAdState extends State<NativeAd>
   NativeAdController controller;
   NativeAdEvent state = NativeAdEvent.loading;
 
-  bool platformVisible = MobileAds.useHybridComposition;
-
   @override
   void didUpdateWidget(NativeAd oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -180,22 +180,24 @@ class _NativeAdState extends State<NativeAd>
     controller.channel.invokeMethod('updateUI', {'layout': layout ?? {}});
   }
 
+  StreamSubscription _onEventSub;
+
   @override
   void initState() {
     super.initState();
     controller = widget.controller ?? NativeAdController();
     controller.attach();
     controller.load(options: widget.options);
-    controller.onEvent.listen((e) {
+    _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
         case NativeAdEvent.loading:
         case NativeAdEvent.loaded:
         case NativeAdEvent.loadFailed:
-          setState(() => state = event);
+          if (mounted) setState(() => state = event);
           break;
         case NativeAdEvent.undefined:
-          setState(() {});
+          if (mounted) setState(() {});
           break;
         default:
           break;
@@ -205,6 +207,8 @@ class _NativeAdState extends State<NativeAd>
 
   @override
   void dispose() {
+    _onEventSub?.cancel();
+    _onEventSub = null;
     // dispose the controller only if the controller was
     // created by the ad.
     if (widget.controller == null)
@@ -242,21 +246,9 @@ class _NativeAdState extends State<NativeAd>
       );
 
       if (Platform.isAndroid) {
-        w = Opacity(
-          opacity: platformVisible ? 1 : 0,
-          child: buildAndroidPlatformView(
-            params: params,
-            viewType: _viewType,
-            onCreated: (_) async {
-              if (platformVisible) return;
-              // This is the workaround for now until
-              // https://github.com/bdlukaa/native_admob_flutter/issues/11
-              // can be fixed
-              // TODO(bdlukaa): Fix it
-              await Future.delayed(Duration(milliseconds: 250));
-              setState(() => platformVisible = true);
-            },
-          ),
+        w = AndroidPlatformView(
+          params: params,
+          viewType: _viewType,
         );
       } else if (Platform.isIOS) {
         w = UiKitView(

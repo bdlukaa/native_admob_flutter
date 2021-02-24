@@ -1,9 +1,14 @@
 Date format: DD/MM/YYYY
 
-## [0.9.2-pre] - [21/02/2021]
+## [0.9.2] - [21/02/2021]
 
-- Do not use xml layout for native ad anymore
-- Fixes [#11](https://github.com/bdlukaa/native_admob_flutter/issues/11)
+- **PERFORMANCE** 
+  - Do not use xml layout for native ad anymore
+  - Close the stream subscription to free up resources
+- **FIXED**
+  - Added a delay to show the android platform view (Virtual Display). (Fixes [#11](https://github.com/bdlukaa/native_admob_flutter/issues/11))
+  - Check if the widget is `mounted` before trying to `setState`
+  - Banner height is only applied to `BannerAd` only when it's loaded. (Fixed [#11/783862567](https://github.com/bdlukaa/native_admob_flutter/issues/11#issuecomment-783862567))
 
 ## [0.9.1+1] - [18/02/2021]
 

@@ -1,8 +1,10 @@
-import 'dart:io';
+import 'dart:io' show Platform;
+import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../platform_views.dart';
 import '../utils.dart';
 import 'controller.dart';
 
@@ -163,6 +165,7 @@ class _BannerAdState extends State<BannerAd>
   double height;
 
   BannerAdOptions get options => widget.options;
+  StreamSubscription _onEventSub;
 
   @override
   void initState() {
@@ -188,7 +191,8 @@ class _BannerAdState extends State<BannerAd>
   void attachNewController() {
     controller = widget.controller ?? BannerAdController();
     controller.attach(true);
-    controller.onEvent.listen((e) {
+    _onEventSub?.cancel();
+    _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       final info = e.values.first;
       switch (event) {
@@ -206,6 +210,8 @@ class _BannerAdState extends State<BannerAd>
 
   @override
   void dispose() {
+    _onEventSub?.cancel();
+    _onEventSub = null;
     // dispose the controller only if the controller was
     // created by the ad.
     if (widget.controller == null)
@@ -241,7 +247,7 @@ class _BannerAdState extends State<BannerAd>
 
         Widget w;
         if (Platform.isAndroid) {
-          w = buildAndroidPlatformView(
+          w = AndroidPlatformView(
             params: params,
             viewType: _viewType,
           );
@@ -263,7 +269,9 @@ class _BannerAdState extends State<BannerAd>
         else /* if (height == -1 && width == -2) */ {
           final screenHeight = MediaQuery.of(context).size.height;
           double height;
-          if (screenHeight <= 400)
+          if (state != BannerAdEvent.loaded)
+            height = 0;
+          else if (screenHeight <= 400)
             height = 32;
           else if (screenHeight > 400 || screenHeight <= 720)
             height = 50;
