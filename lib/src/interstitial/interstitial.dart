@@ -69,7 +69,10 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   bool get isLoaded => _loaded;
 
   /// Creates a new interstitial ad controller
-  InterstitialAd() : super();
+  InterstitialAd({
+    String unitId,
+    Duration loadTimeout,
+  }) : super(unitId: unitId, loadTimeout: loadTimeout);
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
@@ -142,6 +145,9 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   Future<bool> load({
     String unitId,
     bool force = false,
+
+    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    Duration timeout,
   }) async {
     assert(force != null);
     ensureAdNotDisposed();
@@ -149,9 +155,18 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
     _loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
+          this.unitId ??
           MobileAds.interstitialAdUnitId ??
           MobileAds.interstitialAdTestUnitId,
-    });
+    }).timeout(
+      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      onTimeout: () {
+        onEventController.add({
+          FullScreenAdEvent.loadFailed: AdError.timeoutError,
+        });
+        return false;
+      },
+    );
     return _loaded;
   }
 

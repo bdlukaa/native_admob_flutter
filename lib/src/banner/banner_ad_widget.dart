@@ -31,6 +31,8 @@ class BannerAd extends StatefulWidget {
     this.loading,
     this.unitId,
     this.options = const BannerAdOptions(),
+    this.delayToShow,
+    this.loadTimeout,
   })  : assert(size != null, 'A size must be set'),
         assert(options != null),
         super(key: key);
@@ -147,11 +149,23 @@ class BannerAd extends StatefulWidget {
   final BannerSize size;
 
   /// The unitId used by this `BannerAd`.
-  /// If changed after loaded it'll be reloaded with the new ad unit id.\
-  /// If null, defaults to `MobileAds.bannerAdUnitId`
+  /// If changed after loaded the ad will NOT be reloaded with the new ad unit id.\
+  ///
+  /// If `null`, defaults to `MobileAds.bannerAdUnitId`
   final String unitId;
 
+  /// The options this ad will follow.
   final BannerAdOptions options;
+
+  /// The duration the platform view will wait to be shown.
+  ///
+  /// For more info, see [this issue](https://github.com/bdlukaa/native_admob_flutter/issues/11)
+  final Duration delayToShow;
+
+  /// The ad will stop loading after a specified time.
+  ///
+  /// If `null`, defaults to `Duration(seconds: 30)`
+  final Duration loadTimeout;
 
   @override
   _BannerAdState createState() => _BannerAdState();
@@ -171,30 +185,36 @@ class _BannerAdState extends State<BannerAd>
   void initState() {
     super.initState();
     attachNewController();
-    controller.load();
+    controller.load(timeout: widget.loadTimeout);
   }
 
-  // @override
-  // void didUpdateWidget(BannerAd oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   // if ((oldWidget.unitId == null && widget.unitId != null) ||
-  //   //     (oldWidget.unitId != widget.unitId)) {
-  //   //   controller.load();
-  //   // }
-  //   // if (oldWidget.controller == null && widget.controller != null) {
-  //   //   attachNewController();
-  //   //   controller.changeController(controller.id);
-  //   //   controller.load();
-  //   // }
-  // }
+  @override
+  void didUpdateWidget(BannerAd oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.options.reloadWhenSizeChanges) {
+      if (oldWidget.size != widget.size)
+        controller.load(timeout: widget.loadTimeout);
+    }
+    // if ((oldWidget.unitId == null && widget.unitId != null) ||
+    //     (oldWidget.unitId != widget.unitId)) {
+    //   controller.load();
+    // }
+    // if (oldWidget.controller == null && widget.controller != null) {
+    //   attachNewController();
+    //   controller.changeController(controller.id);
+    //   controller.load();
+    // }
+  }
 
   void attachNewController() {
-    controller = widget.controller ?? BannerAdController();
+    controller = widget.controller ??
+        BannerAdController(loadTimeout: widget.loadTimeout);
     controller.attach(true);
     _onEventSub?.cancel();
     _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       final info = e.values.first;
+      print(event);
       switch (event) {
         case BannerAdEvent.loading:
         case BannerAdEvent.loadFailed:
@@ -250,6 +270,7 @@ class _BannerAdState extends State<BannerAd>
           w = AndroidPlatformView(
             params: params,
             viewType: _viewType,
+            delayToShow: widget.delayToShow,
           );
         } else if (Platform.isIOS) {
           w = UiKitView(

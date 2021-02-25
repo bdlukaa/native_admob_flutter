@@ -82,6 +82,11 @@ bool debugCheckAdWillReload(bool isLoaded, bool force) {
 typedef AdBuilder = Widget Function(BuildContext context, Widget child);
 
 class AdError {
+  static const AdError timeoutError = AdError(
+    code: -1,
+    message: 'Timeout achieved',
+  );
+
   /// Gets the error code. Possible error codes:
   /// - App Id Missing (The ad request was not made due to a missing app ID): 8
   /// - Invalid request (The ad request was invalid; for instance, the ad unit ID was incorrect): 1
@@ -160,6 +165,8 @@ mixin AttachableMixin {
   }
 }
 
+const Duration kDefaultLoadTimeout = Duration(seconds: 30);
+
 abstract class LoadShowAd<T> with UniqueKeyMixin {
   @protected
   final onEventController = StreamController<Map<T, dynamic>>.broadcast();
@@ -183,8 +190,16 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   /// `ad.dispose()`
   bool get isDisposed => _disposed;
 
+  /// The unit id used on this ad. Can be null
+  String unitId;
+
+  /// The ad will stop loading after a specified time.
+  ///
+  /// If `null`, defaults to `Duration(seconds: 30)`
+  Duration loadTimeout;
+
   @mustCallSuper
-  LoadShowAd() {
+  LoadShowAd({this.unitId, this.loadTimeout}) {
     channel = MethodChannel(id);
     init();
   }

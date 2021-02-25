@@ -183,7 +183,10 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// Creates a new rewarded ad
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#create-a-rewarded-ad)
-  RewardedAd() : super();
+  RewardedAd({
+    String unitId,
+    Duration loadTimeout,
+  }) : super(unitId: unitId, loadTimeout: loadTimeout);
 
   /// Initialize the ad. This can be called only by the ad
   void init() async {
@@ -262,6 +265,9 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
 
     /// Force to load an ad even if another is already avaiable
     bool force = false,
+
+    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    Duration timeout,
   }) async {
     assert(force != null);
     ensureAdNotDisposed();
@@ -269,9 +275,16 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
     _loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
+          this.unitId ??
           MobileAds.rewardedAdUnitId ??
           MobileAds.rewardedAdTestUnitId,
-    });
+    }).timeout(
+      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      onTimeout: () {
+        onEventController.add({RewardedAdEvent.loadFailed: AdError.timeoutError});
+        return false;
+      },
+    );
     return _loaded;
   }
 

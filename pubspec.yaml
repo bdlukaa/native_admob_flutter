@@ -1,6 +1,6 @@
 name: native_admob_flutter
 description: Create native ads easily purely in dart using PlatformViews and Google's ADMOB Sdk
-version: 0.9.2
+version: 0.9.3
 repository: https://github.com/bdlukaa/native_admob_flutter
 
 environment:

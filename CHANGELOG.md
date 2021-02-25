@@ -1,8 +1,19 @@
 Date format: DD/MM/YYYY
 
+## [0.9.3] - [24/02/2021]
+
+- **NEW**
+  - `unitId` parameter in the `NativeAd` widget. (Fixes [#14/785424875](https://github.com/bdlukaa/native_admob_flutter/issues/14#issuecomment-785424875))
+  - `unitId` paramer in the `AppOpenAd`, `RewardedAd` and `InterstitialAd` constructor.
+  - `loadTimeout` parameter in all the ads. (Fixed [#14/785435140](https://github.com/bdlukaa/native_admob_flutter/issues/15#issuecomment-785435140))
+  - `delayToShow` parameter in `NativeAd` and `BannerAd`.
+- **FIXED** `BannerAdOptions.reloadWhenSizeChanges` now works properly
+- Wiki:
+  - [Incompatibility with other admob dependencies](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#incompatibility-with-other-admob-dependencies)
+
 ## [0.9.2] - [21/02/2021]
 
-- **PERFORMANCE** 
+- **PERFORMANCE**
   - Do not use xml layout for native ad anymore
   - Close the stream subscription to free up resources
 - **FIXED**

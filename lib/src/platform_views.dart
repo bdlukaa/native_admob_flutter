@@ -36,6 +36,7 @@ class AndroidPlatformView extends StatefulWidget {
   _AndroidPlatformViewState createState() => _AndroidPlatformViewState();
 }
 
+// TODO(bdlukaa): Update the controller when changed
 class _AndroidPlatformViewState extends State<AndroidPlatformView> {
   bool visible;
 

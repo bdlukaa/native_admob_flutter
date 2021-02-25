@@ -13,58 +13,6 @@ const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
 /// Landscape orientation
 const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
 
-// /// The events a [AppOpenAd] can receive. Listen
-// /// to the events using `appOpenAd.onEvent.listen((event) {})`.
-// ///
-// /// Avaiable events:
-// ///   - loading (When the ad starts loading)
-// ///   - loaded (When the ad is loaded)
-// ///   - loadFailed (When the ad failed to load)
-// ///   - showed (When the ad showed successfully)
-// ///   - showFailed (When it failed on showing)
-// ///   - dimissed (When the ad is closed)
-// ///
-// /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#ad-events)
-// enum AppOpenEvent {
-//   /// Called when the ad starts loading. This event is usually thrown by `ad.load()`
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
-//   loading,
-
-//   /// Called when the ad is loaded. This event is usually thrown by `ad.load()`
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
-//   loaded,
-
-//   /// Called when the load failed. This event is usually thrown by `ad.load()`
-//   ///
-//   /// Attempting to load a new ad from the `loadFailed` event is strongly discouraged.
-//   /// If you must load an ad from this event, limit ad load retries to avoid
-//   /// continuous failed ad requests in situations such as limited network connectivity.
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#load-the-ad)
-//   loadFailed,
-
-//   /// Called when the ad is closed. The same as `await ad.show()`
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#show-the-ad)
-//   dismissed,
-
-//   /// Called when it failed on showing. This event is usually thrown by `ad.show()`
-//   ///
-//   /// Attempting to show the ad again from the `showFailed` event is strongly discouraged.
-//   /// If you must show the ad from this event, limit ad show retries to avoid
-//   /// continuous failed attempts in situations such as limited network connectivity.
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#show-the-ad)
-//   showFailed,
-
-//   /// Called when it showed successfully. This event is usually thrown by `ad.show()`
-//   ///
-//   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#show-the-ad)
-//   showed,
-// }
-
 /// An AppOpenAd model to communicate with the model in the platform side.
 /// It gives you methods to help in the implementation and event tracking.
 ///
@@ -142,14 +90,17 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
   /// This can NOT be null. If so, an `AssertionError` is thrown
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#consider-ad-expiration)
-  Duration timeout;
+  final Duration timeout;
 
   /// Creates a new AppOpenAd instance.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#creating-an-ad-object)
-  AppOpenAd([this.timeout = const Duration(hours: 1)])
-      : assert(timeout != null, 'The timeout time can NOT be null'),
-        super();
+  AppOpenAd({
+    this.timeout = const Duration(hours: 1),
+    Duration loadTimeout,
+    String unitId,
+  })  : assert(timeout != null, 'The timeout time can NOT be null'),
+        super(unitId: unitId, loadTimeout: loadTimeout);
 
   void init() {
     channel.setMethodCallHandler(_handleMessages);
@@ -207,14 +158,19 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
 
     /// Force to load an ad even if another is already avaiable
     bool force = false,
+
+    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    Duration timeout,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isAvaiable, force)) return false;
     if (orientation != null)
       assert(
-        [APP_OPEN_AD_ORIENTATION_PORTRAIT, APP_OPEN_AD_ORIENTATION_LANDSCAPE]
-            .contains(orientation),
+        [
+          APP_OPEN_AD_ORIENTATION_PORTRAIT,
+          APP_OPEN_AD_ORIENTATION_LANDSCAPE,
+        ].contains(orientation),
         'The orientation must be a valid orientation: $APP_OPEN_AD_ORIENTATION_PORTRAIT, $APP_OPEN_AD_ORIENTATION_LANDSCAPE',
       );
     else {
@@ -233,12 +189,21 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
           break;
       }
     }
-    print(orientation);
     final loaded = await channel.invokeMethod<bool>('loadAd', {
-      'unitId':
-          unitId ?? MobileAds.appOpenAdUnitId ?? MobileAds.appOpenAdTestUnitId,
+      'unitId': unitId ??
+          this.unitId ??
+          MobileAds.appOpenAdUnitId ??
+          MobileAds.appOpenAdTestUnitId,
       'orientation': orientation,
-    });
+    }).timeout(
+      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      onTimeout: () {
+        onEventController.add({
+          FullScreenAdEvent.loadFailed: AdError.timeoutError,
+        });
+        return false;
+      },
+    );
     if (loaded) _lastLoadedTime = DateTime.now();
     return loaded;
   }

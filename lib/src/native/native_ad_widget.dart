@@ -61,6 +61,11 @@ class NativeAd extends StatefulWidget {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events)
   final NativeAdController controller;
 
+  /// The unit id used by this `NativeAd`
+  /// The ad won't be reloaded if this changes.
+  /// If `null`, defaults to `MobileAds.nativeAdUnitId`
+  final String unitId;
+
   /// The widget used in case of an error shows up
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
@@ -120,6 +125,16 @@ class NativeAd extends StatefulWidget {
   /// For more info, read the [changelog](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#adbuilder)
   final AdBuilder builder;
 
+  /// The duration the platform view will wait to be shown.
+  ///
+  /// For more info, see [this issue](https://github.com/bdlukaa/native_admob_flutter/issues/11)
+  final Duration delayToShow;
+
+  /// The ad will stop loading after a specified time.
+  ///
+  /// If `null`, defaults to `Duration(seconds: 30)`
+  final Duration loadTimeout;
+
   /// Create a `NativeAd`.
   /// Uses `NativeAdView` on android and `GADNativeAd` on iOS
   ///
@@ -143,6 +158,7 @@ class NativeAd extends StatefulWidget {
     this.ratingBar,
     this.store,
     this.controller,
+    this.unitId,
     this.error,
     this.loading,
     this.height,
@@ -150,6 +166,8 @@ class NativeAd extends StatefulWidget {
     this.options,
     this.reloadWhenOptionsChange = true,
     this.builder,
+    this.delayToShow,
+    this.loadTimeout,
   })  : assert(buildLayout != null),
         assert(reloadWhenOptionsChange != null),
         super(key: key);
@@ -168,9 +186,13 @@ class _NativeAdState extends State<NativeAd>
     super.didUpdateWidget(oldWidget);
     // reload if options changed
     if (widget.reloadWhenOptionsChange &&
-        oldWidget.options?.toJson()?.toString() !=
-            widget.options?.toJson()?.toString())
-      controller.load(options: widget.options);
+        (oldWidget.options?.toString() != widget.options?.toString())) {
+      controller.load(
+        options: widget.options,
+        unitId: widget.unitId,
+        timeout: widget.loadTimeout,
+      );
+    }
     if (layout(oldWidget).toString() != layout(widget).toString()) {
       _requestAdUIUpdate(layout(widget));
     }
@@ -187,7 +209,11 @@ class _NativeAdState extends State<NativeAd>
     super.initState();
     controller = widget.controller ?? NativeAdController();
     controller.attach();
-    controller.load(options: widget.options);
+    controller.load(
+      options: widget.options,
+      unitId: widget.unitId,
+      timeout: widget.loadTimeout,
+    );
     _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
@@ -249,6 +275,7 @@ class _NativeAdState extends State<NativeAd>
         w = AndroidPlatformView(
           params: params,
           viewType: _viewType,
+          delayToShow: widget.delayToShow,
         );
       } else if (Platform.isIOS) {
         w = UiKitView(

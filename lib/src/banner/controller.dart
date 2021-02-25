@@ -166,7 +166,7 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
-  BannerAdController() : super();
+  BannerAdController({Duration loadTimeout}) : super(loadTimeout: loadTimeout);
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
@@ -224,11 +224,22 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
   Future<bool> load({
     /// Force to load an ad even if another is already avaiable
     bool force = false,
+
+    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    Duration timeout,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
-    _loaded = await channel.invokeMethod<bool>('loadAd');
+    _loaded = await channel.invokeMethod<bool>('loadAd').timeout(
+      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      onTimeout: () {
+        onEventController.add({
+          BannerAdEvent.loadFailed: AdError.timeoutError,
+        });
+        return false;
+      },
+    );
     return isLoaded;
   }
 }

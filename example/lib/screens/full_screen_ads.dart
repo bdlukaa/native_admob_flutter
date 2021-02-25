@@ -7,7 +7,7 @@ final interstitialVideoAd = InterstitialAd()
 
 final rewardedAd = RewardedAd()..load();
 
-final AppOpenAd appOpenAd = AppOpenAd(Duration(seconds: 5))..load();
+final AppOpenAd appOpenAd = AppOpenAd(timeout: Duration(seconds: 5))..load();
 
 class FullScreenAds extends StatefulWidget {
   const FullScreenAds({Key key}) : super(key: key);

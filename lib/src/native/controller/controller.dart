@@ -211,7 +211,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
-  NativeAdController() : super();
+  NativeAdController({Duration loadTimeout}) : super(loadTimeout: loadTimeout);
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
@@ -324,6 +324,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
 
     /// Force to load an ad even if another is already avaiable
     bool force = false,
+
+    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    Duration timeout,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -332,7 +335,13 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     _loaded = await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
-    });
+    }).timeout(
+      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      onTimeout: () {
+        onEventController.add({NativeAdEvent.loadFailed: AdError.timeoutError});
+        return false;
+      },
+    );
     return _loaded;
   }
 
