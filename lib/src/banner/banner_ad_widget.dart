@@ -33,7 +33,7 @@ class BannerAd extends StatefulWidget {
     this.options = const BannerAdOptions(),
     this.delayToShow,
     this.loadTimeout,
-    this.useHybridComposition,
+    this.useHybridComposition = true,
   })  : assert(size != null, 'A size must be set'),
         assert(options != null),
         super(key: key);

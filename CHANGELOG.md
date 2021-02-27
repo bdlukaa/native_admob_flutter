@@ -6,6 +6,7 @@ Date format: DD/MM/YYYY
 - **FIX** Make sure the SDK is initialized when verifying the os version. (Fixes [#8](https://github.com/bdlukaa/native_admob_flutter/issues/8))
 - **WIKI** **NEW** Incompatibility with other admob dependencies (Fixes [#4](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#incompatibility-with-other-admob-dependencies))
 - **NEW** `useHybridComposition` parameter in the constructor of both `NativeAd` and `BannerAd`
+- **WORKAROUND** `useHybridComposition` defaults to `true` in android. (See [#16](https://github.com/bdlukaa/native_admob_flutter/issues/16) for more info)
 
 ## [0.9.3] - [25/02/2021]
 
