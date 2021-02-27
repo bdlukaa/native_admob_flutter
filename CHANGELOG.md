@@ -1,12 +1,19 @@
 Date format: DD/MM/YYYY
 
-## [0.9.3] - [24/02/2021]
+## [0.9.4] - [27/02/2021]
+
+- **FIX** Apply height to BannerAd only when it's loaded. (Fixes [#11/786244151](https://github.com/bdlukaa/native_admob_flutter/issues/11#issuecomment-786244151))
+- **FIX** Make sure the SDK is initialized when verifying the os version. (Fixes [#8](https://github.com/bdlukaa/native_admob_flutter/issues/8))
+- **WIKI** **NEW** Incompatibility with other admob dependencies (Fixes [#4](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#incompatibility-with-other-admob-dependencies))
+- **NEW** `useHybridComposition` parameter in the constructor of both `NativeAd` and `BannerAd`
+
+## [0.9.3] - [25/02/2021]
 
 - **NEW**
   - `unitId` parameter in the `NativeAd` widget. (Fixes [#14/785424875](https://github.com/bdlukaa/native_admob_flutter/issues/14#issuecomment-785424875))
   - `unitId` paramer in the `AppOpenAd`, `RewardedAd` and `InterstitialAd` constructor.
-  - `loadTimeout` parameter in all the ads. (Fixed [#14/785435140](https://github.com/bdlukaa/native_admob_flutter/issues/15#issuecomment-785435140))
-  - `delayToShow` parameter in `NativeAd` and `BannerAd`.
+  - `loadTimeout` parameter in all the ads. (Fixes [#14/785435140](https://github.com/bdlukaa/native_admob_flutter/issues/15#issuecomment-785435140))
+  - `delayToShow` parameter in `NativeAd` and `BannerAd`. (Fixes [#11](https://github.com/bdlukaa/native_admob_flutter/issues/11))
 - **FIXED** `BannerAdOptions.reloadWhenSizeChanges` now works properly
 - Wiki:
   - [Incompatibility with other admob dependencies](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad#incompatibility-with-other-admob-dependencies)
@@ -14,7 +21,7 @@ Date format: DD/MM/YYYY
 ## [0.9.2] - [21/02/2021]
 
 - **PERFORMANCE**
-  - Do not use xml layout for native ad anymore
+  - **BREAKING** Do not use xml layout for native ad anymore (You may need to run `flutter clean` to build the app again)
   - Close the stream subscription to free up resources
 - **FIXED**
   - Added a delay to show the android platform view (Virtual Display). (Fixes [#11](https://github.com/bdlukaa/native_admob_flutter/issues/11))

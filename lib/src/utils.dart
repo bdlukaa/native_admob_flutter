@@ -39,6 +39,7 @@ void assertMobileAdsIsInitialized() {
 ///  - iOS: 9
 ///  - Android: 16 (19 for Native and Banner Ads)
 void assertVersionIsSupported([bool usePlatformView = true]) {
+  assert(MobileAds.osVersion > 0, 'The Mobile Ads SDK must be initialized');
   if (Platform.isAndroid) {
     /// The min required version for Android is 16
     assert(

@@ -281,7 +281,8 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     }).timeout(
       timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
       onTimeout: () {
-        onEventController.add({RewardedAdEvent.loadFailed: AdError.timeoutError});
+        onEventController
+            .add({RewardedAdEvent.loadFailed: AdError.timeoutError});
         return false;
       },
     );

@@ -96,7 +96,6 @@ class NativeAdOptions {
 
   @override
   String toString() => toJson().toString();
- 
 }
 
 class VideoOptions {

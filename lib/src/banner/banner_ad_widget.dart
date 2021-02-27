@@ -33,6 +33,7 @@ class BannerAd extends StatefulWidget {
     this.options = const BannerAdOptions(),
     this.delayToShow,
     this.loadTimeout,
+    this.useHybridComposition,
   })  : assert(size != null, 'A size must be set'),
         assert(options != null),
         super(key: key);
@@ -167,6 +168,11 @@ class BannerAd extends StatefulWidget {
   /// If `null`, defaults to `Duration(seconds: 30)`
   final Duration loadTimeout;
 
+  /// Use hybrid composition in this ad. This has effect only on Android
+  ///
+  /// If null, defaults to `MobileAds.useHybridComposition`
+  final bool useHybridComposition;
+
   @override
   _BannerAdState createState() => _BannerAdState();
 }
@@ -271,6 +277,7 @@ class _BannerAdState extends State<BannerAd>
             params: params,
             viewType: _viewType,
             delayToShow: widget.delayToShow,
+            useHybridComposition: widget.useHybridComposition,
           );
         } else if (Platform.isIOS) {
           w = UiKitView(
@@ -283,16 +290,16 @@ class _BannerAdState extends State<BannerAd>
         }
 
         double finalHeight;
-        if (this.height != null && !this.height.isNegative) {
+        if (state != BannerAdEvent.loaded) {
+          finalHeight = 0;
+        } else if (this.height != null && !this.height.isNegative) {
           finalHeight = this.height;
         } else if (!height.isNegative)
           finalHeight = height;
         else /* if (height == -1 && width == -2) */ {
           final screenHeight = MediaQuery.of(context).size.height;
           double height;
-          if (state != BannerAdEvent.loaded)
-            height = 0;
-          else if (screenHeight <= 400)
+          if (screenHeight <= 400)
             height = 32;
           else if (screenHeight > 400 || screenHeight <= 720)
             height = 50;

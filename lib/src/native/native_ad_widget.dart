@@ -135,6 +135,11 @@ class NativeAd extends StatefulWidget {
   /// If `null`, defaults to `Duration(seconds: 30)`
   final Duration loadTimeout;
 
+  /// Use hybrid composition in this ad. This has effect only on Android
+  ///
+  /// If null, defaults to `MobileAds.useHybridComposition`
+  final bool useHybridComposition;
+
   /// Create a `NativeAd`.
   /// Uses `NativeAdView` on android and `GADNativeAd` on iOS
   ///
@@ -168,6 +173,7 @@ class NativeAd extends StatefulWidget {
     this.builder,
     this.delayToShow,
     this.loadTimeout,
+    this.useHybridComposition,
   })  : assert(buildLayout != null),
         assert(reloadWhenOptionsChange != null),
         super(key: key);
@@ -276,6 +282,7 @@ class _NativeAdState extends State<NativeAd>
           params: params,
           viewType: _viewType,
           delayToShow: widget.delayToShow,
+          useHybridComposition: widget.useHybridComposition,
         );
       } else if (Platform.isIOS) {
         w = UiKitView(

@@ -62,7 +62,7 @@ class BannerSize {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#adaptive-banners)
   ///
-  /// ![Adaptive Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/adaptive_banner.png)
+  /// ![Adaptive Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/adaptive_banner.png?raw=true)
   static const BannerSize ADAPTIVE = BannerSize(Size(-1, -1));
 
   /// Standart banner.\
@@ -70,7 +70,7 @@ class BannerSize {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#other-sizes)
   ///
-  /// ![Standart Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/standart_banner.png)
+  /// ![Standart Banner](https://github.com/bdlukaa/native_admob_flutter/blob/master/screenshots/banner/standart_banner.png?raw=true)
   static const BannerSize BANNER = BannerSize(Size(320, 50));
 
   /// Large banner.\
