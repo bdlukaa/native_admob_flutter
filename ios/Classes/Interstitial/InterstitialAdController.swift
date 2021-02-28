@@ -24,7 +24,7 @@ class InterstitialAdController: GADFullScreenContentDelegate {
         switch call.method {
             case "loadAd":
                 channel.invokeMethod("loading", arguments: nil)
-                let unitId = params?["unitId"]
+                let unitId = params?["unitId"] as! String
                 let request = GADRequest()
                 GADInterstitialAd.load(withAdUnitID: unitId,
                                 request: request,
@@ -48,7 +48,7 @@ class InterstitialAdController: GADFullScreenContentDelegate {
                 if interstitialView == nil {
                     result(false)
                 }
-                interstitial.present(fromRootViewController: UIApplication.shared.keyWindow!.rootViewController!)
+                interstitial.present(fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!)
             default:
                 result(FlutterMethodNotImplemented)
     }
