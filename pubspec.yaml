@@ -21,5 +21,5 @@ flutter:
       android:
         package: com.bruno.native_admob_flutter
         pluginClass: NativeAdmobFlutterPlugin
-      # ios:
-      #   pluginClass: NativeAdmobFlutterPlugin
+      ios:
+        pluginClass: NativeAdmobFlutterPlugin
