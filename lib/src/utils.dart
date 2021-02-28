@@ -11,6 +11,7 @@ import 'mobile_ads.dart';
 /// Make sure the running platform is supported.
 /// The currently supported platforms are:
 ///   - Android
+///   - iOS (developer preview)
 void assertPlatformIsSupported() {
   // Google's AdMOB supports only Android and iOS
   assert(
@@ -19,8 +20,7 @@ void assertPlatformIsSupported() {
     'The platforms that support it are Android and iOS',
   );
 
-  // TODO: Support iOS
-  // assert(Platform.isAndroid, 'Android is the only supported platform for now');
+  assert(Platform.isAndroid, 'Android is the only supported platform for now');
 }
 
 /// Assert the Mobile Ads SDK is initialized.
