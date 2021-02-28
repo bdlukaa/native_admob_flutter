@@ -5,8 +5,6 @@ class BannerAdController: NSObject {
 
     var bannerView: GADBannerView!
 
-//    var loadRequested: ((MethodChannel.Result) -> Unit)? = null
-
     let id: String
     let channel: FlutterMethodChannel
 

@@ -3,14 +3,15 @@ import GoogleMobileAds
 
 class BannerAdView : NSObject,FlutterPlatformView {
     
-    var data:Dictionary<String, Any>?
+    var data: Dictionary<String, Any>?
     var controller: BannerAdController
+
     private let channel: FlutterMethodChannel
     private let messenger: FlutterBinaryMessenger
 
-        private func getAdSize(width: Double)-> GADAdSize {
-            return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
-        }
+    private func getAdSize(width: Double)-> GADAdSize {
+        return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
+    }
     
     init(data: Dictionary<String, Any>?, messenger: FlutterBinaryMessenger) {
         self.data=data
@@ -18,19 +19,19 @@ class BannerAdView : NSObject,FlutterPlatformView {
         self.messenger = messenger
         channel = FlutterMethodChannel(name: "banner_admob", binaryMessenger: messenger)
         super.init()
-        generateAdView(data:data)
+        generateAdView(data: data)
         load()
     }
     
     private func load() {
-        controller.bannerView.delegate=self
+        controller.bannerView.delegate = self
         controller.bannerView.load(GADRequest())
-        }
+    }
     
-    private func generateAdView(data:Dictionary<String, Any>?) {
+    private func generateAdView(data: Dictionary<String, Any>?) {
         controller.bannerView = GADBannerView(adSize: kGADAdSizeBanner)
         controller.bannerView.adUnitID = (data?["unitId"] as! String)
-        }
+    }
 
     func view() -> UIView {
         return controller.bannerView
