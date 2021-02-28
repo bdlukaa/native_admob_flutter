@@ -22,6 +22,7 @@ class RewardedAdController: NSObject, GADFullScreenContentDelegate {
         switch call.method {
             case "loadAd":
                 channel.invokeMethod("loading", arguments: nil)
+                let unitId = params?["unitId"] as! String
                 let request = GADRequest()
                 GADRewardedAd.load(
                     withAdUnitID: unitId,
