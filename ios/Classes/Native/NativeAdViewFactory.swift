@@ -1,7 +1,7 @@
 import Flutter
 import GoogleMobileAds
 
-class BannerAdViewFactory : NSObject,FlutterPlatformViewFactory {
+class NativeAdViewFactory : NSObject,FlutterPlatformViewFactory {
     let messenger: FlutterBinaryMessenger
 
        init(messenger: FlutterBinaryMessenger) {
@@ -10,7 +10,7 @@ class BannerAdViewFactory : NSObject,FlutterPlatformViewFactory {
     
     func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
         let creationParams = args as? Dictionary<String, Any>
-        return BannerAdView(data: creationParams,messenger:messenger)
+        return NativeAdView(data: creationParams,messenger:messenger)
     }
     
     public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {

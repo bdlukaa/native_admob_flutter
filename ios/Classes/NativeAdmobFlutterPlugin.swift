@@ -5,7 +5,7 @@ import GoogleMobileAds
 
 let controllerManager = InterstitialAdControllerManager.shared
 
-public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
+public class NativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
     
     let messenger: FlutterBinaryMessenger
     
@@ -16,9 +16,11 @@ public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
     //messenger = registrar.messenger()
     let channel = FlutterMethodChannel(name: "native_admob_flutter", binaryMessenger: registrar.messenger())
-    let instance = SwiftNativeAdmobFlutterPlugin(messenger: registrar.messenger())
+    let instance = NativeAdmobFlutterPlugin(messenger: registrar.messenger())
     registrar.addMethodCallDelegate(instance, channel: channel)
     registrar.register(BannerAdViewFactory(messenger: registrar.messenger()), withId: "banner_admob")
+    registrar.register(NativeAdViewFactory(messenger: registrar.messenger()), withId: "native_admob")
+
   }
     
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -73,7 +75,7 @@ public class SwiftNativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
       
       // General
       case "isTestDevice":
-        result(true)
+        result(false)
       
       case "setTestDeviceIds":
         GADMobileAds

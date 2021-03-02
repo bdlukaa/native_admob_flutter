@@ -40,7 +40,7 @@ Para começar com Anúncios Nativos para Flutter, [leia a documentação - Ingl�
 AdMOB só suporta anúncios em dispositivos mobile. Web e desktop estão fora de alcance
 
 ✔️ Android\
-❌ iOS
+✔️ iOS
 
 ## Problemas e feedback
 

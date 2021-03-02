@@ -40,7 +40,7 @@ To get started with Native Ads for Flutter, [read the documentation](https://git
 AdMOB only supports ads on mobile. Web and desktop are out of reach
 
 ✔️ Android\
-❌ iOS
+✔️ iOS
 
 ## Issues and feedback
 

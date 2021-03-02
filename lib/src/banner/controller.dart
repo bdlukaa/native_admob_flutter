@@ -234,9 +234,10 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
     _loaded = await channel.invokeMethod<bool>('loadAd').timeout(
       timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
       onTimeout: () {
-        onEventController.add({
-          BannerAdEvent.loadFailed: AdError.timeoutError,
-        });
+        if (!onEventController.isClosed)
+          onEventController.add({
+            BannerAdEvent.loadFailed: AdError.timeoutError,
+          });
         return false;
       },
     );

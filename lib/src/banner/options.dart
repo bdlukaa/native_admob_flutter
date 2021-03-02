@@ -1,13 +1,13 @@
 class BannerAdOptions {
-  /// Reload the ad whenever the orientation changes. Defaults to `true`
-  final bool reloadWhenOrientationChanges;
-
   /// Reload the ad whenever its size changes. Defaults to `true`
   final bool reloadWhenSizeChanges;
 
+  /// Reload the ad whenever its unit id changes. Defaults to `true`
+  final bool reloadWhenUnitIdChanges;
+
   const BannerAdOptions({
-    this.reloadWhenOrientationChanges = true,
     this.reloadWhenSizeChanges = true,
-  })  : assert(reloadWhenOrientationChanges != null),
-        assert(reloadWhenSizeChanges != null);
+    this.reloadWhenUnitIdChanges = true,
+  })  : assert(reloadWhenSizeChanges != null),
+        assert(reloadWhenUnitIdChanges != null);
 }

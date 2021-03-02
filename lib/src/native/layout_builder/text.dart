@@ -21,6 +21,8 @@ class AdTextView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
+    double elevation,
+    Color elevationColor,
     // text
     this.style,
     this.minLines,
@@ -37,6 +39,8 @@ class AdTextView extends AdView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
+          elevation: elevation,
+          elevationColor: elevationColor,
         );
 
   AdTextView copyWith(AdView view) {
@@ -48,6 +52,8 @@ class AdTextView extends AdView {
       width: view.width ?? width,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevationColor,
       maxLines: (view as AdTextView).maxLines ?? maxLines,
       minLines: (view as AdTextView).minLines ?? minLines,
       style: _copyStylesWithin(this.style, (view as AdTextView).style),
@@ -107,6 +113,8 @@ class AdButtonView extends AdTextView {
     double width,
     double height,
     AdDecoration decoration,
+    double elevation,
+    Color elevationColor,
     this.pressColor,
     // text
     int minLines,
@@ -120,6 +128,8 @@ class AdButtonView extends AdTextView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
+          elevation: elevation,
+          elevationColor: elevationColor,
           // text
           maxLines: maxLines,
           minLines: minLines,
@@ -141,6 +151,8 @@ class AdButtonView extends AdTextView {
       width: view.width ?? width,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevationColor,
       maxLines: (view as AdButtonView).maxLines ?? maxLines,
       minLines: (view as AdButtonView).minLines ?? minLines,
       textStyle: (view as AdButtonView).style ?? style,

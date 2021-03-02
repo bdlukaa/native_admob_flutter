@@ -1,5 +1,15 @@
 Date format: DD/MM/YYYY
 
+## [1.0.0-pre] - iOS update - [00/03/2021]
+
+- **FIX** Unhandled Exception: Bad state: Cannot add new events after calling close
+- **FIX** Banner Ad was not working with Virtual Display. (Fixes [#16](https://github.com/bdlukaa/native_admob_flutter/issues/16) and revert [#11/786244151](https://github.com/bdlukaa/native_admob_flutter/issues/11#issuecomment-786244151))
+- **FIX** Load native and banner when added to the tree only if not loaded
+- **FIX** Listen to events only before loading native and banner ads
+- **NEW** `BannerAdOptions.reloadWhenUnitIdChanges`
+- **BREAKING** Removed `BannerAdOptions.reloadWhenOrientationChanges`
+- **NEW** `AdView.elevation` and `AdView.elevationColor`
+
 ## [0.9.4] - [27/02/2021]
 
 - **FIX** Apply height to BannerAd only when it's loaded. (Fixes [#11/786244151](https://github.com/bdlukaa/native_admob_flutter/issues/11#issuecomment-786244151))

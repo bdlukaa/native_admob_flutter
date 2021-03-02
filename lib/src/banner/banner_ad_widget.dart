@@ -33,7 +33,7 @@ class BannerAd extends StatefulWidget {
     this.options = const BannerAdOptions(),
     this.delayToShow,
     this.loadTimeout,
-    this.useHybridComposition = true,
+    this.useHybridComposition,
   })  : assert(size != null, 'A size must be set'),
         assert(options != null),
         super(key: key);
@@ -190,29 +190,6 @@ class _BannerAdState extends State<BannerAd>
   @override
   void initState() {
     super.initState();
-    attachNewController();
-    controller.load(timeout: widget.loadTimeout);
-  }
-
-  @override
-  void didUpdateWidget(BannerAd oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.options.reloadWhenSizeChanges) {
-      if (oldWidget.size != widget.size)
-        controller.load(timeout: widget.loadTimeout);
-    }
-    // if ((oldWidget.unitId == null && widget.unitId != null) ||
-    //     (oldWidget.unitId != widget.unitId)) {
-    //   controller.load();
-    // }
-    // if (oldWidget.controller == null && widget.controller != null) {
-    //   attachNewController();
-    //   controller.changeController(controller.id);
-    //   controller.load();
-    // }
-  }
-
-  void attachNewController() {
     controller = widget.controller ??
         BannerAdController(loadTimeout: widget.loadTimeout);
     controller.attach(true);
@@ -220,7 +197,6 @@ class _BannerAdState extends State<BannerAd>
     _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       final info = e.values.first;
-      print(event);
       switch (event) {
         case BannerAdEvent.loading:
         case BannerAdEvent.loadFailed:
@@ -232,6 +208,28 @@ class _BannerAdState extends State<BannerAd>
           break;
       }
     });
+    if (!controller.isLoaded) controller.load(timeout: widget.loadTimeout);
+  }
+
+  @override
+  void didUpdateWidget(BannerAd oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.options.reloadWhenSizeChanges) {
+      if (oldWidget.size != widget.size)
+        controller.load(timeout: widget.loadTimeout);
+    }
+    if (widget.options.reloadWhenUnitIdChanges) {
+      if ((oldWidget.unitId == null && widget.unitId != null) ||
+          (oldWidget.unitId != null && widget.unitId == null) ||
+          (oldWidget.unitId != widget.unitId)) {
+        controller.load(timeout: widget.loadTimeout);
+      }
+    }
+    // if (oldWidget.controller == null && widget.controller != null) {
+    //   attachNewController();
+    //   controller.changeController(controller.id);
+    //   controller.load();
+    // }
   }
 
   @override
@@ -290,9 +288,7 @@ class _BannerAdState extends State<BannerAd>
         }
 
         double finalHeight;
-        if (state != BannerAdEvent.loaded) {
-          finalHeight = 0;
-        } else if (this.height != null && !this.height.isNegative) {
+        if (this.height != null && !this.height.isNegative) {
           finalHeight = this.height;
         } else if (!height.isNegative)
           finalHeight = height;

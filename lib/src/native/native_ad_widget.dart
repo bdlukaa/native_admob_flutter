@@ -215,11 +215,6 @@ class _NativeAdState extends State<NativeAd>
     super.initState();
     controller = widget.controller ?? NativeAdController();
     controller.attach();
-    controller.load(
-      options: widget.options,
-      unitId: widget.unitId,
-      timeout: widget.loadTimeout,
-    );
     _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       switch (event) {
@@ -235,6 +230,12 @@ class _NativeAdState extends State<NativeAd>
           break;
       }
     });
+    if (!controller.isLoaded)
+      controller.load(
+        options: widget.options,
+        unitId: widget.unitId,
+        timeout: widget.loadTimeout,
+      );
   }
 
   @override

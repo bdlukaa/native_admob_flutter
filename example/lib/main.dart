@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
+// import 'screens/list_nativead.dart';
 import 'screens/native_ads.dart';
 import 'screens/full_screen_ads.dart';
 import 'screens/banner_ads.dart';
@@ -86,12 +87,13 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               icon: Icon(Icons.navigate_next),
               onPressed: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (_) => Scaffold(
-                    appBar: AppBar(title: Text('Native Ads')),
-                    body: NativeAds(),
-                  ),
-                ));
+                print('next');
+                // Navigator.of(context).push(MaterialPageRoute(
+                //   builder: (_) => Scaffold(
+                //     appBar: AppBar(title: Text('Native Ads List')),
+                //     body: ListNativeAd(),
+                //   ),
+                // ));
               },
             ),
           ],
@@ -117,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
             BannerAd(controller: bannerController),
           ],
         ),
-        bottomNavigationBar: Container(
+        bottomNavigationBar: Material(
           color: Colors.blue,
           child: TabBar(
             indicatorColor: Colors.white,

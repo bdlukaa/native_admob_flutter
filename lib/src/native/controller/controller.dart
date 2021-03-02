@@ -338,7 +338,10 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     }).timeout(
       timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
       onTimeout: () {
-        onEventController.add({NativeAdEvent.loadFailed: AdError.timeoutError});
+        if (!onEventController.isClosed)
+          onEventController.add({
+            NativeAdEvent.loadFailed: AdError.timeoutError,
+          });
         return false;
       },
     );

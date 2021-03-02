@@ -161,9 +161,10 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
     }).timeout(
       timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
       onTimeout: () {
-        onEventController.add({
-          FullScreenAdEvent.loadFailed: AdError.timeoutError,
-        });
+        if (!onEventController.isClosed)
+          onEventController.add({
+            FullScreenAdEvent.loadFailed: AdError.timeoutError,
+          });
         return false;
       },
     );

@@ -44,6 +44,16 @@ class AdView {
   /// The height of the view
   final double height;
 
+  /// The elevation of the view. It may not work in some views
+  ///
+  /// On android, it only has effect on version >= 21
+  final double elevation;
+
+  /// The color of the elevation. It may not work in some views
+  ///
+  /// On android, it only has effect on version >= 21
+  final Color elevationColor;
+
   /// The type of the view. Do not change this manually
   final String viewType;
 
@@ -58,6 +68,8 @@ class AdView {
     this.height,
     this.id,
     this.decoration,
+    this.elevation,
+    this.elevationColor,
   });
 
   /// Copy [this] with a new [AdView]
@@ -71,6 +83,8 @@ class AdView {
       id: view.id ?? id,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevationColor,
     );
   }
 
@@ -98,6 +112,9 @@ class AdView {
       // screen bounds
       'width': width,
       'height': height,
+      // others
+      'elevation': elevation,
+      'elevationColor': elevationColor?.toHex()
     };
     if (decoration != null) json.addAll(decoration.toJson());
     return json;
@@ -110,6 +127,8 @@ class AdImageView extends AdView {
     EdgeInsets margin,
     double size,
     AdDecoration decoration,
+    double elevation,
+    Color elevationColor,
   }) : super(
           viewType: 'image_view',
           padding: padding,
@@ -117,6 +136,8 @@ class AdImageView extends AdView {
           decoration: decoration,
           width: size ?? 50,
           height: size ?? 50,
+          elevation: elevation,
+          elevationColor: elevationColor,
         );
 
   /// Copy [this] with a new [AdView]
@@ -128,6 +149,8 @@ class AdImageView extends AdView {
       size: view.height ?? view.width ?? height ?? width,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevation,
     );
   }
 }
@@ -139,6 +162,8 @@ class AdMediaView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
+    double elevation,
+    Color elevationColor,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -146,6 +171,8 @@ class AdMediaView extends AdView {
           decoration: decoration,
           width: width ?? MATCH_PARENT,
           height: height ?? WRAP_CONTENT,
+          elevation: elevation,
+          elevationColor: elevationColor,
         );
 
   /// Copy [this] with a new [AdView]
@@ -157,6 +184,8 @@ class AdMediaView extends AdView {
       width: view.width ?? width,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevationColor,
     );
   }
 }
@@ -170,6 +199,8 @@ class AdRatingBarView extends AdView {
     AdDecoration decoration,
     double width,
     double height,
+    double elevation,
+    Color elevationColor,
     // rating
     this.stepSize,
   }) : super(
@@ -179,6 +210,8 @@ class AdRatingBarView extends AdView {
           decoration: decoration,
           width: width ?? WRAP_CONTENT,
           height: height ?? WRAP_CONTENT,
+          elevation: elevation,
+          elevationColor: elevationColor,
         );
 
   /// Copy [this] with a new [AdRatingBarView]
@@ -191,6 +224,8 @@ class AdRatingBarView extends AdView {
       width: view.width ?? width,
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
+      elevation: view.elevation ?? elevation,
+      elevationColor: view.elevationColor ?? elevationColor,
       stepSize: (view as AdRatingBarView).stepSize,
     );
   }

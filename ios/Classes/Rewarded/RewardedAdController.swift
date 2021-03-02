@@ -1,12 +1,15 @@
 import Flutter
 import GoogleMobileAds
 
-class RewardedAdController: NSObject, GADFullScreenContentDelegate {
+class RewardedAdController: NSObject,GADFullScreenContentDelegate {
 
-    var rewardedView: GADRewardedAd?
+    var rewardedAd: GADRewardedAd!
+
+//    var loadRequested: ((MethodChannel.Result) -> Unit)? = null
 
     let id: String
     let channel: FlutterMethodChannel
+    var result : FlutterResult?=nil
 
     init(id: String, channel: FlutterMethodChannel) {
         self.id = id
@@ -17,70 +20,52 @@ class RewardedAdController: NSObject, GADFullScreenContentDelegate {
     }
 
     private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        params = call.arguments as? [String: Any]
-
+        self.result=result
+        let params = call.arguments as? [String: Any]
+        
         switch call.method {
-            case "loadAd":
-                channel.invokeMethod("loading", arguments: nil)
-                let unitId = params?["unitId"] as! String
-                let request = GADRequest()
-                GADRewardedAd.load(
-                    withAdUnitID: unitId,
-                    request: request,
-                    completionHandler: { [self] ad, error in
-                        if let error = error {
-                            interstitialView = nil
-                            channel.invokeMethod("onAdFailedToLoad", arguments: [
-                                "errorCode": error.code,
-                                "error": error.localizedDescription
-                            ])
-                            result(true)
-                            return
-                        }
-                        rewardedView = ad
-                        rewardedView?.fullScreenContentDelegate = self
-                        channel.invokeMethod("onAdLoaded", arguments: nil)
-                        result(false)
-                    }
-                }
-            case "show":
-                if (rewardedView == nil) {
+        case "loadAd":
+            channel.invokeMethod("loading", arguments: nil)
+            let unitId: String = params?["unitId"] as! String
+            GADRewardedAd.load(withAdUnitID: unitId, request: GADRequest()) { (ad : GADRewardedAd?, error:Error?) in
+                if error != nil {
+                    self.rewardedAd = nil
+                    self.channel.invokeMethod("onAdFailedToLoad", arguments: error.debugDescription)
                     result(false)
-                    return
                 }
-                rewardedView.present(
-                    fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!
-                    userDidEarnRewardHandler: { [self] in
-                        let reward = rewardedAd.adReward
-                        channel.invokeMethod("onUserEarnedReward", arguments: [
-                            "amount": reward.amount,
-                            "type": reward.type
-                        ])
-                    }
-                )
-                result(true)
-            default:
-                result(FlutterMethodNotImplemented)
+                else{
+                    self.rewardedAd = ad
+                    self.rewardedAd.fullScreenContentDelegate=self
+                    self.channel.invokeMethod("onAdLoaded", arguments: nil)
+                    result(true)
+                }
+            }
+        case "show" :
+            if (self.rewardedAd == nil){ return result(false)}
+            self.rewardedAd.present(fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!){ () in
+                self.channel.invokeMethod("onUserEarnedReward", arguments: [
+                    "amount":self.rewardedAd.adReward.amount,
+                    "type":self.rewardedAd.adReward.type
+                ])
+            }
+            
+        default: 
+            result(FlutterMethodNotImplemented)
         }
     }
-
-    /// Tells the delegate that the ad failed to present full screen content.
+    
     func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-      // TODO: this should return an error in arguments
-      channel.invokeMethod("onAdFailedToShowFullScreenContent", arguments: null)
-      // TODO: this should result(false)
+        self.channel.invokeMethod("onAdFailedToShowFullScreenContent", arguments: error.localizedDescription)
+        result!(false)
     }
-
-    /// Tells the delegate that the ad presented full screen content.
+    
     func adDidPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-      channel.invokeMethod("onAdShowedFullScreenContent", arguments: null)
-      // TODO: this should result(true)
+        self.channel.invokeMethod("onAdShowedFullScreenContent", arguments: nil)
     }
-
-    /// Tells the delegate that the ad dismissed full screen content.
+    
     func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-      channel.invokeMethod("onAdDismissedFullScreenContent", arguments: null)
-      // TODO: this should result(true)
+        self.channel.invokeMethod("onAdDismissedFullScreenContent", arguments: nil)
+        result!(true)
     }
 
 }

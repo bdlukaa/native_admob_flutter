@@ -12,6 +12,7 @@ import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.*
 import android.widget.LinearLayout.HORIZONTAL
 import android.widget.LinearLayout.VERTICAL
@@ -86,6 +87,9 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
                 "image_view" -> {
                     view = ImageView(context)
                     view.adjustViewBounds = true
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        view.stateListAnimator = null
+                    }
                 }
                 "media_view" -> {
                     view = MediaView(context)
@@ -99,6 +103,9 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
 //                view.isClickable = true
 //                view.isLongClickable = true
                     view.applyText(data)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        view.stateListAnimator = null
+                    }
                 }
             }
 
@@ -134,6 +141,18 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
                     )
                 }
                 else -> {
+                }
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.elevation = ((data["elevation"] as? Double) ?: 0.0).toInt().dp().toFloat()
+            view.clipToOutline = false
+            view.outlineProvider = ViewOutlineProvider.PADDED_BOUNDS
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                (data["elevationColor"] as? String)?.let {
+                    view.outlineAmbientShadowColor = Color.parseColor(it)
+                    view.outlineSpotShadowColor = Color.parseColor(it)
                 }
             }
         }
@@ -215,6 +234,10 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
 
         val view: View = build(data!!, context)
         adView.addView(view)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            view.clipToOutline = false
+            view.outlineProvider = ViewOutlineProvider.BOUNDS
+        }
 
         define()
 
