@@ -10,9 +10,9 @@ class AdRadialGradient extends AdGradient {
   /// - The default value for [radius] is 1000
   /// - The default value for [center] is `Alignment(0.5, 0.5)`
   AdRadialGradient({
-    @required List<Color> colors,
-    double radius,
-    Alignment center,
+    required List<Color> colors,
+    double? radius,
+    Alignment? center,
   }) : super(
           type: AdGradient.RADIAL,
           colors: colors,

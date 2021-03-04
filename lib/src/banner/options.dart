@@ -8,6 +8,5 @@ class BannerAdOptions {
   const BannerAdOptions({
     this.reloadWhenSizeChanges = true,
     this.reloadWhenUnitIdChanges = true,
-  })  : assert(reloadWhenSizeChanges != null),
-        assert(reloadWhenUnitIdChanges != null);
+  });
 }

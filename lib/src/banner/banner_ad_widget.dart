@@ -23,7 +23,7 @@ class BannerAd extends StatefulWidget {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad)
   const BannerAd({
-    Key key,
+    Key? key,
     this.builder,
     this.controller,
     this.size = BannerSize.ADAPTIVE,
@@ -32,11 +32,9 @@ class BannerAd extends StatefulWidget {
     this.unitId,
     this.options = const BannerAdOptions(),
     this.delayToShow,
-    this.loadTimeout,
+    this.loadTimeout = kDefaultLoadTimeout,
     this.useHybridComposition,
-  })  : assert(size != null, 'A size must be set'),
-        assert(options != null),
-        super(key: key);
+  }) : super(key: key);
 
   /// The builder of the ad. The ad won't be reloaded if this changes
   ///
@@ -64,17 +62,17 @@ class BannerAd extends StatefulWidget {
   /// ```
   ///
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#adbuilder)
-  final AdBuilder builder;
+  final AdBuilder? builder;
 
   /// The error placeholder. If an error happens, this widget will be shown
   ///
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#loading-and-error-placeholders)
-  final Widget error;
+  final Widget? error;
 
   /// The loading placeholder. This widget will be shown while the ad is loading
   ///
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-banner-ad#loading-and-error-placeholders)
-  final Widget loading;
+  final Widget? loading;
 
   /// The controller of the ad.
   /// This controller must be unique and can be used on only one `BannerAd`
@@ -108,7 +106,7 @@ class BannerAd extends StatefulWidget {
   /// ```
   ///
   /// For more info, visit the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events)
-  final BannerAdController controller;
+  final BannerAdController? controller;
 
   /// The size of the Ad. `BannerSize.ADAPTIVE` is the default.
   /// This can NOT be null. If so, throws an `AssertionError`
@@ -153,7 +151,7 @@ class BannerAd extends StatefulWidget {
   /// If changed after loaded the ad will NOT be reloaded with the new ad unit id.\
   ///
   /// If `null`, defaults to `MobileAds.bannerAdUnitId`
-  final String unitId;
+  final String? unitId;
 
   /// The options this ad will follow.
   final BannerAdOptions options;
@@ -161,7 +159,7 @@ class BannerAd extends StatefulWidget {
   /// The duration the platform view will wait to be shown.
   ///
   /// For more info, see [this issue](https://github.com/bdlukaa/native_admob_flutter/issues/11)
-  final Duration delayToShow;
+  final Duration? delayToShow;
 
   /// The ad will stop loading after a specified time.
   ///
@@ -171,7 +169,7 @@ class BannerAd extends StatefulWidget {
   /// Use hybrid composition in this ad. This has effect only on Android
   ///
   /// If null, defaults to `MobileAds.useHybridComposition`
-  final bool useHybridComposition;
+  final bool? useHybridComposition;
 
   @override
   _BannerAdState createState() => _BannerAdState();
@@ -179,13 +177,13 @@ class BannerAd extends StatefulWidget {
 
 class _BannerAdState extends State<BannerAd>
     with AutomaticKeepAliveClientMixin<BannerAd> {
-  BannerAdController controller;
+  late BannerAdController controller;
   BannerAdEvent state = BannerAdEvent.loading;
 
-  double height;
+  double? height;
 
   BannerAdOptions get options => widget.options;
-  StreamSubscription _onEventSub;
+  StreamSubscription? _onEventSub;
 
   @override
   void initState() {
@@ -239,9 +237,9 @@ class _BannerAdState extends State<BannerAd>
     // dispose the controller only if the controller was
     // created by the ad.
     if (widget.controller == null)
-      controller?.dispose();
+      controller.dispose();
     else
-      controller?.attach(false);
+      controller.attach(false);
     super.dispose();
   }
 
@@ -250,7 +248,6 @@ class _BannerAdState extends State<BannerAd>
     super.build(context);
     assertPlatformIsSupported();
     assertVersionIsSupported();
-    assert(options != null, 'You must set the ad options');
 
     return LayoutBuilder(
       builder: (context, consts) {
@@ -265,7 +262,7 @@ class _BannerAdState extends State<BannerAd>
         params.addAll({
           'controllerId': controller.id,
           'unitId': widget.unitId ?? MobileAds.bannerAdUnitId,
-          'size_height': height ?? -1,
+          'size_height': height,
           'size_width': width,
         });
 
@@ -287,8 +284,8 @@ class _BannerAdState extends State<BannerAd>
           return SizedBox();
         }
 
-        double finalHeight;
-        if (this.height != null && !this.height.isNegative) {
+        double? finalHeight;
+        if (this.height != null && !this.height!.isNegative) {
           finalHeight = this.height;
         } else if (!height.isNegative)
           finalHeight = height;

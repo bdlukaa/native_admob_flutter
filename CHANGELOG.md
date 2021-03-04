@@ -1,7 +1,18 @@
 Date format: DD/MM/YYYY
 
+## [1.0.0-pre.1] - Null Safety - [04/03/2021]
+
+- Null Safety🎉🥳
+- **NEW** Timeout for all the ads. Default to 30 minutes
+- **NEW** `unitId` for `NativeAdController`.
+- **FIXED** `NativeAdController.muteThisAdReasons`
+- **FIXED** `NativeAdController.isCustomMuteThisAdEnabled`
+- **FIXED** `NativeAdController.mediaContent`
+- Native Video Ad in example app
+
 ## [1.0.0-pre] - iOS update - [00/03/2021]
 
+- **iOS** Banner, Interstitial, Rewarded, AppOpen ads are supported on iOS 🥳🎉
 - **FIX** Unhandled Exception: Bad state: Cannot add new events after calling close
 - **FIX** Banner Ad was not working with Virtual Display. (Fixes [#16](https://github.com/bdlukaa/native_admob_flutter/issues/16) and revert [#11/786244151](https://github.com/bdlukaa/native_admob_flutter/issues/11#issuecomment-786244151))
 - **FIX** Load native and banner when added to the tree only if not loaded

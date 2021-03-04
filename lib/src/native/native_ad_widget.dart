@@ -26,55 +26,55 @@ class NativeAd extends StatefulWidget {
   final AdLayoutBuilder buildLayout;
 
   /// The rating bar. This isn't always inclued in the request
-  final AdRatingBarView ratingBar;
+  final AdRatingBarView? ratingBar;
 
   /// The full media view. This is always included in the request
-  final AdMediaView media;
+  final AdMediaView? media;
 
   /// The icon view. This isn't always inclued in the request
-  final AdImageView icon;
+  final AdImageView? icon;
 
   /// The ad headline. This is always inclued in the request
-  final AdTextView headline;
+  final AdTextView? headline;
 
   /// The ad advertiser. This isn't always inclued in the request
-  final AdTextView advertiser;
+  final AdTextView? advertiser;
 
   /// The ad body. This isn't always inclued in the request
-  final AdTextView body;
+  final AdTextView? body;
 
   /// The app price. This isn't always inclued in the request
-  final AdTextView price;
+  final AdTextView? price;
 
   /// The store. This isn't always inclued in the request
-  final AdTextView store;
+  final AdTextView? store;
 
   /// The ad attribution. This is always inclued in the request
-  final AdTextView attribution;
+  final AdTextView? attribution;
 
   /// The ad button. This isn't always inclued in the request
-  final AdButtonView button;
+  final AdButtonView? button;
 
   /// The ad controller. If not specified, uses a default controller.
   /// This can not be changed dynamically
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events)
-  final NativeAdController controller;
+  final NativeAdController? controller;
 
   /// The unit id used by this `NativeAd`
   /// The ad won't be reloaded if this changes.
   /// If `null`, defaults to `MobileAds.nativeAdUnitId`
-  final String unitId;
+  final String? unitId;
 
   /// The widget used in case of an error shows up
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
-  final Widget error;
+  final Widget? error;
 
   /// The widget used while the ad is loading.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#loading-and-error-placeholders)
-  final Widget loading;
+  final Widget? loading;
 
   /// The height of the ad. If this is null, the widget will expand
   ///
@@ -85,7 +85,7 @@ class NativeAd extends StatefulWidget {
   ///
   /// Usage inside of a `Column` requires an `Expanded` or a defined height.
   /// Usage inside of a `ListView` requires a defined height.
-  final double height;
+  final double? height;
 
   /// The width of the ad. If this is null, the widget will expand
   ///
@@ -96,13 +96,13 @@ class NativeAd extends StatefulWidget {
   ///
   /// Usage inside of a Row requires an Expanded or a defined width.
   /// Usage inside of a ListView requires a defined width.
-  final double width;
+  final double? width;
 
   /// Used to configure native ad requests.
   ///
   /// If this is changed, the ad will be reloaded. To disable it, set
   /// `reloadWhenOptionsChange` to false
-  final NativeAdOptions options;
+  final NativeAdOptions? options;
 
   /// If true, the ad will be reloaded whenever `options` changes
   final bool reloadWhenOptionsChange;
@@ -123,22 +123,22 @@ class NativeAd extends StatefulWidget {
   /// ```
   ///
   /// For more info, read the [changelog](https://github.com/bdlukaa/native_admob_flutter/wiki/Native-Ad-builder-and-placeholders#adbuilder)
-  final AdBuilder builder;
+  final AdBuilder? builder;
 
   /// The duration the platform view will wait to be shown.
   ///
   /// For more info, see [this issue](https://github.com/bdlukaa/native_admob_flutter/issues/11)
-  final Duration delayToShow;
+  final Duration? delayToShow;
 
   /// The ad will stop loading after a specified time.
   ///
   /// If `null`, defaults to `Duration(seconds: 30)`
-  final Duration loadTimeout;
+  final Duration? loadTimeout;
 
   /// Use hybrid composition in this ad. This has effect only on Android
   ///
   /// If null, defaults to `MobileAds.useHybridComposition`
-  final bool useHybridComposition;
+  final bool? useHybridComposition;
 
   /// Create a `NativeAd`.
   /// Uses `NativeAdView` on android and `GADNativeAd` on iOS
@@ -150,8 +150,8 @@ class NativeAd extends StatefulWidget {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-native-ad)
   const NativeAd({
-    Key key,
-    @required this.buildLayout,
+    Key? key,
+    required this.buildLayout,
     this.advertiser,
     this.attribution,
     this.body,
@@ -174,9 +174,7 @@ class NativeAd extends StatefulWidget {
     this.delayToShow,
     this.loadTimeout,
     this.useHybridComposition,
-  })  : assert(buildLayout != null),
-        assert(reloadWhenOptionsChange != null),
-        super(key: key);
+  }) : super(key: key);
 
   @override
   _NativeAdState createState() => _NativeAdState();
@@ -184,7 +182,7 @@ class NativeAd extends StatefulWidget {
 
 class _NativeAdState extends State<NativeAd>
     with AutomaticKeepAliveClientMixin<NativeAd> {
-  NativeAdController controller;
+  late NativeAdController controller;
   NativeAdEvent state = NativeAdEvent.loading;
 
   @override
@@ -205,10 +203,10 @@ class _NativeAdState extends State<NativeAd>
   }
 
   void _requestAdUIUpdate(Map<String, dynamic> layout) {
-    controller.channel.invokeMethod('updateUI', {'layout': layout ?? {}});
+    controller.channel.invokeMethod('updateUI', {'layout': layout});
   }
 
-  StreamSubscription _onEventSub;
+  StreamSubscription? _onEventSub;
 
   @override
   void initState() {
@@ -245,9 +243,9 @@ class _NativeAdState extends State<NativeAd>
     // dispose the controller only if the controller was
     // created by the ad.
     if (widget.controller == null)
-      controller?.dispose();
+      controller.dispose();
     else
-      controller?.attach(false);
+      controller.attach(false);
     super.dispose();
   }
 
@@ -269,8 +267,6 @@ class _NativeAdState extends State<NativeAd>
       final size = consts.biggest;
       final height = widget.height ?? size.height;
       final width = widget.width ?? size.width;
-      // assert(!height.isInfinite, 'A height must be provided');
-      // assert(!width.isInfinite, 'A width must be provided');
       assert(
         height > 32 && width > 32,
         'Native ad views that have a width or height smaller than '
@@ -352,19 +348,20 @@ class _NativeAdState extends State<NativeAd>
     store.id = 'store';
 
     // build the layout
-    final layout = (widget.buildLayout ?? adBannerLayoutBuilder)(
-      ratingBar,
-      media,
-      icon,
-      headline,
-      advertiser,
-      body,
-      price,
-      store,
-      attribution,
-      button,
-    )?.toJson();
-    assert(layout != null, 'The layout must not return null');
+    final layout = widget
+        .buildLayout(
+          ratingBar,
+          media,
+          icon,
+          headline,
+          advertiser,
+          body,
+          price,
+          store,
+          attribution,
+          button,
+        )
+        .toJson();
 
     return layout;
   }

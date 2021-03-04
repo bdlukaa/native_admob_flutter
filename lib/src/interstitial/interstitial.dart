@@ -61,18 +61,19 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
-  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent => super.onEvent;
-
-  bool _loaded = false;
-
-  /// Returns true if the ad was successfully loaded and is ready to be shown.
-  bool get isLoaded => _loaded;
+  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent =>
+      super.onEvent as Stream<Map<FullScreenAdEvent, dynamic>>;
 
   /// Creates a new interstitial ad controller
   InterstitialAd({
-    String unitId,
-    Duration loadTimeout,
-  }) : super(unitId: unitId, loadTimeout: loadTimeout);
+    String? unitId,
+    Duration loadTimeout = kDefaultLoadTimeout,
+    Duration timeout = kDefaultAdTimeout,
+  }) : super(
+          unitId: unitId,
+          loadTimeout: loadTimeout,
+          timeout: timeout,
+        );
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
@@ -104,19 +105,18 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
         onEventController.add({FullScreenAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _loaded = false;
+        isLoaded = false;
         onEventController.add({
           FullScreenAdEvent.loadFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdLoaded':
-        _loaded = true;
+        isLoaded = true;
         onEventController.add({FullScreenAdEvent.loaded: null});
         break;
       case 'onAdShowedFullScreenContent':
-        _loaded = false;
+        isLoaded = false;
         onEventController.add({FullScreenAdEvent.showed: null});
-        _loaded = false;
         break;
       case 'onAdFailedToShowFullScreenContent':
         onEventController.add({
@@ -143,23 +143,22 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#load-the-ad)
   Future<bool> load({
-    String unitId,
+    String? unitId,
     bool force = false,
 
     /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
-    Duration timeout,
+    Duration? timeout,
   }) async {
-    assert(force != null);
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
-    _loaded = await channel.invokeMethod<bool>('loadAd', {
+    isLoaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
           this.unitId ??
           MobileAds.interstitialAdUnitId ??
           MobileAds.interstitialAdTestUnitId,
     }).timeout(
-      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      timeout ?? this.loadTimeout,
       onTimeout: () {
         if (!onEventController.isClosed)
           onEventController.add({
@@ -167,8 +166,8 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
           });
         return false;
       },
-    );
-    return _loaded;
+    ))!;
+    return isLoaded;
   }
 
   /// Show the interstitial ad. This returns a `Future` that will complete when
@@ -178,11 +177,11 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   /// `interstitialAd.isLoaded`. If it's not loaded, throws an `AssertionError`
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#show-the-ad)
-  Future<bool> show() {
+  Future<bool> show() async {
     ensureAdNotDisposed();
     assert(isLoaded, '''The ad must be loaded to show. 
       Call interstitialAd.load() to load the ad. 
       Call interstitialAd.isLoaded to check if the ad is loaded before showing.''');
-    return channel.invokeMethod<bool>('show');
+    return (await channel.invokeMethod<bool>('show'))!;
   }
 }

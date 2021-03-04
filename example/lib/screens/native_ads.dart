@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
 class NativeAds extends StatefulWidget {
-  const NativeAds({Key key}) : super(key: key);
+  const NativeAds({Key? key}) : super(key: key);
 
   @override
   _NativeAdsState createState() => _NativeAdsState();
@@ -10,12 +10,12 @@ class NativeAds extends StatefulWidget {
 
 class _NativeAdsState extends State<NativeAds>
     with AutomaticKeepAliveClientMixin {
-  Widget child;
+  Widget? child;
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    if (child != null) return child;
+    if (child != null) return child!;
     return RefreshIndicator(
       onRefresh: () async {
         setState(() => child = SizedBox());
@@ -78,6 +78,7 @@ class _NativeAdsState extends State<NativeAds>
                 child: child,
               );
             },
+            unitId: MobileAds.nativeAdVideoTestUnitId,
             buildLayout: fullBuilder,
             loading: Text('loading'),
             error: Text('error'),
@@ -127,7 +128,7 @@ AdLayoutBuilder get fullBuilder => (ratingBar, media, icon, headline,
         width: MATCH_PARENT,
         decoration: AdDecoration(
             gradient: AdLinearGradient(
-          colors: [Colors.indigo[300], Colors.indigo[700]],
+          colors: [Colors.indigo[300]!, Colors.indigo[700]!],
           orientation: AdGradientOrientation.tl_br,
         )),
         children: [
@@ -167,7 +168,7 @@ AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
         orientation: HORIZONTAL,
         decoration: AdDecoration(
           gradient: AdRadialGradient(
-            colors: [Colors.blue[300], Colors.blue[900]],
+            colors: [Colors.blue[300]!, Colors.blue[900]!],
             center: Alignment(0.5, 0.5),
             radius: 1000,
           ),

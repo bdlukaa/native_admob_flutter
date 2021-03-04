@@ -8,21 +8,21 @@ class AdTextView extends AdView {
   /// - fontSize
   /// - fontWeight (only FontWeight.bold)
   /// - letterSpacing
-  final TextStyle style;
-  final String text;
+  final TextStyle? style;
+  final String? text;
 
-  final int minLines;
-  final int maxLines;
+  final int? minLines;
+  final int? maxLines;
 
   AdTextView({
     String viewType = 'text_view',
-    EdgeInsets padding,
-    EdgeInsets margin,
-    AdDecoration decoration,
-    double width,
-    double height,
-    double elevation,
-    Color elevationColor,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    AdDecoration? decoration,
+    double? width,
+    double? height,
+    double? elevation,
+    Color? elevationColor,
     // text
     this.style,
     this.minLines,
@@ -33,7 +33,7 @@ class AdTextView extends AdView {
           'This view must be a text view or a button view',
         ),
         super(
-          viewType: viewType ?? 'text_view',
+          viewType: viewType,
           padding: padding,
           margin: margin,
           decoration: decoration,
@@ -43,7 +43,7 @@ class AdTextView extends AdView {
           elevationColor: elevationColor,
         );
 
-  AdTextView copyWith(AdView view) {
+  AdTextView copyWith(AdView? view) {
     if (view == null) return this;
     assert(view is AdTextView);
     return AdTextView(
@@ -55,13 +55,13 @@ class AdTextView extends AdView {
       elevation: view.elevation ?? elevation,
       elevationColor: view.elevationColor ?? elevationColor,
       maxLines: (view as AdTextView).maxLines ?? maxLines,
-      minLines: (view as AdTextView).minLines ?? minLines,
-      style: _copyStylesWithin(this.style, (view as AdTextView).style),
-      text: (view as AdTextView).text ?? text,
+      minLines: view.minLines ?? minLines,
+      style: _copyStylesWithin(this.style, view.style),
+      text: view.text ?? text,
     );
   }
 
-  TextStyle _copyStylesWithin(TextStyle a, TextStyle b) {
+  TextStyle? _copyStylesWithin(TextStyle? a, TextStyle? b) {
     if (a == null && b == null)
       return TextStyle(fontSize: 14, color: Colors.white);
     if (a == null) return b;
@@ -77,20 +77,18 @@ class AdTextView extends AdView {
   Map<String, dynamic> toJson() {
     final json = super.toJson();
     final defaultColor = () {
-      final b = WidgetsBinding.instance.window.platformBrightness;
+      final b = WidgetsBinding.instance!.window.platformBrightness;
       switch (b) {
         case Brightness.dark:
           return Colors.white;
-          break;
         default:
           return Colors.black;
-          break;
       }
     }();
     final style = _copyStylesWithin(
       TextStyle(fontSize: 14, color: defaultColor),
       this.style,
-    );
+    )!;
     json.addAll({
       'textColor': style.color?.toHex(),
       'textSize': style.fontSize,
@@ -105,22 +103,22 @@ class AdTextView extends AdView {
 }
 
 class AdButtonView extends AdTextView {
-  final Color pressColor;
+  final Color? pressColor;
 
   AdButtonView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    double width,
-    double height,
-    AdDecoration decoration,
-    double elevation,
-    Color elevationColor,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    double? width,
+    double? height,
+    AdDecoration? decoration,
+    double? elevation,
+    Color? elevationColor,
     this.pressColor,
     // text
-    int minLines,
-    int maxLines,
-    TextStyle textStyle,
-    String text,
+    int? minLines,
+    int? maxLines,
+    TextStyle? textStyle,
+    String? text,
   }) : super(
           viewType: 'button_view',
           padding: padding,
@@ -142,7 +140,7 @@ class AdButtonView extends AdTextView {
           text: text,
         );
 
-  AdButtonView copyWith(AdView view) {
+  AdButtonView copyWith(AdView? view) {
     if (view == null) return this;
     assert(view is AdButtonView);
     return AdButtonView(
@@ -154,10 +152,10 @@ class AdButtonView extends AdTextView {
       elevation: view.elevation ?? elevation,
       elevationColor: view.elevationColor ?? elevationColor,
       maxLines: (view as AdButtonView).maxLines ?? maxLines,
-      minLines: (view as AdButtonView).minLines ?? minLines,
-      textStyle: (view as AdButtonView).style ?? style,
-      text: (view as AdButtonView).text ?? text,
-      pressColor: (view as AdButtonView).pressColor ?? pressColor,
+      minLines: view.minLines ?? minLines,
+      textStyle: view.style ?? style,
+      text: view.text ?? text,
+      pressColor: view.pressColor ?? pressColor,
     );
   }
 

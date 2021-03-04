@@ -30,38 +30,38 @@ const double WRAP_CONTENT = -2;
 
 class AdView {
   /// The Decoration of the AdView.
-  final AdDecoration decoration;
+  final AdDecoration? decoration;
 
   /// The padding applied to the view. Default to none
-  final EdgeInsets padding;
+  final EdgeInsets? padding;
 
   /// The margin applied to the view. Default to none
-  final EdgeInsets margin;
+  final EdgeInsets? margin;
 
   /// The width of the view
-  final double width;
+  final double? width;
 
   /// The height of the view
-  final double height;
+  final double? height;
 
   /// The elevation of the view. It may not work in some views
   ///
   /// On android, it only has effect on version >= 21
-  final double elevation;
+  final double? elevation;
 
   /// The color of the elevation. It may not work in some views
   ///
   /// On android, it only has effect on version >= 21
-  final Color elevationColor;
+  final Color? elevationColor;
 
   /// The type of the view. Do not change this manually
   final String viewType;
 
   /// The id of the view. Used to recognize it
-  String id;
+  String? id;
 
   AdView({
-    @required this.viewType,
+    required this.viewType,
     this.padding = EdgeInsets.zero,
     this.margin = EdgeInsets.zero,
     this.width,
@@ -74,9 +74,8 @@ class AdView {
 
   /// Copy [this] with a new [AdView]
   AdView copyWith(AdView view) {
-    if (view == null) return this;
     return AdView(
-      viewType: view.viewType ?? viewType,
+      viewType: view.viewType,
       decoration: view.decoration ?? decoration,
       height: view.height ?? height,
       width: view.width ?? width,
@@ -89,10 +88,10 @@ class AdView {
   }
 
   Map<String, dynamic> toJson() {
-    double width = this.width;
+    double? width = this.width;
     if (width == double.infinity) width = MATCH_PARENT;
 
-    double height = this.height;
+    double? height = this.height;
     if (height == double.infinity) height = MATCH_PARENT;
 
     final json = <String, dynamic>{
@@ -116,19 +115,19 @@ class AdView {
       'elevation': elevation,
       'elevationColor': elevationColor?.toHex()
     };
-    if (decoration != null) json.addAll(decoration.toJson());
+    if (decoration != null) json.addAll(decoration!.toJson());
     return json;
   }
 }
 
 class AdImageView extends AdView {
   AdImageView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    double size,
-    AdDecoration decoration,
-    double elevation,
-    Color elevationColor,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    double? size,
+    AdDecoration? decoration,
+    double? elevation,
+    Color? elevationColor,
   }) : super(
           viewType: 'image_view',
           padding: padding,
@@ -141,7 +140,7 @@ class AdImageView extends AdView {
         );
 
   /// Copy [this] with a new [AdView]
-  AdImageView copyWith(AdView view) {
+  AdImageView copyWith(AdView? view) {
     if (view == null) return this;
     assert(view is AdImageView);
     return AdImageView(
@@ -150,20 +149,20 @@ class AdImageView extends AdView {
       margin: view.margin ?? margin,
       padding: view.padding ?? padding,
       elevation: view.elevation ?? elevation,
-      elevationColor: view.elevationColor ?? elevation,
+      elevationColor: view.elevationColor ?? elevation as Color?,
     );
   }
 }
 
 class AdMediaView extends AdView {
   AdMediaView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    AdDecoration decoration,
-    double width,
-    double height,
-    double elevation,
-    Color elevationColor,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    AdDecoration? decoration,
+    double? width,
+    double? height,
+    double? elevation,
+    Color? elevationColor,
   }) : super(
           viewType: 'media_view',
           padding: padding,
@@ -176,7 +175,7 @@ class AdMediaView extends AdView {
         );
 
   /// Copy [this] with a new [AdView]
-  AdMediaView copyWith(AdView view) {
+  AdMediaView copyWith(AdView? view) {
     if (view == null) return this;
     return AdMediaView(
       decoration: view.decoration ?? decoration,
@@ -191,16 +190,16 @@ class AdMediaView extends AdView {
 }
 
 class AdRatingBarView extends AdView {
-  final double stepSize;
+  final double? stepSize;
 
   AdRatingBarView({
-    EdgeInsets padding,
-    EdgeInsets margin,
-    AdDecoration decoration,
-    double width,
-    double height,
-    double elevation,
-    Color elevationColor,
+    EdgeInsets? padding,
+    EdgeInsets? margin,
+    AdDecoration? decoration,
+    double? width,
+    double? height,
+    double? elevation,
+    Color? elevationColor,
     // rating
     this.stepSize,
   }) : super(
@@ -215,7 +214,7 @@ class AdRatingBarView extends AdView {
         );
 
   /// Copy [this] with a new [AdRatingBarView]
-  AdRatingBarView copyWith(AdView view) {
+  AdRatingBarView copyWith(AdView? view) {
     if (view == null) return this;
     assert(view is AdRatingBarView);
     return AdRatingBarView(

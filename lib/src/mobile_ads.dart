@@ -20,7 +20,7 @@ class MobileAds {
   MobileAds._();
 
   // Unit ids
-  static String nativeAdUnitId;
+  static String? nativeAdUnitId;
   static String get nativeAdTestUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/2247696110'
       : 'ca-app-pub-3940256099942544/3986624511';
@@ -28,12 +28,12 @@ class MobileAds {
       ? 'ca-app-pub-3940256099942544/1044960115'
       : 'ca-app-pub-3940256099942544/2521693316';
 
-  static String bannerAdUnitId;
+  static String? bannerAdUnitId;
   static String get bannerAdTestUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/6300978111'
       : 'ca-app-pub-3940256099942544/2934735716';
 
-  static String interstitialAdUnitId;
+  static String? interstitialAdUnitId;
   static String get interstitialAdTestUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/1033173712'
       : 'ca-app-pub-3940256099942544/4411468910';
@@ -41,12 +41,12 @@ class MobileAds {
       ? 'ca-app-pub-3940256099942544/8691691433'
       : 'ca-app-pub-3940256099942544/5135589807';
 
-  static String rewardedAdUnitId;
+  static String? rewardedAdUnitId;
   static String get rewardedAdTestUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/5224354917'
       : 'ca-app-pub-3940256099942544/1712485313';
 
-  static String appOpenAdUnitId;
+  static String? appOpenAdUnitId;
   static String get appOpenAdTestUnitId => Platform.isAndroid
       ? 'ca-app-pub-3940256099942544/3419835294'
       : 'ca-app-pub-3940256099942544/5662855259';
@@ -75,9 +75,9 @@ class MobileAds {
   ///
   /// For more info on hybrid composition, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enabling-hybrid-composition-for-android)
   static bool get useHybridComposition => _useHybridComposition;
-  static set useHybridComposition(bool use) {
-    assert(use != null);
-    _useHybridComposition = use ?? useHybridComposition;
+  static set useHybridComposition(bool? use) {
+    use ??= false;
+    _useHybridComposition = use;
   }
 
   static int _version = 0;
@@ -103,12 +103,12 @@ class MobileAds {
   /// You can find a complete example [here](https://github.com/bdlukaa/native_admob_flutter/blob/master/example/lib/main.dart)\
   /// For more info on intialization, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#initialize-the-mobile-ads-sdk)
   static Future<void> initialize({
-    String nativeAdUnitId,
-    String bannerAdUnitId,
-    String interstitialAdUnitId,
-    String rewardedAdUnitId,
-    String appOpenAdUnitId,
-    bool useHybridComposition,
+    String? nativeAdUnitId,
+    String? bannerAdUnitId,
+    String? interstitialAdUnitId,
+    String? rewardedAdUnitId,
+    String? appOpenAdUnitId,
+    bool? useHybridComposition,
   }) async {
     assertPlatformIsSupported();
     WidgetsFlutterBinding.ensureInitialized();
@@ -143,7 +143,7 @@ class MobileAds {
     _debugCheckIsTestId(MobileAds.appOpenAdUnitId, [appOpenAdTestUnitId]);
 
     // Make sure the version is supported
-    _version = await _pluginChannel.invokeMethod<int>('initialize');
+    _version = (await _pluginChannel.invokeMethod<int>('initialize'))!;
     assertVersionIsSupported(false);
     if (Platform.isAndroid) {
       // hybrid composition is enabled in android 19 and can't be disabled
@@ -168,10 +168,8 @@ class MobileAds {
   /// Check if the test id that is being used is for testing or not.
   ///
   /// [kReleaseMode] and [kDebugMode] are considered as test mode
-  static void _debugCheckIsTestId(String id, List<String> testIds) {
-    assert(id != null);
-    assert(testIds != null);
-    if (!testIds.contains(id) && !kReleaseMode)
+  static void _debugCheckIsTestId(String? id, List<String> testIds) {
+    if (!testIds.contains(id ?? '') && !kReleaseMode)
       print(
         'It is highly recommended to use test ads in for testing instead of production ads'
         'Failure to do so can lead in to the suspension of your account',
@@ -193,7 +191,7 @@ class MobileAds {
   /// Returns `true` if this device will receive test ads.
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enable-test-devices)
-  static Future<bool> isTestDevice() {
+  static Future<bool?> isTestDevice() {
     return _pluginChannel.invokeMethod<bool>('isTestDevice');
   }
 
@@ -267,13 +265,12 @@ class MobileAds {
   /// MobileAds.setMaxAdContentRating(RATING_MA);
   /// ```
   static Future<void> setMaxAdContentRating(int maxRating) async {
-    assert(maxRating != null, 'Max rating must not be null');
     assert(
       [RATING_G, RATING_PG, RATING_T, RATING_MA].contains(maxRating),
       'The provided int is not avaiable. Avaiable values: $RATING_G, $RATING_PG, $RATING_T, $RATING_MA',
     );
     await _pluginChannel.invokeMethod('setMaxAdContentRating', {
-      'maxRating': maxRating ?? 0,
+      'maxRating': maxRating,
     });
   }
 
@@ -294,12 +291,11 @@ class MobileAds {
   /// MobileAds.setAppVolume(0.5);
   /// ```
   static Future<void> setAppVolume(double volume) {
-    assert(volume != null, 'The volume can NOT be null');
     assert(
       volume >= 0 && volume <= 1,
       'The volume must be in bettwen of 0 and 1',
     );
-    return _pluginChannel.invokeMethod('setAppVolume', {'volume': volume ?? 1});
+    return _pluginChannel.invokeMethod('setAppVolume', {'volume': volume});
   }
 
   /// To inform the SDK that the app volume has been muted, use the `setAppMuted()` method:
@@ -308,7 +304,7 @@ class MobileAds {
   /// volume for the Google Mobile Ads SDK is set to 1 (the current device volume).
   static Future<void> setAppMuted([bool muted = true]) {
     return _pluginChannel.invokeMethod('setAppMuted', {
-      'muted': muted ?? true,
+      'muted': muted,
     });
   }
 

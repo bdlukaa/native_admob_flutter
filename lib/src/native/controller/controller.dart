@@ -109,12 +109,12 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
   static String get videoTestUnitId => MobileAds.nativeAdVideoTestUnitId;
 
-  MediaContent _mediaContent;
+  MediaContent? _mediaContent;
 
   /// Provides media content information.
   ///
   /// This will be null until load is complete
-  MediaContent get mediaContent => _mediaContent;
+  MediaContent? get mediaContent => _mediaContent;
 
   List<String> _muteThisAdReasons = [];
 
@@ -163,7 +163,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-events)
-  Stream<Map<NativeAdEvent, dynamic>> get onEvent => super.onEvent;
+  Stream<Map<NativeAdEvent, dynamic>> get onEvent =>
+      super.onEvent as Stream<Map<NativeAdEvent, dynamic>>;
 
   final _onVideoEvent =
       StreamController<Map<AdVideoEvent, dynamic>>.broadcast();
@@ -211,7 +212,15 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   bool get isLoaded => _loaded;
 
   /// Creates a new native ad controller
-  NativeAdController({Duration loadTimeout}) : super(loadTimeout: loadTimeout);
+  NativeAdController({
+    String? unitId,
+    Duration loadTimeout = kDefaultLoadTimeout,
+    Duration timeout = kDefaultAdTimeout,
+  }) : super(
+          loadTimeout: loadTimeout,
+          timeout: timeout,
+          unitId: unitId,
+        );
 
   /// Initialize the controller. This can be called only by the controller
   void init() {
@@ -283,6 +292,24 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
         break;
       case 'onAdLoaded':
         _loaded = true;
+        final arguments = call.arguments! as Map;
+        arguments.forEach((key, value) {
+          final args = value;
+          switch (key) {
+            case 'mediaContent':
+              _mediaContent = MediaContent.fromJson(args);
+              break;
+            case 'muteThisAdInfo':
+              _muteThisAdReasons =
+                  (args['muteThisAdReasons'] as List).cast<String>();
+              _customMuteThisAdEnabled =
+                  args['isCustomMuteThisAdEnabled'] as bool;
+              return;
+            default:
+              print(key);
+              break;
+          }
+        });
         onEventController.add({NativeAdEvent.loaded: null});
         break;
       case 'onAdMuted':
@@ -293,24 +320,6 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
         onEventController.add({NativeAdEvent.undefined: null});
         break;
     }
-
-    if (call.arguments != null && call.arguments is Map) {
-      (call.arguments as Map).forEach((key, value) {
-        switch (key) {
-          case 'muteThisAdInfo':
-            final Map args = (value ?? {}) as Map;
-            _muteThisAdReasons = args?.get('muteThisAdReasons') ?? [];
-            _customMuteThisAdEnabled =
-                args?.get('isCustomMuteThisAdEnabled') ?? false;
-            break;
-          case 'mediaContent':
-            _mediaContent = MediaContent.fromJson(value);
-            break;
-          default:
-            break;
-        }
-      });
-    }
   }
 
   /// Load the ad. If the controller is disposed or the Mobile Ads SDK
@@ -319,24 +328,24 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#reloading-the-ad)
   Future<bool> load({
     /// The ad unit id. If null, uses [MobileAds.nativeAdUnitId]
-    String unitId,
-    NativeAdOptions options,
+    String? unitId,
+    NativeAdOptions? options,
 
     /// Force to load an ad even if another is already avaiable
     bool force = false,
 
     /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
-    Duration timeout,
+    Duration? timeout,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    _loaded = await channel.invokeMethod<bool>('loadAd', {
+    _loaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     }).timeout(
-      timeout ?? this.loadTimeout ?? kDefaultLoadTimeout,
+      timeout ?? this.loadTimeout,
       onTimeout: () {
         if (!onEventController.isClosed)
           onEventController.add({
@@ -344,7 +353,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
           });
         return false;
       },
-    );
+    ))!;
     return _loaded;
   }
 
@@ -353,17 +362,10 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Use `null` to Mute This Ad with default reason.
   ///
   /// Fore more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad)
-  Future<void> muteThisAd([int reason]) {
+  Future<void> muteThisAd([int? reason]) {
     ensureAdNotDisposed();
     if (reason != null)
       assert(!reason.isNegative, 'You must specify a valid reason');
     return channel.invokeMethod('muteAd', {'reason': reason});
-  }
-}
-
-extension _map<K, V> on Map<K, V> {
-  V get(K key) {
-    if (containsKey(key)) return this[key];
-    return null;
   }
 }

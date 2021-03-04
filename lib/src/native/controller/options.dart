@@ -10,10 +10,10 @@ const int MEDIA_ASPECT_RATIO_SQUARE = 4;
 
 class NativeAdOptions {
   NativeAdOptions({
-    bool requestCustomMuteThisAd,
-    int adChoichesPlacement,
-    int mediaAspectRatio,
-    VideoOptions videoOptions,
+    bool? requestCustomMuteThisAd,
+    int? adChoichesPlacement,
+    int? mediaAspectRatio,
+    VideoOptions? videoOptions,
   }) {
     this.requestCustomMuteThisAd = requestCustomMuteThisAd;
     this.adChoicesPlacement = adChoicesPlacement;
@@ -22,7 +22,7 @@ class NativeAdOptions {
   }
   bool _requestCustomMuteThisAd = false;
   bool get requestCustomMuteThisAd => _requestCustomMuteThisAd;
-  set requestCustomMuteThisAd(bool request) =>
+  set requestCustomMuteThisAd(bool? request) =>
       _requestCustomMuteThisAd = request ?? false;
 
   int _adChoichesPlacement = ADCHOICES_TOP_RIGHT;
@@ -37,7 +37,6 @@ class NativeAdOptions {
   /// 4. `ADCHOICES_BOTTOM_LEFT`
   int get adChoicesPlacement => _adChoichesPlacement;
   set adChoicesPlacement(int value) {
-    if (value != null)
       assert(
         [
           ADCHOICES_TOP_LEFT,
@@ -47,7 +46,7 @@ class NativeAdOptions {
         ].contains(value),
         'The entered value is not accepted. Accepted values: 0, 1, 2, 3',
       );
-    _adChoichesPlacement = value ?? 1;
+    _adChoichesPlacement = value;
   }
 
   int _mediaAspectRatio = MEDIA_ASPECT_RATIO_LANDSCAPE;
@@ -61,7 +60,7 @@ class NativeAdOptions {
   /// 3. `NATIVE_MEDIA_ASPECT_RATIO_SQUARE`
   /// 4. `NATIVE_MEDIA_ASPECT_RATIO_ANY`
   int get mediaAspectRatio => _mediaAspectRatio;
-  set mediaAspectRatio(int aspect) {
+  set mediaAspectRatio(int? aspect) {
     if (aspect != null) {
       assert(
         [
@@ -79,7 +78,6 @@ class NativeAdOptions {
   VideoOptions _videoOptions = VideoOptions();
   VideoOptions get videoOptions => _videoOptions;
   set videoOptions(VideoOptions options) {
-    assert(options != null, 'The video options can NOT be null');
     _videoOptions = _videoOptions.copyWith(options);
   }
 
@@ -87,10 +85,10 @@ class NativeAdOptions {
     return {
       'returnUrlsForImageAssets': false,
       'requestMultipleImages': false,
-      'requestCustomMuteThisAd': requestCustomMuteThisAd ?? false,
-      'adChoicesPlacement': adChoicesPlacement ?? ADCHOICES_TOP_RIGHT,
-      'mediaAspectRatio': mediaAspectRatio ?? MEDIA_ASPECT_RATIO_LANDSCAPE,
-      'videoOptions': (videoOptions ?? VideoOptions()).toJson(),
+      'requestCustomMuteThisAd': requestCustomMuteThisAd,
+      'adChoicesPlacement': adChoicesPlacement,
+      'mediaAspectRatio': mediaAspectRatio,
+      'videoOptions': videoOptions.toJson(),
     };
   }
 
@@ -99,19 +97,15 @@ class NativeAdOptions {
 }
 
 class VideoOptions {
-  bool _startMuted = true;
-
   /// Whether the video start muted or not. Defaults to `true`
-  bool get startMuted => _startMuted;
-  set startMuted(bool start) => _startMuted = start ?? true;
+  bool startMuted = true;
 
   VideoOptions copyWith(VideoOptions old) {
-    if (old == null) return this;
-    return VideoOptions()..startMuted = old.startMuted ?? startMuted;
+    return VideoOptions()..startMuted = old.startMuted;
   }
 
   Map<String, dynamic> toJson() {
-    return {'startMuted': startMuted ?? true};
+    return {'startMuted': startMuted};
   }
 
   @override

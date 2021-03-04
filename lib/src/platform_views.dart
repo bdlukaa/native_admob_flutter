@@ -8,37 +8,31 @@ import 'mobile_ads.dart';
 
 const kDefaultAndroidViewDelay = Duration(milliseconds: 250);
 
-// TODO(bdlukaa): Fix the BannerAd and NativeAd controller
-// When the controller changes, it uses the same controller unless
-// the widget is re-introduced to the widget tree
 class AndroidPlatformView extends StatefulWidget {
   AndroidPlatformView({
-    Key key,
-    @required this.params,
-    @required this.viewType,
-    bool useHybridComposition,
+    Key? key,
+    required this.params,
+    required this.viewType,
+    bool? useHybridComposition,
     this.onCreated,
     this.delayToShow,
-  })  : assert(params != null),
-        assert(viewType != null),
-        this.useHybridComposition =
+  })  : this.useHybridComposition =
             useHybridComposition ?? MobileAds.useHybridComposition,
         super(key: key);
 
-  final PlatformViewCreatedCallback onCreated;
+  final PlatformViewCreatedCallback? onCreated;
   final String viewType;
   final bool useHybridComposition;
   final Map<String, dynamic> params;
 
-  final Duration delayToShow;
+  final Duration? delayToShow;
 
   @override
   _AndroidPlatformViewState createState() => _AndroidPlatformViewState();
 }
 
-// TODO(bdlukaa): Update the controller when changed
 class _AndroidPlatformViewState extends State<AndroidPlatformView> {
-  bool visible;
+  late bool visible;
 
   @override
   void initState() {
@@ -79,7 +73,7 @@ class _AndroidPlatformViewState extends State<AndroidPlatformView> {
         viewType: widget.viewType,
         surfaceFactory: (context, controller) {
           return AndroidViewSurface(
-            controller: controller,
+            controller: controller as AndroidViewController,
             gestureRecognizers: gestures,
             hitTestBehavior: PlatformViewHitTestBehavior.opaque,
           );

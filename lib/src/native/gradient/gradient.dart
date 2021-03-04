@@ -18,13 +18,13 @@ class AdGradient {
   final String type;
 
   /// The colors of the gradients. There must be at least two colors
-  final List<Color> colors;
+  final List<Color>? colors;
 
   /// The orientation of the gradient. Default to `left to right`
-  final AdGradientOrientation orientation;
+  final AdGradientOrientation? orientation;
 
   /// The radius used by [AdRadialGradient]
-  final double radialGradientRadius;
+  final double? radialGradientRadius;
 
   /// The center point of the gadient used by [AdRadialGradient].
   ///
@@ -35,13 +35,13 @@ class AdGradient {
   final Alignment gradientCenter;
 
   AdGradient({
-    @required this.type,
+    required this.type,
     this.colors,
     this.orientation,
     this.gradientCenter = const Alignment(0.5, 0.5),
     this.radialGradientRadius,
   })  : assert(
-          type != null && [LINEAR, RADIAL].contains(type),
+          [LINEAR, RADIAL].contains(type),
           'You must specify a valid gradient type. It can be: $LINEAR or $RADIAL',
         ),
         assert(
@@ -51,12 +51,12 @@ class AdGradient {
 
   Map<String, dynamic> toJson() {
     return {
-      'type': type ?? LINEAR,
-      'colors': colors?.map<String>((e) => e?.toHex())?.toList(),
+      'type': type,
+      'colors': colors?.map<String>((e) => e.toHex()).toList(),
       'orientation':
           _adGradientName(orientation ?? AdGradientOrientation.left_right),
-      'radialGradientCenterX': gradientCenter?.x ?? 0.0,
-      'radialGradientCenterY': gradientCenter?.y ?? 0.0,
+      'radialGradientCenterX': gradientCenter.x,
+      'radialGradientCenterY': gradientCenter.y,
       'radialGradientRadius': radialGradientRadius ?? 1000.0,
     };
   }

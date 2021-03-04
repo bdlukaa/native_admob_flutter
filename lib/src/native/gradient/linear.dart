@@ -9,8 +9,8 @@ class AdLinearGradient extends AdGradient {
   /// - You must specify at least two colors.
   /// - The default orientation is `left_right` (left to right)
   AdLinearGradient({
-    AdGradientOrientation orientation,
-    @required List<Color> colors,
+    AdGradientOrientation? orientation,
+    required List<Color> colors,
   }) : super(
           type: AdGradient.LINEAR,
           colors: colors,
@@ -47,5 +47,5 @@ enum AdGradientOrientation {
 
 /// Gets the name of the gradient that will be used by the platform
 String _adGradientName(AdGradientOrientation o) {
-  return o?.toString()?.replaceAll('AdGradientOrientation.', '');
+  return o.toString().replaceAll('AdGradientOrientation.', '');
 }

@@ -65,7 +65,7 @@ void assertVersionIsSupported([bool usePlatformView = true]) {
   }
 }
 
-bool debugCheckAdWillReload(bool isLoaded, bool force) {
+bool debugCheckAdWillReload([bool? isLoaded, bool? force]) {
   isLoaded ??= false;
   force ??= false;
   if (isLoaded && !force) {
@@ -107,17 +107,17 @@ class AdError {
   /// - Internal error (Something happened internally; for instance, an invalid response was received from the ad server): 0
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Ad-error-codes)
-  final int code;
+  final int? code;
 
   /// Gets an error message. For example "Account not approved yet".
   /// See [this](https://support.google.com/admob/answer/9905175) for explanations of
   /// common errors
-  final String message;
+  final String? message;
 
   /// Creates a new AdError instance
   const AdError({
-    @required this.code,
-    @required this.message,
+    required this.code,
+    required this.message,
   });
 
   /// Retrieve an [AdError] from a json
@@ -151,7 +151,6 @@ mixin AttachableMixin {
   /// You should not call this function
   @mustCallSuper
   void attach([bool attach = true]) {
-    assert(attach != null);
     if (attach) _assertControllerIsNotAttached();
     _attached = attach;
   }
@@ -167,6 +166,7 @@ mixin AttachableMixin {
 }
 
 const Duration kDefaultLoadTimeout = Duration(seconds: 30);
+const Duration kDefaultAdTimeout = Duration(minutes: 30);
 
 abstract class LoadShowAd<T> with UniqueKeyMixin {
   @protected
@@ -183,7 +183,34 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
 
   /// Channel to communicate with controller
   // @protected
-  MethodChannel channel;
+  late MethodChannel channel;
+
+  bool _loaded = false;
+
+  /// Check if the ad is loaded
+  bool get isLoaded => _loaded;
+
+  /// The time the ad can be kept loaded.
+  /// 
+  /// If null, defaults to 30 minutes
+  final Duration timeout;
+
+  @protected
+  DateTime? lastLoadedTime;
+
+  /// Check if the time is available. If ad is not loaded, returns false
+  /// If it has been the time of [timeout] since the last load, returns false
+  bool get isAvailable {
+    if (!isLoaded || lastLoadedTime == null) return false;
+    final difference = lastLoadedTime!.difference(DateTime.now());
+    if (difference > timeout) return false;
+    return true;
+  }
+
+  @protected
+  set isLoaded(bool loaded) {
+    _loaded = loaded;
+  }
 
   bool _disposed = false;
 
@@ -192,15 +219,19 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   bool get isDisposed => _disposed;
 
   /// The unit id used on this ad. Can be null
-  String unitId;
+  final String? unitId;
 
   /// The ad will stop loading after a specified time.
   ///
-  /// If `null`, defaults to `Duration(seconds: 30)`
-  Duration loadTimeout;
+  /// If `null`, defaults to 30 seconds
+  final Duration loadTimeout;
 
   @mustCallSuper
-  LoadShowAd({this.unitId, this.loadTimeout}) {
+  LoadShowAd({
+    this.unitId,
+    this.loadTimeout = kDefaultLoadTimeout,
+    this.timeout = kDefaultAdTimeout,
+  }) {
     channel = MethodChannel(id);
     init();
   }
@@ -223,4 +254,10 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   void ensureAdNotDisposed() {
     assert(!_disposed, 'You can NOT use a disposed ad');
   }
+
+  @protected
+  void ensureAdAvailable() {
+    assert(isAvailable, 'You can only use an available ad.');
+  }
+
 }
