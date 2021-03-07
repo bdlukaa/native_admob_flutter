@@ -29,7 +29,7 @@ English | [Português](README-PT.md)
 
 To get started with Native Ads for Flutter, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki)
 
-✔️ Native Ads\
+✔️ Native Ads (Android-only)\
 ✔️ Banner Ads\
 ✔️ Interstitial Ads\
 ✔️ Rewarded Ads\

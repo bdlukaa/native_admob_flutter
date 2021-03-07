@@ -2,12 +2,12 @@ import Flutter
 import GoogleMobileAds
 
 class NativeAdController: NSObject,GADNativeAdLoaderDelegate {
-
+    
     var nativeAdChanged: ((GADNativeAd?) -> Void)? = nil
     var nativeAdUpdateRequested: ((Dictionary<String, Any>?, GADNativeAd?) -> Void)? = nil
     var nativeAd: GADNativeAd? = nil
     var adLoader: GADAdLoader!
-
+    
     
     let id: String
     let channel: FlutterMethodChannel
@@ -25,7 +25,7 @@ class NativeAdController: NSObject,GADNativeAdLoaderDelegate {
     
     private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         let params = call.arguments as? [String: Any]
-
+        
         switch call.method {
         case "loadAd" :
             let unitId: String = params?["unitId"] as! String
@@ -53,30 +53,34 @@ class NativeAdController: NSObject,GADNativeAdLoaderDelegate {
     
     private func loadAd(unitId: String, options: Dictionary<String, Any>, result: FlutterResult) {
         self.channel.invokeMethod("loading", arguments: nil)
-            // ad options
+        // ad options
         let adImageAdLoaderOptions = GADNativeAdImageAdLoaderOptions()
         adImageAdLoaderOptions.shouldRequestMultipleImages=options["requestMultipleImages"] as! Bool
         let adViewAdOptions = GADNativeAdViewAdOptions()
-        adViewAdOptions.preferredAdChoicesPosition=GADAdChoicesPosition(rawValue: options["adChoicesPlacement"] as! Int)!
+        adViewAdOptions.preferredAdChoicesPosition=adChoiceMapper(index: options["adChoicesPlacement"] as! Int)
         let adVideoOptions = GADVideoOptions()
         adVideoOptions.startMuted=(options["videoOptions"] as! Dictionary<String, Any>)["startMuted"] as! Bool
         let adMediaAdLoaderOptions = GADNativeAdMediaAdLoaderOptions()
         adMediaAdLoaderOptions.mediaAspectRatio=GADMediaAspectRatio(rawValue: options["mediaAspectRatio"] as! Int)!
         let adMuteThisAdLoaderOptions=GADNativeMuteThisAdLoaderOptions()
         adMuteThisAdLoaderOptions.customMuteThisAdRequested=options["requestCustomMuteThisAd"] as! Bool
-
+        
         
         adLoader = GADAdLoader(adUnitID: unitId, rootViewController: nil, adTypes: [ GADAdLoaderAdType.native ], options: [adImageAdLoaderOptions,adViewAdOptions,adVideoOptions,adMediaAdLoaderOptions,adMuteThisAdLoaderOptions
         ])
         adLoader.delegate=self
-        adLoader.load(GADRequest())
+        let request = GADRequest()
+        if #available(iOS 13.0, *) {
+            request.scene = UIApplication.shared.keyWindow?.windowScene
         }
+        adLoader.load(request)
+    }
     
     func adLoader(_ adLoader: GADAdLoader, didReceive nativeAd: GADNativeAd) {
         nativeAd.rootViewController=UIApplication.shared.keyWindow?.rootViewController
         if(self.nativeAdChanged != nil){ self.nativeAdChanged!(nativeAd)}
         let mediaContent = nativeAd.mediaContent
-
+        
         self.channel.invokeMethod("onAdLoaded", arguments: [
             "muteThisAdInfo" :[
                 "muteThisAdReasons" : nativeAd.muteThisAdReasons?.map{
@@ -98,6 +102,23 @@ class NativeAdController: NSObject,GADNativeAdLoaderDelegate {
         self.channel.invokeMethod("onAdFailedToLoad", arguments: error.localizedDescription)
     }
     
-   
+    func adChoiceMapper(index : Int) -> GADAdChoicesPosition{
+        
+        switch index {
+        case 0:
+            return GADAdChoicesPosition.topLeftCorner
+        case 1:
+            return GADAdChoicesPosition.topRightCorner
+        case 2:
+            return GADAdChoicesPosition.bottomRightCorner
+        case 3:
+            return GADAdChoicesPosition.bottomLeftCorner
+        default:
+            return GADAdChoicesPosition.topLeftCorner
+            
+        }
+    }
+    
+    
     
 }

@@ -37,15 +37,15 @@ class NativeAdOptions {
   /// 4. `ADCHOICES_BOTTOM_LEFT`
   int get adChoicesPlacement => _adChoichesPlacement;
   set adChoicesPlacement(int value) {
-      assert(
-        [
-          ADCHOICES_TOP_LEFT,
-          ADCHOICES_TOP_RIGHT,
-          ADCHOICES_BOTTOM_RIGHT,
-          ADCHOICES_BOTTOM_LEFT,
-        ].contains(value),
-        'The entered value is not accepted. Accepted values: 0, 1, 2, 3',
-      );
+    assert(
+      [
+        ADCHOICES_TOP_LEFT,
+        ADCHOICES_TOP_RIGHT,
+        ADCHOICES_BOTTOM_RIGHT,
+        ADCHOICES_BOTTOM_LEFT,
+      ].contains(value),
+      'The entered value is not accepted. Accepted values: 0, 1, 2, 3',
+    );
     _adChoichesPlacement = value;
   }
 

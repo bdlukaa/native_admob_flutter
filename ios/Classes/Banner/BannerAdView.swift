@@ -5,34 +5,50 @@ class BannerAdView : NSObject,FlutterPlatformView {
     
     var data:Dictionary<String, Any>?
     var controller: BannerAdController
-    private let channel: FlutterMethodChannel
     private let messenger: FlutterBinaryMessenger
-
-        private func getAdSize(width: Double)-> GADAdSize {
-            return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
-        }
+    var result : FlutterResult?=nil
+    private var adSize: GADAdSize = kGADAdSizeBanner
+    
+    private func getAdSize(width: Float)-> GADAdSize {
+        return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
+    }
     
     init(data: Dictionary<String, Any>?, messenger: FlutterBinaryMessenger) {
         self.data=data
         self.controller = BannerAdControllerManager.shared.getController(forID: data?["controllerId"] as? String)!
+        self.result=controller.result
         self.messenger = messenger
-        channel = FlutterMethodChannel(name: "banner_admob", binaryMessenger: messenger)
         super.init()
+        if let width = data?["size_width"] as! Float?, width != -1{
+            self.adSize=getAdSize(width: width)
+        }
+        self.controller.loadRequested=load
         generateAdView(data:data)
         load()
     }
     
     private func load() {
-        controller.bannerView.delegate=self
-        controller.bannerView.load(GADRequest())
+        let request = GADRequest()
+        if #available(iOS 13.0, *) {
+            request.scene = UIApplication.shared.keyWindow?.windowScene
         }
+        controller.bannerView.load(request)
+    }
     
     private func generateAdView(data:Dictionary<String, Any>?) {
-        controller.bannerView = GADBannerView(adSize: kGADAdSizeBanner)
+        controller.bannerView = GADBannerView()
+        if let width = Int(data?["size_width"] as! Float) as Int?,
+           let height = Int(data?["size_height"] as! Float) as Int?, height != -1, width != -1{
+            self.controller.bannerView.adSize = GADAdSizeFromCGSize(CGSize(width: width, height: height))
+        }
+        else{
+            self.controller.bannerView.adSize = adSize
+        }
         controller.bannerView.rootViewController=UIApplication.shared.keyWindow?.rootViewController
         controller.bannerView.adUnitID = (data?["unitId"] as! String)
-        }
-
+        controller.bannerView.delegate=self
+    }
+    
     func view() -> UIView {
         return controller.bannerView
     }
@@ -40,27 +56,24 @@ class BannerAdView : NSObject,FlutterPlatformView {
 }
 
 extension BannerAdView : GADBannerViewDelegate {
-    func adViewDidReceiveAd(_ bannerView: GADBannerView) {
-        channel.invokeMethod("onAdLoaded", arguments: controller.bannerView.adSize.size.height)
+    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+        controller.channel.invokeMethod("onAdLoaded", arguments: controller.bannerView.adSize.size.height)
+        result?(true)
     }
     
-    private func adView(_ bannerView: GADBannerView, didFailToReceiveAdWithError error: NSError) {
-        channel.invokeMethod("onAdFailedToLoad", arguments: [
+    private func bannerView(bannerView: GADBannerView, didFailToReceiveAdWithError error: NSError) {
+        controller.channel.invokeMethod("onAdFailedToLoad", arguments: [
             "errorCode": error.code,
-            "error": error.localizedDescription
+            "message": error.localizedDescription
         ])
+        result?(false)
     }
     
-    private func adViewWillPresentScreen(_ bannerView: GADBannerView) {
-        channel.invokeMethod("onAdClicked", arguments: nil)
+    func bannerViewDidRecordImpression(_ bannerView: GADBannerView){
+        controller.channel.invokeMethod("onAdImpression", arguments: nil)
     }
     
-
-    func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
-        channel.invokeMethod("leftApplication", arguments: nil)
-    }
-    
-    internal func bannerViewDidDismissScreen(_ bannerView: GADBannerView) {
-        channel.invokeMethod("closed", arguments: nil)
+    func bannerViewWillPresentScreen(_ bannerView: GADBannerView) {
+        controller.channel.invokeMethod("onAdClicked", arguments: nil)
     }
 }

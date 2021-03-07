@@ -308,6 +308,70 @@ class MobileAds {
     });
   }
 
+  /// Display App Tracking Transparency authorization request on iOS. This
+  /// has effect only on iOS
+  ///
+  /// To display the App Tracking Transparency authorization request
+  /// for accessing the IDFA, update your `Info.plist` to add the
+  /// `NSUserTrackingUsageDescription` key with a custom message describing
+  /// your usage. Here is an example description text:
+  ///
+  /// ```
+  /// <key>NSUserTrackingUsageDescription</key>
+  /// <string>This identifier will be used to deliver personalized ads to you.</string>
+  /// ```
+  ///
+  /// ![](https://developers.google.com/admob/images/idfa/editor.png)
+  ///
+  /// The usage description appears in the App Tracking Transparency dialog box:
+  /// ![](https://developers.google.com/admob/images/idfa/att-iOS.png)
+  ///
+  /// [Learn more](https://developers.google.com/admob/ios/ios14#request)
+  static Future<TrackingAuthorizationStatus>
+      requestTrackingAuthorization() async {
+    if (Platform.isIOS) {
+      final result = await _pluginChannel
+          .invokeMethod<int>('requestTrackingAuthorization');
+      switch (result) {
+        case 0:
+          return TrackingAuthorizationStatus.notDetermined;
+        case 1:
+          return TrackingAuthorizationStatus.restricted;
+        case 2:
+          return TrackingAuthorizationStatus.denied;
+        case 3:
+          return TrackingAuthorizationStatus.authorized;
+      }
+    }
+    return TrackingAuthorizationStatus.notDetermined;
+  }
+
   static const _pluginChannel = const MethodChannel('native_admob_flutter');
   static MethodChannel get pluginChannel => _pluginChannel;
+}
+
+enum TrackingAuthorizationStatus {
+  /// The value returned if a user has not yet received a request to authorize
+  /// access to app-related data that can be used for tracking the user or the device.
+  ///
+  /// [Learn more](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus/notdetermined)
+  notDetermined,
+
+  /// The value returned if authorization to access app-related data that can be
+  /// used for tracking the user or the device is restricted.
+  ///
+  /// [Learn more](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus/restricted)
+  restricted,
+
+  /// The value returned if the user denies authorization to access app-related
+  /// data that can be used for tracking the user or the device.
+  ///
+  /// [Denied](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus/denied)
+  denied,
+
+  /// The value returned if the user authorizes access to app-related data
+  /// that can be used for tracking the user or the device.
+  ///
+  /// [Authorized](https://developer.apple.com/documentation/apptrackingtransparency/attrackingmanager/authorizationstatus/authorized)
+  authorized,
 }

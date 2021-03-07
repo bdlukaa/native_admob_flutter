@@ -7,7 +7,7 @@
 
      let id: String
      let channel: FlutterMethodChannel
-     var result : FlutterResult?=nil
+    var result : FlutterResult?=nil
 
 
      init(id: String, channel: FlutterMethodChannel) {
@@ -27,10 +27,17 @@
             channel.invokeMethod("loading", arguments: nil)
             let unitId: String = params?["unitId"] as! String
             let orientation: Int = params?["orientation"] as! Int
-            GADAppOpenAd.load(withAdUnitID: unitId, request: GADRequest(), orientation: UIInterfaceOrientation(rawValue: orientation)!) { (ad : GADAppOpenAd?, error:Error?) in
+            let request = GADRequest()
+            if #available(iOS 13.0, *) {
+                request.scene = UIApplication.shared.keyWindow?.windowScene
+            }
+            GADAppOpenAd.load(withAdUnitID: unitId, request: request, orientation: UIInterfaceOrientation(rawValue: orientation)!) { (ad : GADAppOpenAd?, error:Error?) in
                 if error != nil {
                     self.appOpenAd = nil
-                    self.channel.invokeMethod("onAppOpenAdFailedToLoad", arguments: error.debugDescription)
+                    self.channel.invokeMethod("onAppOpenAdFailedToLoad", arguments: [
+                        "errorCode": (error! as NSError).code,
+                        "message": (error! as NSError).localizedDescription
+                    ])
                     result(false)
                 }
                 else{

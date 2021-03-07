@@ -26,10 +26,17 @@ class InterstitialAdController: NSObject,GADFullScreenContentDelegate {
         case "loadAd":
             channel.invokeMethod("loading", arguments: nil)
             let unitId: String = params?["unitId"] as! String
-            GADInterstitialAd.load(withAdUnitID: unitId, request: GADRequest()) { (ad : GADInterstitialAd?, error:Error?) in
+            let request = GADRequest()
+            if #available(iOS 13.0, *) {
+                request.scene = UIApplication.shared.keyWindow?.windowScene
+            }
+            GADInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad : GADInterstitialAd?, error:Error?) in
                 if error != nil {
                     self.interstitialAd = nil
-                    self.channel.invokeMethod("onAdFailedToLoad", arguments: error.debugDescription)
+                    self.channel.invokeMethod("onAdFailedToLoad", arguments: [
+                        "errorCode": (error! as NSError).code,
+                        "message": (error! as NSError).localizedDescription
+                    ])
                     result(false)
                 }
                 else{

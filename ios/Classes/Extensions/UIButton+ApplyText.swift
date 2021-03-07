@@ -1,42 +1,42 @@
 import Foundation
 
-extension UILabel{
+extension UIButton{
     func applyText(data: Dictionary<String, Any>) -> Void{
         let view = self
         if let textSize = data["textSize"] as? Double{
-            view.font=view.font.withSize(CGFloat(textSize))
+            view.titleLabel?.font=view.titleLabel?.font.withSize(CGFloat(textSize))
         }
         
         if let textColor = data["textColor"] as? String{
-            view.textColor = UIColor(hexString:textColor)
+            view.setTitleColor(UIColor(hexString:textColor), for: .normal)
         }
         
         if let letterSpacing = data["letterSpacing"] as? String{
-            let attributedString = NSMutableAttributedString(string: attributedText!.string)
+            let attributedString = NSMutableAttributedString(string: view.titleLabel?.attributedText!.string ?? "")
             attributedString.addAttribute(NSAttributedString.Key.kern, value: letterSpacing, range: NSRange(location: 0, length: attributedString.length - 1))
-            attributedText = attributedString
+            view.setAttributedTitle(attributedString, for: .normal)
         }
         
         if let maxLines = data["maxLines"] as? Int{
-            view.numberOfLines = maxLines
+            view.titleLabel?.numberOfLines = maxLines
         }
         
         if let bold = data["bold"] as? Bool{
             if(bold){
-                view.font=UIFont.systemFont(ofSize: view.font.pointSize, weight: .bold)
-                
+                view.titleLabel?.font=UIFont.systemFont(ofSize: view.titleLabel?.font.pointSize ?? 0, weight: .bold)
             }
             else{
-                view.font=UIFont.systemFont(ofSize: view.font.pointSize, weight: .regular)
-                
+                view.titleLabel?.font=UIFont.systemFont(ofSize: view.titleLabel?.font.pointSize ?? 0, weight: .regular)
             }
         }
         
         if let text = data["text"] as? String{
-            view.text=text
+            view.setTitle(text, for: .normal)
         }
         
-        view.lineBreakMode = .byTruncatingTail
+        view.titleLabel?.lineBreakMode = .byTruncatingTail
+        
+        
         
         return
     }

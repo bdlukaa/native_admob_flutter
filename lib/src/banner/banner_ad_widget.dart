@@ -163,7 +163,7 @@ class BannerAd extends StatefulWidget {
 
   /// The ad will stop loading after a specified time.
   ///
-  /// If `null`, defaults to `Duration(seconds: 30)`
+  /// If `null`, defaults to 1 minute
   final Duration loadTimeout;
 
   /// Use hybrid composition in this ad. This has effect only on Android

@@ -19,8 +19,6 @@ void assertPlatformIsSupported() {
     'The current platform does not support native ads. '
     'The platforms that support it are Android and iOS',
   );
-
-  assert(Platform.isAndroid, 'Android is the only supported platform for now');
 }
 
 /// Assert the Mobile Ads SDK is initialized.
@@ -165,7 +163,7 @@ mixin AttachableMixin {
   }
 }
 
-const Duration kDefaultLoadTimeout = Duration(seconds: 30);
+const Duration kDefaultLoadTimeout = Duration(minutes: 1);
 const Duration kDefaultAdTimeout = Duration(minutes: 30);
 
 abstract class LoadShowAd<T> with UniqueKeyMixin {
@@ -191,7 +189,7 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   bool get isLoaded => _loaded;
 
   /// The time the ad can be kept loaded.
-  /// 
+  ///
   /// If null, defaults to 30 minutes
   final Duration timeout;
 
@@ -259,5 +257,4 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   void ensureAdAvailable() {
     assert(isAvailable, 'You can only use an available ad.');
   }
-
 }

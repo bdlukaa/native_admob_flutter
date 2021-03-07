@@ -267,7 +267,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     /// Force to load an ad even if another is already avaiable
     bool force = false,
 
-    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    /// The timeout of this ad. If null, defaults to 1 minute
     Duration? timeout,
   }) async {
     ensureAdNotDisposed();
@@ -281,7 +281,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {
-        if (!onEventController.isClosed)
+        if (!onEventController.isClosed && !isLoaded)
           onEventController.add({
             RewardedAdEvent.loadFailed: AdError.timeoutError,
           });

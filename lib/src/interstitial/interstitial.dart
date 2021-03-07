@@ -146,7 +146,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
     String? unitId,
     bool force = false,
 
-    /// The timeout of this ad. If null, defaults to `Duration(seconds: 30)`
+    /// The timeout of this ad. If null, defaults to 1 minute
     Duration? timeout,
   }) async {
     ensureAdNotDisposed();
@@ -160,7 +160,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {
-        if (!onEventController.isClosed)
+        if (!onEventController.isClosed && !isLoaded)
           onEventController.add({
             FullScreenAdEvent.loadFailed: AdError.timeoutError,
           });

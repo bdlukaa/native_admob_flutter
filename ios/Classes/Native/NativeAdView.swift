@@ -3,7 +3,7 @@ import GoogleMobileAds
 
 class NativeAdView : NSObject,FlutterPlatformView {
     
-    var data:Dictionary<String, Any>?
+    var data:[String:Any]?
     private let channel: FlutterMethodChannel
     
     private var adView: GADNativeAdView
@@ -22,15 +22,18 @@ class NativeAdView : NSObject,FlutterPlatformView {
     private var controller: NativeAdController? = nil
     
     
-    init(data: Dictionary<String, Any>?, messenger: FlutterBinaryMessenger) {
+    init(data: [String:Any]?, messenger: FlutterBinaryMessenger) {
         self.data=data
         channel = FlutterMethodChannel(name: "native_admob", binaryMessenger: messenger)
         self.adView=GADNativeAdView()
         super.init()
         adView.backgroundColor = UIColor(white: 1, alpha: 0.5)
         let builtView = buildView(data: data!)
-        builtView.frame=adView.bounds
         self.adView.addSubview(builtView)
+        builtView.topAnchor.constraint(equalTo: adView.topAnchor).isActive = true
+        builtView.bottomAnchor.constraint(equalTo: adView.bottomAnchor).isActive = true
+        builtView.leftAnchor.constraint(equalTo: adView.leftAnchor).isActive = true
+        builtView.rightAnchor.constraint(equalTo: adView.rightAnchor).isActive = true
         define()
         if let controllerId = data?["controllerId"] as? String,
            let controller = NativeAdControllerManager.shared.getController(forID: controllerId) {
@@ -50,224 +53,190 @@ class NativeAdView : NSObject,FlutterPlatformView {
         
     }
     
-    private func buildView(data: Dictionary<String, Any>)-> UIView {
+    private func buildView(data: [String:Any])-> UIView {
         let viewType: String? = data["viewType"] as? String
-        var view :UIView = UIView()
+        let view :UIView = UICustomView(data: data)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        var subView:UIView = UIView()
         
         if (viewType != nil){
             switch (viewType) {
             case "linear_layout" :
-                view=UIStackView()
-//                (view as! UIStackView).translatesAutoresizingMaskIntoConstraints=false
-                (view as! UIStackView).distribution = .fillProportionally
-                
+                subView=UIStackView()
+                subView.translatesAutoresizingMaskIntoConstraints = false
                 if data["orientation"] as! String == "vertical"{
-                    (view as! UIStackView).axis = NSLayoutConstraint.Axis.vertical
+                    (subView as! UIStackView).axis = NSLayoutConstraint.Axis.vertical
                 } else {
-                    (view as! UIStackView).axis = NSLayoutConstraint.Axis.horizontal
+                    (subView as! UIStackView).axis = NSLayoutConstraint.Axis.horizontal
                 }
                 switch data["gravity"] as? String {
                 case "center":
-                    (view as! UIStackView).alignment = .center
+                    (subView as! UIStackView).alignment = .center
                 case "center_horizontal":
-                    (view as! UIStackView).alignment = .center
+                    (subView as! UIStackView).alignment = .center
                 case "center_vertical":
-                    (view as! UIStackView).alignment = .center
+                    (subView as! UIStackView).alignment = .center
                 case "left":
-                    (view as! UIStackView).alignment = .leading
+                    (subView as! UIStackView).alignment = .leading
                 case "right":
-                    (view as! UIStackView).alignment = .trailing
+                    (subView as! UIStackView).alignment = .trailing
                 case "top":
-                    (view as! UIStackView).alignment = .top
+                    (subView as! UIStackView).alignment = .top
                 case "bottom":
-                    (view as! UIStackView).alignment = .bottom
+                    (subView as! UIStackView).alignment = .bottom
                 default:
-                    (view as! UIStackView).alignment = .top
+                    (subView as! UIStackView).alignment = .top
                 }
                 if (data["children"] != nil){
-                    for child in data["children"] as! Array<Any>{
-                        (view as! UIStackView).addArrangedSubview(buildView(data: child as! Dictionary<String, Any>))
+                    let lastId : String = (data["children"] as! Array<[String:Any]>).last!["id"] as! String
+                    let firstId : String = (data["children"] as! Array<[String:Any]>).first!["id"] as! String
+                    for child in data["children"] as! Array<[String:Any]>{
+                        let builtView = buildView(data: child)
+                        (subView as! UIStackView).addArrangedSubview(builtView)
+                        if let height =  child["height"] as! Float? , height == -1{
+                            if lastId == child["id"] as! String{
+                                builtView.bottomAnchor.constraint(equalTo: subView.bottomAnchor).isActive = true
+                            }
+                            if firstId == child["id"] as! String{
+                                builtView.topAnchor.constraint(equalTo: subView.topAnchor).isActive = true
+                            }
+                        }
+                        if  let width = child["width"] as! Float?, width == -1{
+                            if lastId == child["id"] as! String{
+                                builtView.trailingAnchor.constraint(equalTo: subView.trailingAnchor).isActive = true
+                            }
+                            if firstId == child["id"] as! String{
+                                builtView.leadingAnchor.constraint(equalTo: subView.leadingAnchor).isActive = true
+                            }
+                        }
                     }
                 }
             case "text_view" :
-                view = UILabel()
-                (view as! UILabel).applyText(data: data)
+            subView=CustomUILabel(data: data)
             case "image_view" :
-                view = UIImageView()
+            subView = PaddedImageView(data: data)
+            subView.contentMode = .scaleAspectFit
             case "media_view" :
-                view = GADMediaView()
+            subView = GADMediaView()
+            (subView as! GADMediaView).contentMode = .scaleAspectFit
             case "rating_bar" :
-                view = UIImageView()
+            subView = PaddedImageView(data: data)
             case "button_view" :
-                view = UIButton()
+            subView=UIButton()
+            (subView as! UIButton).applyText(data: data)
+            (subView as! UIButton).contentMode = .scaleAspectFit
             case .none:
-                print("none")
+            print("none")
             case .some(_):
-                print("some")
-            }
-            
+            print("some")
         }
+    }
+    
+    // bounds
+    let paddingRight = data["paddingRight"] as? Double ?? 0
+    let paddingLeft=data["paddingLeft"] as? Double ?? 0
+    let paddingTop=data["paddingTop"] as? Double ?? 0
+    let paddingBottom=data["paddingBottom"] as? Double ?? 0
+    if #available(iOS 11.0, *) {
+    if(viewType == "linear_layout"){(subView as! UIStackView).isLayoutMarginsRelativeArrangement = true}
+    subView.directionalLayoutMargins=NSDirectionalEdgeInsets(top: CGFloat(paddingTop), leading: CGFloat(paddingLeft), bottom: CGFloat(paddingBottom), trailing: CGFloat(paddingRight))
+    } else {
+    subView.layoutMargins=UIEdgeInsets(top: CGFloat(paddingTop), left: CGFloat(paddingLeft), bottom: CGFloat(paddingBottom), right: CGFloat(paddingRight))
+    }
+    
+    if let height =  data["height"] as! Float?, height > 0{
+    subView.heightAnchor.constraint(equalToConstant: CGFloat(height)).isActive = true
+    }
+    if  let width = data["width"] as! Float?, width > 0{
+    subView.widthAnchor.constraint(equalToConstant: CGFloat(width)).isActive = true
+    }
+    
+    
+    
+    switch data["id"] as! String{
+    case "advertiser" : adAdvertiser = subView as? UILabel
+    case "attribution" : adAttribution = subView as? UILabel
+    case "body" : adBody = subView as? UILabel
+    case "button" : callToAction = subView as? UIButton
+    case "headline" : adHeadline = subView as? UILabel
+    case "icon" : adIcon = subView as? UIImageView
+    case "media" : adMedia = subView as? GADMediaView
+    case "price" : adPrice = subView as? UILabel
+    case "ratingBar" : ratingBar = subView as? UIImageView
+    case "store" : adStore = subView as? UILabel
+    default:
+    print("")
+    }
+    
+    (view as! UIStackView).addArrangedSubview(subView)
+    
+    return view
+}
 
-        
-        let shape = CAGradientLayer()
-        let gradient: Dictionary<String,Any>? = data["gradient"] as? Dictionary<String,Any>
-        
-        if(gradient != nil){
-            print("\n")
-            print(view.subviews)
-            print("\n")
-            switch gradient?["orientation"] as! String{
-            case "top_bottom" :
-                shape.startPoint = CGPoint(x: 0.5, y: 0.0);
-                shape.endPoint = CGPoint(x: 0.5, y: 1.0);
-            case "tr_bl" :
-                shape.startPoint = CGPoint(x: 1.0, y: 0.0);
-                shape.endPoint = CGPoint(x: 0.0, y: 1.0);
-            case "right_left" :
-                shape.startPoint = CGPoint(x: 1.0, y: 0.5);
-                shape.endPoint = CGPoint(x: 0.0, y: 0.5);
-            case "br_tl" :
-                shape.startPoint = CGPoint(x: 1.0, y: 1.0);
-                shape.endPoint = CGPoint(x: 0.0, y: 0.0);
-            case "bottom_top" :
-                shape.startPoint = CGPoint(x: 0.5, y: 1.0);
-                shape.endPoint = CGPoint(x: 0.5, y: 0.0);
-            case "bl_tr" :
-                shape.startPoint = CGPoint(x: 0.0, y: 1.0);
-                shape.endPoint = CGPoint(x: 1.0, y: 0.0);
-            case "left_right" :
-                shape.startPoint = CGPoint(x: 0.0, y: 0.5);
-                shape.endPoint = CGPoint(x: 1.0, y: 0.5);
-            case "tl_br" :
-                shape.startPoint = CGPoint(x: 0.0, y: 0.0);
-                shape.endPoint = CGPoint(x: 1.0, y: 1.0);
-            default:
-                shape.startPoint = CGPoint(x: 0.0, y: 0.5);
-                shape.endPoint = CGPoint(x: 1.0, y: 0.5);
-            }
-            
-            let colors: Array<CGColor> = (data["colors"] as? Array<String> ?? ["#ffffff","#ffffff"]).map { UIColor(hexString: $0).cgColor };
-            shape.colors=colors
-            
-            switch gradient?["type"] as! String{
-            case "linear" :
-                shape.type=CAGradientLayerType.axial
-            case "radial" :
-                shape.type=CAGradientLayerType.radial
-            default:
-                shape.type=CAGradientLayerType.axial
-            }
-        }
-     
-        // radius
-        shape.cornerRadius=CGFloat(data["topRightRadius"] as? Double ?? 00)
-        
-        shape.borderWidth=CGFloat(data["borderWidth"] as? Double ?? 0);
-        shape.borderColor=UIColor(hexString: data["borderColor"] as? String ?? "#ffffff").cgColor
-        
-        shape.backgroundColor=UIColor(hexString: (data["backgroundColor"] as? String ?? "#ffffff")).cgColor
-        
-        view.layer.insertSublayer(shape, at: 0)
-        
-        // bounds
-        let paddingRight = (data["paddingRight"] as? Double)
-        let paddingLeft=(data["paddingLeft"] as? Double)
-        let paddingTop=(data["paddingTop"] as? Double)
-        let paddingBottom=(data["paddingBottom"] as? Double)
-        view.layoutMargins=UIEdgeInsets(top: CGFloat(paddingTop ?? 0), left: CGFloat(paddingLeft ?? 0), bottom: CGFloat(paddingBottom ?? 0), right: CGFloat(paddingRight ?? 0))
-        
-        if let height =  data["height"], let width = data["width"] {
-            let dpHeight = Int(height as! Float).dp()
-            let dpWidth = Int(width as! Float).dp()
-            view.frame.size.width=CGFloat(dpWidth)
-            view.frame.size.height=CGFloat(dpHeight)
-            view.sizeThatFits(CGSize(width: CGFloat(dpWidth), height: CGFloat(dpHeight)))
-        }
+func view() -> UIView {
+    return adView
+}
 
-        
-        
-        switch data["id"] as! String{
-        case "advertiser" : adAdvertiser = view as? UILabel
-        case "attribution" : adAttribution = view as? UILabel
-        case "body" : adBody = view as? UILabel
-        case "button" : callToAction = view as? UIButton
-        case "headline" : adHeadline = view as? UILabel
-        case "icon" : adIcon = view as? UIImageView
-        case "media" : adMedia = view as? GADMediaView
-        case "price" : adPrice = view as? UILabel
-        case "ratingBar" : ratingBar = view as? UIImageView
-        case "store" : adStore = view as? UILabel
-        default:
-            print("")
-        }
+func imageOfStars(from starRating: NSDecimalNumber?) -> UIImage? {
+    guard let rating = starRating?.doubleValue else {
+        return nil
+    }
+    if rating >= 5 {
+        return UIImage(named: "stars_5")
+    } else if rating >= 4.5 {
+        return UIImage(named: "stars_4_5")
+    } else if rating >= 4 {
+        return UIImage(named: "stars_4")
+    } else if rating >= 3.5 {
+        return UIImage(named: "stars_3_5")
+    } else {
+        return nil
+    }
+}
 
-        return view
-    }
+private func define() {
+    self.adView.mediaView = adMedia
+    self.adView.headlineView = adHeadline
+    self.adView.bodyView = adBody
+    self.adView.callToActionView = callToAction
+    self.adView.iconView = adIcon
+    self.adView.priceView = adPrice
+    self.adView.starRatingView = ratingBar
+    self.adView.storeView = adStore
+    self.adView.advertiserView = adAdvertiser
+}
+
+private func setNativeAd(nativeAd: GADNativeAd?) {
+    if (nativeAd == nil){ return}
     
-    func view() -> UIView {
-        return adView
-    }
+    adMedia?.mediaContent = nativeAd?.mediaContent
     
-    func imageOfStars(from starRating: NSDecimalNumber?) -> UIImage? {
-        guard let rating = starRating?.doubleValue else {
-            return nil
-        }
-        if rating >= 5 {
-            return UIImage(named: "stars_5")
-        } else if rating >= 4.5 {
-            return UIImage(named: "stars_4_5")
-        } else if rating >= 4 {
-            return UIImage(named: "stars_4")
-        } else if rating >= 3.5 {
-            return UIImage(named: "stars_3_5")
-        } else {
-            return nil
-        }
-    }
+    (adHeadline)?.text = nativeAd?.headline
     
-    private func define() {
-        self.adView.mediaView = adMedia
-        self.adView.headlineView = adHeadline
-        self.adView.bodyView = adBody
-        self.adView.callToActionView = callToAction
-        self.adView.iconView = adIcon
-        self.adView.priceView = adPrice
-        self.adView.starRatingView = ratingBar
-        self.adView.storeView = adStore
-        self.adView.advertiserView = adAdvertiser
-    }
+    (adBody)?.text = nativeAd?.body
+    adBody?.isHidden = nativeAd?.body == nil
     
-    private func setNativeAd(nativeAd: GADNativeAd?) {
-        if (nativeAd == nil){ return}
-        
-        adMedia?.mediaContent = nativeAd?.mediaContent
-        
-        (adHeadline)?.text = nativeAd?.headline
-        
-        (adBody)?.text = nativeAd?.body
-        adBody?.isHidden = nativeAd?.body == nil
-        
-        (callToAction)?.setTitle(nativeAd?.callToAction, for: .normal)
-        callToAction?.isHidden = nativeAd?.callToAction == nil
-        
-        (adIcon)?.image = nativeAd?.icon?.image
-        adIcon?.isHidden = nativeAd?.icon == nil
-        
-        (ratingBar)?.image = imageOfStars(from:nativeAd?.starRating)
-        ratingBar?.isHidden = nativeAd?.starRating == nil
-        
-        (adStore)?.text = nativeAd?.store
-        adStore?.isHidden = nativeAd?.store == nil
-        
-        (adPrice)?.text = nativeAd?.price
-        adPrice?.isHidden = nativeAd?.price == nil
-        
-        (adAdvertiser)?.text = nativeAd?.advertiser
-        adAdvertiser?.isHidden = nativeAd?.advertiser == nil
-        
-        callToAction?.isUserInteractionEnabled = false
-        
-        adView.nativeAd=nativeAd
-    }
+    (callToAction)?.setTitle(nativeAd?.callToAction, for: .normal)
+    callToAction?.isHidden = nativeAd?.callToAction == nil
     
+    (adIcon)?.image = nativeAd?.icon?.image
+    adIcon?.isHidden = nativeAd?.icon == nil
+    
+    (ratingBar)?.image = imageOfStars(from:nativeAd?.starRating)
+    ratingBar?.isHidden = nativeAd?.starRating == nil
+    
+    (adStore)?.text = nativeAd?.store
+    adStore?.isHidden = nativeAd?.store == nil
+    
+    (adPrice)?.text = nativeAd?.price
+    adPrice?.isHidden = nativeAd?.price == nil
+    
+    (adAdvertiser)?.text = nativeAd?.advertiser
+    adAdvertiser?.isHidden = nativeAd?.advertiser == nil
+    
+    callToAction?.isUserInteractionEnabled = false
+    
+    adView.nativeAd=nativeAd
+}
+
 }

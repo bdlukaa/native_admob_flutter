@@ -13,6 +13,7 @@ Pod::Spec.new do |s|
   s.author           = { 'bdlukaa' => 'email@example.com' }
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
+  s.resources = 'Assets/**/*'
   s.platform = :ios, '9.0'
 
   s.ios.deployment_target = '9.0'

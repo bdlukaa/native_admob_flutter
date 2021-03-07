@@ -1,0 +1,648 @@
+data : [
+    "marginRight": <null>,
+    "marginLeft": <null>,
+    "marginBottom": <null>,
+    "bottomRightRadius": <null>,
+    "orientation": horizontal,
+    "children": <__NSArrayM 0x281abe2e0>(
+{
+    height = 50;
+    id = icon;
+    marginBottom = "<null>";
+    marginLeft = "<null>";
+    marginRight = "<null>";
+    marginTop = "<null>";
+    paddingBottom = 0;
+    paddingLeft = 6;
+    paddingRight = 0;
+    paddingTop = 0;
+    viewType = "image_view";
+    width = 50;
+    },
+    {
+    children =     (
+                {
+            children =             (
+                                {
+                    bold = 1;
+                    height = "-2";
+                    id = headline;
+                    letterSpacing = "<null>";
+                    marginBottom = "<null>";
+                    marginLeft = "<null>";
+                    marginRight = "<null>";
+                    marginTop = "<null>";
+                    maxLines = 1;
+                    minLines = 1;
+                    paddingBottom = "<null>";
+                    paddingLeft = "<null>";
+                    paddingRight = "<null>";
+                    paddingTop = "<null>";
+                    text = "<null>";
+                    textColor = "#ff000000";
+                    textSize = 16;
+                    viewType = "text_view";
+                    width = "-1";
+            },
+            {
+                    children =                     (
+                                                {
+                            backgroundColor = "#ffffeb3b";
+                            bold = 0;
+                            borderColor = "<null>";
+                            borderWidth = 0;
+                            bottomLeftRadius = 10;
+                            bottomRightRadius = 10;
+                            gradient = "<null>";
+                            height = "-2";
+                            id = attribution;
+                            letterSpacing = "<null>";
+                            marginBottom = 0;
+                            marginLeft = 0;
+                            marginRight = 2;
+                            marginTop = 0;
+                            maxLines = 1;
+                            minLines = 1;
+                            paddingBottom = 0;
+                            paddingLeft = 2;
+                            paddingRight = 2;
+                            paddingTop = 0;
+                            text = Ad;
+                            textColor = "#ff000000";
+                            textSize = 14;
+                            topLeftRadius = 10;
+                            topRightRadius = 10;
+                            viewType = "text_view";
+                            width = "-2";
+                },
+                {
+                            bold = 0;
+                            height = "-2";
+                            id = advertiser;
+                            letterSpacing = "<null>";
+                            marginBottom = "<null>";
+                            marginLeft = "<null>";
+                            marginRight = "<null>";
+                            marginTop = "<null>";
+                            maxLines = "<null>";
+                            minLines = 1;
+                            paddingBottom = "<null>";
+                            paddingLeft = "<null>";
+                            paddingRight = "<null>";
+                            paddingTop = "<null>";
+                            text = "<null>";
+                            textColor = "#ff000000";
+                            textSize = 14;
+                            viewType = "text_view";
+                            width = "-1";
+                }
+                    );
+                    gravity = top;
+                    height = "-2";
+                    id = "linear_layout";
+                    marginBottom = "<null>";
+                    marginLeft = "<null>";
+                    marginRight = "<null>";
+                    marginTop = "<null>";
+                    orientation = horizontal;
+                    paddingBottom = "<null>";
+                    paddingLeft = "<null>";
+                    paddingRight = "<null>";
+                    paddingTop = "<null>";
+                    viewType = "linear_layout";
+                    width = "-1";
+            }
+            );
+            gravity = top;
+            height = "-2";
+            id = "linear_layout";
+            marginBottom = 0;
+            marginLeft = 4;
+            marginRight = 4;
+            marginTop = 0;
+            orientation = vertical;
+            paddingBottom = "<null>";
+            paddingLeft = "<null>";
+            paddingRight = "<null>";
+            paddingTop = "<null>";
+            viewType = "linear_layout";
+            width = "-2";
+        }
+    );
+    gravity = top;
+    height = "-2";
+    id = "linear_layout";
+    "layout_weight" = 2;
+    marginBottom = "<null>";
+    marginLeft = "<null>";
+    marginRight = "<null>";
+    marginTop = "<null>";
+    orientation = vertical;
+    paddingBottom = "<null>";
+    paddingLeft = "<null>";
+    paddingRight = "<null>";
+    paddingTop = "<null>";
+    viewType = "linear_layout";
+    width = "-1";
+    },
+    {
+    children =     (
+                {
+            backgroundColor = "#ffffeb3b";
+            bold = 0;
+            borderColor = "<null>";
+            borderWidth = 0;
+            bottomLeftRadius = "<null>";
+            bottomRightRadius = "<null>";
+            gradient = "<null>";
+            height = "-2";
+            id = button;
+            letterSpacing = "<null>";
+            marginBottom = 0;
+            marginLeft = 6;
+            marginRight = 6;
+            marginTop = 0;
+            maxLines = "<null>";
+            minLines = 1;
+            paddingBottom = "<null>";
+            paddingLeft = "<null>";
+            paddingRight = "<null>";
+            paddingTop = "<null>";
+            pressColor = "#fff44336";
+            text = "<null>";
+            textColor = "#ff4caf50";
+            textSize = 14;
+            topLeftRadius = "<null>";
+            topRightRadius = "<null>";
+            viewType = "button_view";
+            width = "-1";
+        }
+    );
+    gravity = top;
+    height = "-2";
+    id = "linear_layout";
+    "layout_weight" = 4;
+    marginBottom = "<null>";
+    marginLeft = "<null>";
+    marginRight = "<null>";
+    marginTop = "<null>";
+    orientation = vertical;
+    paddingBottom = "<null>";
+    paddingLeft = "<null>";
+    paddingRight = "<null>";
+    paddingTop = "<null>";
+    viewType = "linear_layout";
+    width = "-1";
+    }
+)
+,
+    "controllerId": [#b64bf
+    ],
+    "topRightRadius": <null>,
+    "topLeftRadius": <null>,
+    "width": -1,
+    "paddingRight": <null>,
+    "borderWidth": 0,
+    "paddingTop": <null>,
+    "gravity": center_vertical,
+    "marginTop": <null>,
+    "paddingLeft": <null>,
+    "bottomLeftRadius": <null>,
+    "height": -1,
+    "borderColor": <null>,
+    "viewType": linear_layout,
+    "paddingBottom": <null>,
+    "id": linear_layout,
+    "gradient": <null>,
+    "backgroundColor": #ffffffff
+]
+
+
+
+
+
+
+
+
+[
+    "topLeftRadius": <null>,
+    "width": -1,
+    "marginRight": <null>,
+    "gradient": {
+    colors =     (
+        "#ff64b5f6",
+        "#ff0d47a1"
+    );
+    orientation = "left_right";
+    radialGradientCenterX = "0.5";
+    radialGradientCenterY = "0.5";
+    radialGradientRadius = 1000;
+    type = radial;
+    },
+    "gravity": top,
+    "orientation": horizontal,
+    "marginBottom": <null>,
+    "paddingTop": 10,
+    "marginLeft": <null>,
+    "paddingLeft": 10,
+    "borderColor": <null>,
+    "viewType": linear_layout,
+    "backgroundColor": <null>,
+    "children": <__NSArrayM 0x282ef5770>(
+{
+    height = 80;
+    id = icon;
+    marginBottom = "<null>";
+    marginLeft = "<null>";
+    marginRight = "<null>";
+    marginTop = "<null>";
+    paddingBottom = "<null>";
+    paddingLeft = "<null>";
+    paddingRight = "<null>";
+    paddingTop = "<null>";
+    viewType = "image_view";
+    width = 80;
+    },
+    {
+    children =     (
+                {
+            bold = 1;
+            height = "-2";
+            id = headline;
+            letterSpacing = "<null>";
+            marginBottom = "<null>";
+            marginLeft = "<null>";
+            marginRight = "<null>";
+            marginTop = "<null>";
+            maxLines = 1;
+            minLines = 1;
+            paddingBottom = "<null>";
+            paddingLeft = "<null>";
+            paddingRight = "<null>";
+            paddingTop = "<null>";
+            text = "<null>";
+            textColor = "#ffffffff";
+            textSize = 16;
+            viewType = "text_view";
+            width = "-1";
+        },
+        {
+            children =             (
+                                {
+                    backgroundColor = "#ffffeb3b";
+                    bold = 0;
+                    borderColor = "<null>";
+                    borderWidth = 0;
+                    bottomLeftRadius = 10;
+                    bottomRightRadius = 10;
+                    gradient = "<null>";
+                    height = "-2";
+                    id = attribution;
+                    letterSpacing = "<null>";
+                    marginBottom = 0;
+                    marginLeft = 0;
+                    marginRight = 2;
+                    marginTop = 0;
+                    maxLines = 1;
+                    minLines = 1;
+                    paddingBottom = 0;
+                    paddingLeft = 2;
+                    paddingRight = 2;
+                    paddingTop = 0;
+                    text = Ad;
+                    textColor = "#ff000000";
+                    textSize = 14;
+                    topLeftRadius = 10;
+                    topRightRadius = 10;
+                    viewType = "text_view";
+                    width = "-2";
+            },
+            {
+                    bold = 0;
+                    height = "-2";
+                    id = advertiser;
+                    letterSpacing = "<null>";
+                    marginBottom = "<null>";
+                    marginLeft = "<null>";
+                    marginRight = "<null>";
+                    marginTop = "<null>";
+                    maxLines = "<null>";
+                    minLines = 1;
+                    paddingBottom = "<null>";
+                    paddingLeft = "<null>";
+                    paddingRight = "<null>";
+                    paddingTop = "<null>";
+                    text = "<null>";
+                    textColor = "#ffffffff";
+                    textSize = 14;
+                    viewType = "text_view";
+                    width = "-1";
+            },
+            {
+                    height = "-2";
+                    id = ratingBar;
+                    marginBottom = "<null>";
+                    marginLeft = "<null>";
+                    marginRight = "<null>";
+                    marginTop = "<null>";
+                    paddingBottom = "<null>";
+                    paddingLeft = "<null>";
+                    paddingRight = "<null>";
+                    paddingTop = "<null>";
+                    stepSize = "<null>";
+                    viewType = "rating_bar";
+                    width = "-2";
+            }
+            );
+            gravity = top;
+            height = 20;
+            id = "linear_layout";
+            marginBottom = "<null>";
+            marginLeft = "<null>";
+            marginRight = "<null>";
+            marginTop = "<null>";
+            orientation = horizontal;
+            paddingBottom = "<null>";
+            paddingLeft = "<null>";
+            paddingRight = "<null>";
+            paddingTop = "<null>";
+            viewType = "linear_layout";
+            width = "-2";
+        },
+        {
+            backgroundColor = "#ffffeb3b";
+            bold = 0;
+            borderColor = "<null>";
+            borderWidth = 0;
+            bottomLeftRadius = "<null>";
+            bottomRightRadius = "<null>";
+            gradient = "<null>";
+            height = "-2";
+            id = button;
+            letterSpacing = "<null>";
+            marginBottom = 0;
+            marginLeft = 0;
+            marginRight = 0;
+            marginTop = 6;
+            maxLines = "<null>";
+            minLines = 1;
+            paddingBottom = "<null>";
+            paddingLeft = "<null>";
+            paddingRight = "<null>";
+            paddingTop = "<null>";
+            pressColor = "#fff44336";
+            text = "<null>";
+            textColor = "#ff000000";
+            textSize = 14;
+            topLeftRadius = "<null>";
+            topRightRadius = "<null>";
+            viewType = "button_view";
+            width = "-1";
+        }
+    );
+    gravity = top;
+    height = "-2";
+    id = "linear_layout";
+    marginBottom = 0;
+    marginLeft = 4;
+    marginRight = 4;
+    marginTop = 0;
+    orientation = vertical;
+    paddingBottom = "<null>";
+    paddingLeft = "<null>";
+    paddingRight = "<null>";
+    paddingTop = "<null>";
+    viewType = "linear_layout";
+    width = "-1";
+    }
+)
+,
+    "bottomRightRadius": <null>,
+    "id": linear_layout,
+    "borderWidth": 0,
+    "bottomLeftRadius": <null>,
+    "topRightRadius": <null>,
+    "paddingBottom": 10,
+    "height": -2,
+    "marginTop": <null>,
+    "paddingRight": 10,
+    "controllerId": [#e9911
+    ]
+]
+
+
+
+
+
+
+
+
+
+
+
+[
+    "width": -1,
+    "paddingLeft": 10,
+    "children": <__NSArrayM 0x2807b50b0>(
+    {
+        height = 80;
+        id = icon;
+        marginBottom = "<null>";
+        marginLeft = "<null>";
+        marginRight = "<null>";
+        marginTop = "<null>";
+        paddingBottom = "<null>";
+        paddingLeft = "<null>";
+        paddingRight = "<null>";
+        paddingTop = "<null>";
+        viewType = "image_view";
+        width = 80;
+    },
+    {
+        children =     (
+                    {
+                bold = 1;
+                height = "-2";
+                id = headline;
+                letterSpacing = "<null>";
+                marginBottom = "<null>";
+                marginLeft = "<null>";
+                marginRight = "<null>";
+                marginTop = "<null>";
+                maxLines = 1;
+                minLines = 1;
+                paddingBottom = "<null>";
+                paddingLeft = "<null>";
+                paddingRight = "<null>";
+                paddingTop = "<null>";
+                text = "<null>";
+                textColor = "#ffffffff";
+                textSize = 16;
+                viewType = "text_view";
+                width = "-1";
+        },
+        {
+                children =             (
+                                    {
+                        backgroundColor = "#ffffeb3b";
+                        bold = 0;
+                        borderColor = "<null>";
+                        borderWidth = 0;
+                        bottomLeftRadius = 10;
+                        bottomRightRadius = 10;
+                        gradient = "<null>";
+                        height = "-2";
+                        id = attribution;
+                        letterSpacing = "<null>";
+                        marginBottom = 0;
+                        marginLeft = 0;
+                        marginRight = 2;
+                        marginTop = 0;
+                        maxLines = 1;
+                        minLines = 1;
+                        paddingBottom = 0;
+                        paddingLeft = 2;
+                        paddingRight = 2;
+                        paddingTop = 0;
+                        text = Ad;
+                        textColor = "#ff000000";
+    
+                        textSize = 14;
+                        topLeftRadius = 10;
+                        topRightRadius = 10;
+                        viewType = "text_view";
+                        width = "-2";
+            },
+            {
+                        bold = 0;
+                        height = "-2";
+                        id = advertiser;
+                        letterSpacing = "<null>";
+                        marginBottom = "<null>";
+                        marginLeft = "<null>";
+                        marginRight = "<null>";
+                        marginTop = "<null>";
+                        maxLines = "<null>";
+                        minLines = 1;
+                        paddingBottom = "<null>";
+                        paddingLeft = "<null>";
+                        paddingRight = "<null>";
+                        paddingTop = "<null>";
+                        text = "<null>";
+                        textColor = "#ffffffff";
+                        textSize = 14;
+                        viewType = "text_view";
+                        width = "-1";
+            },
+            {
+                        height = "-2";
+                        id = ratingBar;
+                        marginBottom = "<null>";
+                        marginLeft = "<null>";
+                        marginRight = "<null>";
+                        marginTop = "<null>";
+                        paddingBottom = "<null>";
+                        paddingLeft = "<null>";
+                        paddingRight = "<null>";
+                        paddingTop = "<null>";
+                        stepSize = "<null>";
+                        viewType = "rating_bar";
+                        width = "-2";
+            }
+                );
+                gravity = top;
+                height = 20;
+                id = "linear_layout";
+                marginBottom = "<null>";
+                marginLeft = "<null>";
+                marginRight = "<null>";
+                marginTop = "<null>";
+                orientation = horizontal;
+                paddingBottom = "<null>";
+                paddingLeft = "<null>";
+                paddingRight = "<null>";
+                paddingTop = "<null>";
+                viewType = "linear_layout";
+                width = "-2";
+        },
+        {
+                backgroundColor = "#ffffeb3b";
+                bold = 0;
+                borderColor = "<null>";
+                borderWidth = 0;
+                bottomLeftRadius = "<null>";
+                bottomRightRadius = "<null>";
+                gradient = "<null>";
+                height = "-2";
+                id = button;
+                letterSpacing = "<null>";
+                marginBottom = 0;
+                marginLeft = 0;
+                marginRight = 0;
+                marginTop = 6;
+                maxLines = "<null>";
+                minLines = 1;
+                paddingBottom = "<null>";
+                paddingLeft = "<null>";
+                paddingRight = "<null>";
+                paddingTop = "<null>";
+                pressColor = "#fff44336";
+                text = "<null>";
+                textColor = "#ff000000";
+                textSize = 14;
+                topLeftRadius = "<null>";
+                topRightRadius = "<null>";
+                viewType = "button_view";
+                width = "-1";
+        }
+        );
+        gravity = top;
+        height = "-2";
+        id = "linear_layout";
+        marginBottom = 0;
+        marginLeft = 4;
+        marginRight = 4;
+        marginTop = 0;
+        orientation = vertical;
+        paddingBottom = "<null>";
+        paddingLeft = "<null>";
+        paddingRight = "<null>";
+        paddingTop = "<null>";
+        viewType = "linear_layout";
+        width = "-1";
+    }
+    )
+    ,
+    "paddingRight": 10,
+    "controllerId": [#64dbb
+    ],
+    "marginRight": <null>,
+    "height": -2,
+    "viewType": linear_layout,
+    "id": linear_layout,
+    "bottomLeftRadius": <null>,
+    "borderWidth": 0,
+    "marginBottom": <null>,
+    "marginTop": <null>,
+    "paddingBottom": 10,
+    "paddingTop": 10,
+    "bottomRightRadius": <null>,
+    "orientation": horizontal,
+    "borderColor": <null>,
+    "topLeftRadius": <null>,
+    "marginLeft": <null>,
+    "topRightRadius": <null>,
+    "backgroundColor": <null>,
+    "gravity": top,
+    "gradient": {
+        colors =     (
+            "#ff64b5f6",
+        "#ff0d47a1"
+        );
+        orientation = "left_right";
+        radialGradientCenterX = "0.5";
+        radialGradientCenterY = "0.5";
+        radialGradientRadius = 1000;
+        type = radial;
+    }
+]
