@@ -127,7 +127,7 @@ public class NativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
     case "requestTrackingAuthorization":
         if #available(iOS 14, *) {
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
-               result(status)
+                result(Int(status.rawValue))
             })
         }
         result(nil)

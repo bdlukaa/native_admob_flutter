@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:native_admob_flutter/native_admob_flutter.dart';
 
-// import 'screens/list_nativead.dart';
 import 'screens/native_ads.dart';
 import 'screens/full_screen_ads.dart';
 import 'screens/banner_ads.dart';
@@ -38,7 +37,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key}) : super(key: key);
+  MyHomePage({Key key}) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -87,13 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
             IconButton(
               icon: Icon(Icons.navigate_next),
               onPressed: () {
-                print('next');
-                // Navigator.of(context).push(MaterialPageRoute(
-                //   builder: (_) => Scaffold(
-                //     appBar: AppBar(title: Text('Native Ads List')),
-                //     body: ListNativeAd(),
-                //   ),
-                // ));
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (_) => Scaffold(
+                    appBar: AppBar(title: Text('Native Ads')),
+                    body: NativeAds(),
+                  ),
+                ));
               },
             ),
           ],
@@ -119,7 +117,7 @@ class _MyHomePageState extends State<MyHomePage> {
             BannerAd(controller: bannerController),
           ],
         ),
-        bottomNavigationBar: Material(
+        bottomNavigationBar: Container(
           color: Colors.blue,
           child: TabBar(
             indicatorColor: Colors.white,
