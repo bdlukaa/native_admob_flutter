@@ -1,6 +1,11 @@
 Date format: DD/MM/YYYY
 
-## [1.0.0] - [05/03/2021]
+## [1.0.1] - [08/03/2021]
+
+- **FIX** `MobileAds.requestTrackingAuthorization` (Fixes [#23](https://github.com/bdlukaa/native_admob_flutter/issues/23))
+- **FIX** Full-screen ad loading
+
+## [1.0.0] - [07/03/2021]
 
 - **NEW** `MobileAds.requestTrackingAuthorization` (Fixes [#3](https://github.com/bdlukaa/native_admob_flutter/issues/3))
 - **FIX** Check if the ad is not loaded before throwing the timeout error (Fixes [#19](https://github.com/bdlukaa/native_admob_flutter/issues/19))

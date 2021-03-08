@@ -7,12 +7,6 @@ import '../events.dart';
 import '../mobile_ads.dart';
 import '../utils.dart';
 
-/// Portrait orientation
-const int APP_OPEN_AD_ORIENTATION_PORTRAIT = 1;
-
-/// Landscape orientation
-const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
-
 /// An AppOpenAd model to communicate with the model in the platform side.
 /// It gives you methods to help in the implementation and event tracking.
 ///
@@ -20,6 +14,12 @@ const int APP_OPEN_AD_ORIENTATION_LANDSCAPE = 2;
 ///   - https://developers.google.com/admob/android/app-open-ads
 ///   - https://developers.google.com/admob/ios/app-open-ads
 class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
+  /// Portrait orientation
+  static const int ORIENTATION_PORTRAIT = 1;
+
+  /// Landscape orientation
+  static const int ORIENTATION_LANDSCAPE = 2;
+
   /// The test id for this ad.
   ///   - Android: ca-app-pub-3940256099942544/3419835294
   ///   - iOS: ca-app-pub-3940256099942544/5662855259
@@ -132,8 +132,8 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
     String? unitId,
 
     /// The orientation. Avaiable orientations:\
-    /// 1 - [APP_OPEN_AD_ORIENTATION_PORTRAIT]\
-    /// 2 - [APP_OPEN_AD_ORIENTATION_LANDSCAPE]\
+    /// 1 - [ORIENTATION_PORTRAIT]\
+    /// 2 - [ORIENTATION_LANDSCAPE]\
     ///
     /// If null, defaults to the current device orientation
     int? orientation,
@@ -147,15 +147,12 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
-    if (orientation != null)
+    if (orientation != null) {
       assert(
-        [
-          APP_OPEN_AD_ORIENTATION_PORTRAIT,
-          APP_OPEN_AD_ORIENTATION_LANDSCAPE,
-        ].contains(orientation),
-        'The orientation must be a valid orientation: $APP_OPEN_AD_ORIENTATION_PORTRAIT, $APP_OPEN_AD_ORIENTATION_LANDSCAPE',
+        [ORIENTATION_PORTRAIT, ORIENTATION_LANDSCAPE].contains(orientation),
+        'The orientation must be a valid orientation: $ORIENTATION_PORTRAIT, $ORIENTATION_LANDSCAPE',
       );
-    else {
+    } else {
       final window = WidgetsBinding.instance!.window;
       final size = window.physicalSize / window.devicePixelRatio;
       final deviceOrientation = size.width > size.height
@@ -164,14 +161,14 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
 
       switch (deviceOrientation) {
         case Orientation.landscape:
-          orientation = APP_OPEN_AD_ORIENTATION_LANDSCAPE;
+          orientation = ORIENTATION_LANDSCAPE;
           break;
         case Orientation.portrait:
-          orientation = APP_OPEN_AD_ORIENTATION_PORTRAIT;
+          orientation = ORIENTATION_PORTRAIT;
           break;
       }
     }
-    final loaded = await (channel.invokeMethod<bool>('loadAd', {
+    final bool loaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
           this.unitId ??
           MobileAds.appOpenAdUnitId ??
@@ -186,7 +183,7 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
           });
         return false;
       },
-    ) as FutureOr<bool>);
+    ))!;
     if (loaded) lastLoadedTime = DateTime.now();
     return loaded;
   }

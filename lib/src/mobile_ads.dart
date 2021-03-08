@@ -327,21 +327,26 @@ class MobileAds {
   /// ![](https://developers.google.com/admob/images/idfa/att-iOS.png)
   ///
   /// [Learn more](https://developers.google.com/admob/ios/ios14#request)
+  ///
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#request-app-tracking-transparency-authorization-for-ios)
   static Future<TrackingAuthorizationStatus>
       requestTrackingAuthorization() async {
     if (Platform.isIOS) {
       final result = await _pluginChannel
           .invokeMethod<int>('requestTrackingAuthorization');
-      switch (result) {
-        case 0:
-          return TrackingAuthorizationStatus.notDetermined;
-        case 1:
-          return TrackingAuthorizationStatus.restricted;
-        case 2:
-          return TrackingAuthorizationStatus.denied;
-        case 3:
-          return TrackingAuthorizationStatus.authorized;
-      }
+      if (result != null)
+        switch (result) {
+          case 0:
+            return TrackingAuthorizationStatus.notDetermined;
+          case 1:
+            return TrackingAuthorizationStatus.restricted;
+          case 2:
+            return TrackingAuthorizationStatus.denied;
+          case 3:
+            return TrackingAuthorizationStatus.authorized;
+          default:
+            return TrackingAuthorizationStatus.notDetermined;
+        }
     }
     return TrackingAuthorizationStatus.notDetermined;
   }

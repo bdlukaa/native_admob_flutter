@@ -151,7 +151,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    if (!debugCheckAdWillReload(isLoaded, force)) return false;
+    if (!debugCheckAdWillReload(isAvailable, force)) return false;
     isLoaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId ??
           this.unitId ??
@@ -167,6 +167,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
         return false;
       },
     ))!;
+    if (isLoaded) lastLoadedTime = DateTime.now();
     return isLoaded;
   }
 

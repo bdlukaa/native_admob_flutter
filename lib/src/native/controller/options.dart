@@ -1,14 +1,14 @@
-const int ADCHOICES_TOP_LEFT = 0;
-const int ADCHOICES_TOP_RIGHT = 1;
-const int ADCHOICES_BOTTOM_RIGHT = 2;
-const int ADCHOICES_BOTTOM_LEFT = 3;
-
-const int MEDIA_ASPECT_RATIO_ANY = 1;
-const int MEDIA_ASPECT_RATIO_LANDSCAPE = 2;
-const int MEDIA_ASPECT_RATIO_PORTRAIT = 3;
-const int MEDIA_ASPECT_RATIO_SQUARE = 4;
-
 class NativeAdOptions {
+  static const int ADCHOICES_TOP_LEFT = 0;
+  static const int ADCHOICES_TOP_RIGHT = 1;
+  static const int ADCHOICES_BOTTOM_RIGHT = 2;
+  static const int ADCHOICES_BOTTOM_LEFT = 3;
+
+  static const int MEDIA_ASPECT_RATIO_ANY = 1;
+  static const int MEDIA_ASPECT_RATIO_LANDSCAPE = 2;
+  static const int MEDIA_ASPECT_RATIO_PORTRAIT = 3;
+  static const int MEDIA_ASPECT_RATIO_SQUARE = 4;
+
   NativeAdOptions({
     bool? requestCustomMuteThisAd,
     int? adChoichesPlacement,

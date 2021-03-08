@@ -288,6 +288,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
         return false;
       },
     ))!;
+    if (isLoaded) lastLoadedTime = DateTime.now();
     return isLoaded;
   }
 

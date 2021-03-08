@@ -206,11 +206,6 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Check if the controller is attached to a `NativeAd`
   bool get isAttached => super.isAttached;
 
-  bool _loaded = false;
-
-  /// Returns true if the ad was successfully loaded and is ready to be rendered.
-  bool get isLoaded => _loaded;
-
   /// Creates a new native ad controller
   NativeAdController({
     String? unitId,
@@ -281,17 +276,17 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     }
     switch (call.method) {
       case 'loading':
-        _loaded = false;
+        isLoaded = false;
         onEventController.add({NativeAdEvent.loading: null});
         break;
       case 'onAdFailedToLoad':
-        _loaded = false;
+        isLoaded = false;
         onEventController.add({
           NativeAdEvent.loadFailed: AdError.fromJson(call.arguments),
         });
         break;
       case 'onAdLoaded':
-        _loaded = true;
+        isLoaded = true;
         final arguments = call.arguments! as Map;
         arguments.forEach((key, value) {
           final args = value;
@@ -341,7 +336,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    _loaded = (await channel.invokeMethod<bool>('loadAd', {
+    isLoaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
     }).timeout(
@@ -354,7 +349,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
         return false;
       },
     ))!;
-    return _loaded;
+    if (isLoaded) lastLoadedTime = DateTime.now();
+    return isLoaded;
   }
 
   /// Mutes This Ad programmatically.

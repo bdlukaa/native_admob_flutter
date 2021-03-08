@@ -129,8 +129,9 @@ public class NativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
             ATTrackingManager.requestTrackingAuthorization(completionHandler: { status in
                 result(Int(status.rawValue))
             })
+        } else {
+          result(nil)
         }
-        result(nil)
 
       default:
         result(FlutterMethodNotImplemented)

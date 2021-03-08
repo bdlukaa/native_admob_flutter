@@ -243,6 +243,7 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
         return false;
       },
     ))!;
+    if (isLoaded) lastLoadedTime = DateTime.now();
     return isLoaded;
   }
 }
