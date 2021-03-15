@@ -47,6 +47,11 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
                 controller.channel.invokeMethod("onAdClicked", null)
             }
 
+            override fun onAdLeftApplication() {
+                super.onAdClicked()
+                controller.channel.invokeMethod("onAdLeftApplication", null)
+            }
+
             override fun onAdFailedToLoad(error: LoadAdError) {
                 super.onAdFailedToLoad(error)
                 controller.channel.invokeMethod("onAdFailedToLoad", encodeError(error))

@@ -19,6 +19,7 @@ export 'media_content.dart';
 ///   - loadFailed (When the ad failed to load)
 ///   - muted (When the ad is dismissed)
 ///   - undefined (When it receives an unknown error)
+///   - leftApplication (When the user leaves the app)
 ///
 /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-events)
 enum NativeAdEvent {
@@ -49,6 +50,9 @@ enum NativeAdEvent {
 
   /// Called when the event is unkown (usually for rebuilding ui)
   undefined,
+
+  /// Called when the user left the app
+  leftApplication,
 }
 
 /// The video events a [NativeAdController] can receive. Listen
@@ -301,7 +305,6 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
                   args['isCustomMuteThisAdEnabled'] as bool;
               return;
             default:
-              print(key);
               break;
           }
         });
@@ -309,6 +312,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
         break;
       case 'onAdMuted':
         onEventController.add({NativeAdEvent.muted: null});
+        break;
+      case 'onAdLeftApplication':
+        onEventController.add({NativeAdEvent.leftApplication: null});
         break;
       case 'undefined':
       default:

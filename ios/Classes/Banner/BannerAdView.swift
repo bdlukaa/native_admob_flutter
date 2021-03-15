@@ -76,4 +76,8 @@ extension BannerAdView : GADBannerViewDelegate {
     func bannerViewWillPresentScreen(_ bannerView: GADBannerView) {
         controller.channel.invokeMethod("onAdClicked", arguments: nil)
     }
+
+    func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
+        controller.channel.invokeMethod("onAdLeftApplication", arguments: nil)
+    }
 }
