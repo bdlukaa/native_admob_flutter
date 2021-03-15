@@ -102,7 +102,7 @@ class NativeAdmobController(
 
                     override fun onAdLeftApplication() {
                         super.onAdClicked()
-                        controller.channel.invokeMethod("onAdLeftApplication", null)
+                        channel.invokeMethod("onAdLeftApplication", null)
                     }
 
                     override fun onAdFailedToLoad(error: LoadAdError) {

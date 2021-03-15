@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.0.2+1] - [14/03/2021]
+
+- **FIX** Fixed build error: Unresolved reference: controller
+
 ## [1.0.2] - [14/03/2021]
 
 - **NEW** `BannerAdEvents.leftApplication` and `NativeAdEvents.leftApplication` (Fixes [#26](https://github.com/bdlukaa/native_admob_flutter/issues/26))
