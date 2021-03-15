@@ -51,6 +51,11 @@ class MobileAds {
       ? 'ca-app-pub-3940256099942544/3419835294'
       : 'ca-app-pub-3940256099942544/5662855259';
 
+  static String? rewardedInterstitialAdUnitId;
+  static String get rewardedInterstitialAdTestUnitId => Platform.isAndroid
+      ? 'ca-app-pub-3940256099942544/5354046379'
+      : 'ca-app-pub-3940256099942544/6978759866';
+
   static bool _initialized = false;
 
   /// Check if the SDK is initialized. To initialize it, use
@@ -108,6 +113,7 @@ class MobileAds {
     String? interstitialAdUnitId,
     String? rewardedAdUnitId,
     String? appOpenAdUnitId,
+    String? rewardedInterstitialAdUnitId,
     bool? useHybridComposition,
   }) async {
     assertPlatformIsSupported();
@@ -141,6 +147,12 @@ class MobileAds {
 
     MobileAds.appOpenAdUnitId ??= appOpenAdUnitId ?? appOpenAdTestUnitId;
     _debugCheckIsTestId(MobileAds.appOpenAdUnitId, [appOpenAdTestUnitId]);
+
+    MobileAds.rewardedInterstitialAdUnitId =
+        rewardedInterstitialAdUnitId ?? rewardedInterstitialAdTestUnitId;
+    _debugCheckIsTestId(MobileAds.rewardedInterstitialAdUnitId, [
+      rewardedInterstitialAdTestUnitId,
+    ]);
 
     // Make sure the version is supported
     _version = (await _pluginChannel.invokeMethod<int>('initialize'))!;

@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.1.0-pre] - [14/03/2021]
+
+- **NEW** `RewardedInterstial`
+
 ## [1.0.2+1] - [14/03/2021]
 
 - **FIX** Fixed build error: Unresolved reference: controller

@@ -33,7 +33,8 @@ Para começar com Anúncios Nativos para Flutter, [leia a documentação - Ingl�
 ✔️ Anúncios de Banner (Banner Ads)\
 ✔️ Anúncios Intersticiais (Interstitial Ads)\
 ✔️ Anúncios Prêmiados (Rewarded Ads)\
-✔️ Anúncios de Abertura (App Open Ads)
+✔️ Anúncios de Abertura (App Open Ads)\
+✔️ Anúncios Intersticiais Prêmiados (Rewarded Intersitital Ads)
 
 ### [Plataformas suportadas](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup)
 

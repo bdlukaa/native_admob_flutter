@@ -20,6 +20,7 @@ import io.flutter.plugin.common.MethodChannel.Result
 
 import com.bruno.native_admob_flutter.native.*
 import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
+import com.bruno.native_admob_flutter.rewarded_interstitial.RewardedInterstitialAdControllerManager
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.AdRequest
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
@@ -102,6 +103,18 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
             }
             "disposeAppOpenAd" -> {
                 AppOpenAdControllerManager.removeController(call.argument<String>("id")!!)
+            }
+            // Rewarded Interstitial
+            "initRewardedInterstitialAd" -> {
+                RewardedInterstitialAdControllerManager.createController(
+                        call.argument<String>("id")!!,
+                        messenger,
+                        activity)
+                result.success(null)
+            }
+            "disposeRewardedInterstitialAd" -> {
+                RewardedInterstitialAdControllerManager.removeController(call.argument<String>("id")!!)
+                result.success(null)
             }
             // General Controller
             "isTestDevice" -> result.success(AdRequest.Builder().build().isTestDevice(activity))

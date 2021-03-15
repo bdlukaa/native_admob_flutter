@@ -19,3 +19,5 @@ export 'src/interstitial/interstitial.dart';
 export 'src/rewarded/rewarded.dart';
 
 export 'src/app_open/app_open.dart';
+
+export 'src/rewarded_interstitial/rewarded_interstitial.dart';

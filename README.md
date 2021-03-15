@@ -33,7 +33,8 @@ To get started with Native Ads for Flutter, [read the documentation](https://git
 ✔️ Banner Ads\
 ✔️ Interstitial Ads\
 ✔️ Rewarded Ads\
-✔️ App Open Ads
+✔️ App Open Ads\
+✔️ Rewarded Intersitital Ads
 
 ### [Supported platforms](https://github.com/bdlukaa/native_admob_flutter/wiki/Platform-setup)
 
