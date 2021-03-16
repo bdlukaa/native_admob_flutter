@@ -3,7 +3,7 @@ import GoogleMobileAds
 
 class RewardedIntersititalAdController: NSObject,GADFullScreenContentDelegate {
 
-    var rewardedAd: GADRewardedAd!
+    var rewardedAd: GADRewardedInterstitialAd!
 
 //    var loadRequested: ((MethodChannel.Result) -> Unit)? = null
 
@@ -31,7 +31,7 @@ class RewardedIntersititalAdController: NSObject,GADFullScreenContentDelegate {
             if #available(iOS 13.0, *) {
                 request.scene = UIApplication.shared.keyWindow?.windowScene
             }
-            GADRewardedAd.load(withAdUnitID: unitId, request: request) { (ad : GADRewardedAd?, error:Error?) in
+            GADRewardedInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad : GADRewardedInterstitialAd?, error:Error?) in
                 if error != nil {
                     self.rewardedAd = nil
                     self.channel.invokeMethod("onAdFailedToLoad", arguments: [
