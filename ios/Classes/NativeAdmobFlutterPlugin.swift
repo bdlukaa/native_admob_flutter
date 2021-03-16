@@ -63,6 +63,16 @@ public class NativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
       case "disposeRewardedAd":
         RewardedAdControllerManager.shared.removeController(forID: params?["id"] as! String)
         result(nil)
+        
+        // Rewarded Interstitial
+    case "initRewardedInterstitialAd" :
+        RewardedIntersititalAdControllerManager.shared.createController(forID: params?["id"] as! String, binaryMessenger: messenger)
+        result(nil)
+                   
+    case "disposeRewardedInterstitialAd" :
+        RewardedIntersititalAdControllerManager.shared.removeController(forID: params?["id"] as! String)
+        result(nil)
+                    
 
       // App Open 
       case "initAppOpenAd":
