@@ -59,8 +59,7 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-app-open-ad#ad-events)
-  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<FullScreenAdEvent, dynamic>>;
+  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent => super.onEvent;
 
   bool _isShowing = false;
 

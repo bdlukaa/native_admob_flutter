@@ -1,7 +1,8 @@
 Date format: DD/MM/YYYY
 
-## [1.1.0-pre] - [14/03/2021]
+## [1.1.0] - [16/03/2021]
 
+- **FIX** Add conditional `!controller.isLoaded` before showing error and loading placeholders for both Banner and Native Ads (Fixes [#27](https://github.com/bdlukaa/native_admob_flutter/issues/27))
 - **NEW** `RewardedInterstial`
 
 ## [1.0.2+1] - [14/03/2021]

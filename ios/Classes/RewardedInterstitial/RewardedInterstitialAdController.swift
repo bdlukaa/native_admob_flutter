@@ -1,11 +1,9 @@
 import Flutter
 import GoogleMobileAds
 
-class RewardedIntersititalAdController: NSObject,GADFullScreenContentDelegate {
+class RewardedIntersititalAdController: NSObject, GADFullScreenContentDelegate {
 
     var rewardedAd: GADRewardedInterstitialAd!
-
-//    var loadRequested: ((MethodChannel.Result) -> Unit)? = null
 
     let id: String
     let channel: FlutterMethodChannel
@@ -31,7 +29,7 @@ class RewardedIntersititalAdController: NSObject,GADFullScreenContentDelegate {
             if #available(iOS 13.0, *) {
                 request.scene = UIApplication.shared.keyWindow?.windowScene
             }
-            GADRewardedInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad : GADRewardedInterstitialAd?, error:Error?) in
+            GADRewardedInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad : GADRewardedInterstitialAd?, error: Error?) in
                 if error != nil {
                     self.rewardedAd = nil
                     self.channel.invokeMethod("onAdFailedToLoad", arguments: [
@@ -39,8 +37,7 @@ class RewardedIntersititalAdController: NSObject,GADFullScreenContentDelegate {
                         "message": (error! as NSError).localizedDescription
                     ])
                     result(false)
-                }
-                else{
+                } else {
                     self.rewardedAd = ad
                     self.rewardedAd.fullScreenContentDelegate=self
                     self.channel.invokeMethod("onAdLoaded", arguments: nil)

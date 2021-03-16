@@ -167,8 +167,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events#listen-to-events)
-  Stream<Map<NativeAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<NativeAdEvent, dynamic>>;
+  Stream<Map<NativeAdEvent, dynamic>> get onEvent => super.onEvent;
 
   final _onVideoEvent =
       StreamController<Map<AdVideoEvent, dynamic>>.broadcast();

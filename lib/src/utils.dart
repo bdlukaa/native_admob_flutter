@@ -177,7 +177,7 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   ///   print(event);
   /// });
   /// ```
-  Stream get onEvent => onEventController.stream;
+  Stream<Map<T, dynamic>> get onEvent => onEventController.stream;
 
   /// Channel to communicate with controller
   // @protected

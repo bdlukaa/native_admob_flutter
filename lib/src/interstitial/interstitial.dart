@@ -61,8 +61,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#ad-events)
-  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<FullScreenAdEvent, dynamic>>;
+  Stream<Map<FullScreenAdEvent, dynamic>> get onEvent => super.onEvent;
 
   /// Creates a new interstitial ad controller
   InterstitialAd({
@@ -180,9 +179,8 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-an-interstitial-ad#show-the-ad)
   Future<bool> show() async {
     ensureAdNotDisposed();
-    assert(isLoaded, '''The ad must be loaded to show. 
-      Call interstitialAd.load() to load the ad. 
-      Call interstitialAd.isLoaded to check if the ad is loaded before showing.''');
+    assertMobileAdsIsInitialized();
+    ensureAdAvailable();
     return (await channel.invokeMethod<bool>('show'))!;
   }
 }

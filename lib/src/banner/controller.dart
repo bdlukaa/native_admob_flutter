@@ -158,8 +158,7 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#listening-to-events)
-  Stream<Map<BannerAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<BannerAdEvent, dynamic>>;
+  Stream<Map<BannerAdEvent, dynamic>> get onEvent => super.onEvent;
 
   /// Creates a new native ad controller
   BannerAdController({

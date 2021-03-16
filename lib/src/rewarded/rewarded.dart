@@ -173,8 +173,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// ```
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
-  Stream<Map<RewardedAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<RewardedAdEvent, dynamic>>;
+  Stream<Map<RewardedAdEvent, dynamic>> get onEvent => super.onEvent;
 
   /// Creates a new rewarded ad
   ///
@@ -313,12 +312,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   Future<bool> show() async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    assert(
-      isLoaded,
-      '''The ad must be loaded to show. 
-      Call ad.load() to load the ad. 
-      Call ad.isLoaded to check if the ad is loaded before showing.''',
-    );
+    ensureAdAvailable();
     return (await channel.invokeMethod<bool>('show'))!;
   }
 }

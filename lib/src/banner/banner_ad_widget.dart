@@ -305,13 +305,18 @@ class _BannerAdState extends State<BannerAd>
         if (state == BannerAdEvent.loaded)
           w = widget.builder?.call(context, w) ?? w;
 
-        w = Stack(
-          children: [
-            w,
-            if (state == BannerAdEvent.loading) widget.loading ?? SizedBox(),
-            if (state == BannerAdEvent.loadFailed) widget.error ?? SizedBox(),
-          ],
-        );
+        w = Stack(children: [
+          w,
+          () {
+            if (!controller.isLoaded) {
+              if (state == BannerAdEvent.loading)
+                return widget.loading ?? SizedBox();
+              if (state == BannerAdEvent.loadFailed)
+                return widget.error ?? SizedBox();
+            }
+            return SizedBox();
+          }(),
+        ]);
 
         return w;
       },

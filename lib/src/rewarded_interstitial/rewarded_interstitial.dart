@@ -19,7 +19,7 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#always-test-with-test-ads)
   static String get testUnitId => MobileAds.rewardedInterstitialAdTestUnitId;
 
-  /// Listen to the events the ad throws
+  /// Listen to the events thís ad throws
   ///
   /// Usage:
   /// ```dart
@@ -56,13 +56,12 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// });
   /// ```
   ///
-  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#listening-to-events)
-  Stream<Map<RewardedAdEvent, dynamic>> get onEvent =>
-      super.onEvent as Stream<Map<RewardedAdEvent, dynamic>>;
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#listening-to-events)
+  Stream<Map<RewardedAdEvent, dynamic>> get onEvent => super.onEvent;
 
-  /// Creates a new rewarded ad
+  /// Creates a new Rewarded Intersitital Ad
   ///
-  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#create-a-rewarded-ad)
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#create-a-rewarded-ad)
   RewardedInterstitialAd({
     String? unitId,
     Duration loadTimeout = kDefaultLoadTimeout,
@@ -76,7 +75,9 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// Initialize the ad. This can be called only by the ad
   void init() async {
     channel.setMethodCallHandler(_handleMessages);
-    await MobileAds.pluginChannel.invokeMethod('initRewardedInterstitialAd', {'id': id});
+    await MobileAds.pluginChannel.invokeMethod('initRewardedInterstitialAd', {
+      'id': id,
+    });
   }
 
   /// Dispose the ad to free up resources.
@@ -92,7 +93,9 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// ```
   void dispose() {
     super.dispose();
-    MobileAds.pluginChannel.invokeMethod('disposeRewardedInterstitialAd', {'id': id});
+    MobileAds.pluginChannel.invokeMethod('disposeRewardedInterstitialAd', {
+      'id': id,
+    });
   }
 
   /// Handle the messages the channel sends
@@ -143,7 +146,7 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// if (rewardedAd.isLoaded) rewardedAd.show();
   /// ```
   ///
-  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#load-the-ad)
+  /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#load-the-ad)
   Future<bool> load({
     /// The ad unit id. If null, uses [MobileAds.rewardedAdUnitId]
     String? unitId,
@@ -184,7 +187,7 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   ///
   /// This can be shown only once. If you try to show it more than once,
   /// it'll fail. If you `need` to show it more than once, read
-  /// [this](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#using-rewarded-ads-more-than-once)
+  /// [this](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#using-rewarded-ads-more-than-once)
   ///
   /// Usage
   /// ```dart
@@ -193,16 +196,11 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// print('ad showed');
   /// ```
   ///
-  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#show-the-ad)
+  /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#show-the-ad)
   Future<bool> show() async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
-    assert(
-      isLoaded,
-      '''The ad must be loaded to show. 
-      Call ad.load() to load the ad. 
-      Call ad.isLoaded to check if the ad is loaded before showing.''',
-    );
+    ensureAdAvailable();
     return (await channel.invokeMethod<bool>('showAd'))!;
   }
 }
