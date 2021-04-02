@@ -1,9 +1,9 @@
 package com.bruno.native_admob_flutter.app_open
 
 import android.app.Activity
+import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.appopen.AppOpenAd
@@ -19,13 +19,6 @@ class AppOpenAdController(
 ) : MethodChannel.MethodCallHandler {
 
     private var appOpenAd: AppOpenAd? = null
-
-    private fun fetchAd(unitId: String, orientation: Int, loadCallback: AppOpenAdLoadCallback) {
-        // if (isAdAvailable()) return
-        AdRequest.Builder().build()
-        AppOpenAd.load(context, unitId, AdRequest.Builder().build(), orientation, loadCallback)
-    }
-
 
     private fun isAdAvailable(): Boolean {
         return appOpenAd != null
@@ -49,7 +42,8 @@ class AppOpenAdController(
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
                 val orientation: Int = call.argument<Int>("orientation")!!
-                val loadCallback = object : AppOpenAdLoadCallback() {
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")
+                AppOpenAd.load(context, unitId, NativeAdmobFlutterPlugin.createAdRequest(nonPersonalizedAds), orientation, object : AppOpenAdLoadCallback() {
                     override fun onAppOpenAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
                         channel.invokeMethod("onAppOpenAdLoaded", null)
@@ -60,8 +54,7 @@ class AppOpenAdController(
                         channel.invokeMethod("onAppOpenAdFailedToLoad", encodeError(loadAdError))
                         result.success(false)
                     }
-                }
-                fetchAd(unitId, orientation, loadCallback)
+                })
             }
             "showAd" -> {
                 val fullScreenContentCallback: FullScreenContentCallback = object : FullScreenContentCallback() {

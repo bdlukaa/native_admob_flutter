@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 
 import '../../../native_admob_flutter.dart';
 import '../../utils.dart';
-import 'options.dart';
 import 'media_content.dart';
+import 'options.dart';
 
-export 'options.dart';
 export 'media_content.dart';
+export 'options.dart';
 
 /// The events a [NativeAdController] can receive. Listen
 /// to the events using `controller.onEvent.listen((event) {})`.
@@ -344,6 +344,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     isLoaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
+      'nonPersonalizedAds': nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {
