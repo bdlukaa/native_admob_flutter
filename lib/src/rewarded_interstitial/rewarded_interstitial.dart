@@ -158,6 +158,9 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
 
     /// The timeout of this ad. If null, defaults to 1 minute
     Duration? timeout,
+
+    /// Whether non-personalized ads should be enabled
+    bool? nonPersonalizedAds,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -167,7 +170,7 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
           this.unitId ??
           MobileAds.rewardedAdUnitId ??
           MobileAds.rewardedAdTestUnitId,
-      'nonPersonalizedAds': nonPersonalizedAds,
+      'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

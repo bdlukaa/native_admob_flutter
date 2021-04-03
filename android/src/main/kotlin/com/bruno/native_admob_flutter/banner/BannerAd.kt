@@ -3,6 +3,7 @@ package com.bruno.native_admob_flutter.banner
 import android.content.Context
 import android.view.View
 import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
 import io.flutter.plugin.common.MethodChannel
@@ -22,7 +23,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
     private var controller: BannerAdController = BannerAdControllerManager.getController(data!!["controllerId"] as String)!!
     private var adSize: AdSize
-    private var nonPersonalizedAds: Boolean?
+    private var nonPersonalizedAds: Boolean
 
     private fun getAdSize(context: Context, width: Float): AdSize {
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width.toInt())
@@ -30,14 +31,14 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
     init {
         adSize = getAdSize(controller.context, (data!!["size_width"] as Double).toFloat())
-        nonPersonalizedAds = data["nonPersonalizedAds"] as Boolean?
+        nonPersonalizedAds = data["nonPersonalizedAds"] as Boolean
         generateAdView(context, data)
         controller.loadRequested = { load(it) }
         load(null)
     }
 
     private fun load(result: MethodChannel.Result?) {
-        controller.adView.loadAd(NativeAdmobFlutterPlugin.createAdRequest(nonPersonalizedAds))
+        controller.adView.loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
         controller.adView.adListener = object : AdListener() {
             override fun onAdImpression() {
                 super.onAdImpression()

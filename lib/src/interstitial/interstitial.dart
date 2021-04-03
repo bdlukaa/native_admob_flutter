@@ -149,6 +149,9 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
 
     /// The timeout of this ad. If null, defaults to 1 minute
     Duration? timeout,
+
+    /// Whether non-personalized ads should be enabled
+    bool? nonPersonalizedAds,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -158,7 +161,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
           this.unitId ??
           MobileAds.interstitialAdUnitId ??
           MobileAds.interstitialAdTestUnitId,
-      'nonPersonalizedAds': nonPersonalizedAds,
+      'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

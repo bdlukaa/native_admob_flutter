@@ -1,5 +1,12 @@
 Date format: DD/MM/YYYY
 
+## [1.2.0] - [03/04/2021]
+
+> This version was implemented by [@Skyost](https://github.com/Skyost) with [#35](https://github.com/bdlukaa/native_admob_flutter/pull/35)
+
+- **NEW** Support for non personalized ads (Fixes [#27](https://github.com/bdlukaa/native_admob_flutter/issues/32))
+- **FIX** App doesn't crash anymore by calling `setAppVolume` (Fixes [#29](https://github.com/bdlukaa/native_admob_flutter/issues/29))
+
 ## [1.1.0] - [16/03/2021]
 
 - **FIX** Add conditional `!controller.isLoaded` before showing error and loading placeholders for both Banner and Native Ads (Fixes [#27](https://github.com/bdlukaa/native_admob_flutter/issues/27))
