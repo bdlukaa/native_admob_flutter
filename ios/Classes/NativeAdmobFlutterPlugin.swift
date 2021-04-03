@@ -127,7 +127,7 @@ public class NativeAdmobFlutterPlugin: NSObject, FlutterPlugin {
        result(nil)
 
       case "setAppVolume":
-        GADMobileAds.sharedInstance().applicationVolume = params?["volume"] as! Float
+        GADMobileAds.sharedInstance().applicationVolume = (params?["volume"] as! NSNumber).floatValue
         result(nil)
 
       case "setAppMuted":
