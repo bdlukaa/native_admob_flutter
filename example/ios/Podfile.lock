@@ -32,7 +32,7 @@ PODS:
     - nanopb/encode (= 2.30907.0)
   - nanopb/decode (2.30907.0)
   - nanopb/encode (2.30907.0)
-  - native_admob_flutter (1.0.0):
+  - native_admob_flutter (1.1.0):
     - Flutter
     - Google-Mobile-Ads-SDK
   - PromisesObjC (1.2.12)
@@ -63,9 +63,9 @@ SPEC CHECKSUMS:
   GoogleUserMessagingPlatform: b168e8c46cd8f92aa3e34b584c4ca78a411ce367
   GoogleUtilities: 31c5b01f978a70c6cff2afc6272b3f1921614b43
   nanopb: 59221d7f958fb711001e6a449489542d92ae113e
-  native_admob_flutter: ab3c45b698d0b6742f1185077c1f8ab4c2f4c6cd
+  native_admob_flutter: 6480cc4e2954008a21e9878762754c73a9286920
   PromisesObjC: 3113f7f76903778cf4a0586bd1ab89329a0b7b97
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.10.1
+COCOAPODS: 1.10.0
