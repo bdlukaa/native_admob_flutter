@@ -2,7 +2,6 @@ import Flutter
 import GoogleMobileAds
 
 class RewardedAdControllerManager {
-
     static let shared = RewardedAdControllerManager()
 
     private var controllers: [RewardedAdController] = []

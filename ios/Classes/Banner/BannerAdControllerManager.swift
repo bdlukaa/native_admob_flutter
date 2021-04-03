@@ -2,7 +2,6 @@ import Flutter
 import GoogleMobileAds
 
 class BannerAdControllerManager {
-
     static let shared = BannerAdControllerManager()
 
     private var controllers: [BannerAdController] = []

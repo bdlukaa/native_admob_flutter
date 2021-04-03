@@ -1,73 +1,66 @@
 import Flutter
 import GoogleMobileAds
 
-class InterstitialAdController: NSObject,GADFullScreenContentDelegate {
-    
+class InterstitialAdController: NSObject, GADFullScreenContentDelegate {
     var interstitialAd: GADInterstitialAd!
-    
+
     let id: String
     let channel: FlutterMethodChannel
-    var result : FlutterResult?=nil
+    var result: FlutterResult?
 
-    
     init(id: String, channel: FlutterMethodChannel) {
         self.id = id
         self.channel = channel
         super.init()
-        
+
         channel.setMethodCallHandler(handle)
     }
-    
+
     private func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        self.result=result
+        self.result = result
         let params = call.arguments as? [String: Any]
-        
+
         switch call.method {
         case "loadAd":
             channel.invokeMethod("loading", arguments: nil)
             let unitId: String = params?["unitId"] as! String
-            let request = GADRequest()
-            if #available(iOS 13.0, *) {
-                request.scene = UIApplication.shared.keyWindow?.windowScene
-            }
-            GADInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad : GADInterstitialAd?, error:Error?) in
+            let nonPersonalizedAds: Bool = params?["nonPersonalizedAds"] as! Bool
+            let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
+            GADInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad: GADInterstitialAd?, error: Error?) in
                 if error != nil {
                     self.interstitialAd = nil
                     self.channel.invokeMethod("onAdFailedToLoad", arguments: [
                         "errorCode": (error! as NSError).code,
-                        "message": (error! as NSError).localizedDescription
+                        "message": (error! as NSError).localizedDescription,
                     ])
                     result(false)
-                }
-                else{
+                } else {
                     self.interstitialAd = ad
-                    self.interstitialAd.fullScreenContentDelegate=self
+                    self.interstitialAd.fullScreenContentDelegate = self
                     self.channel.invokeMethod("onAdLoaded", arguments: nil)
                     result(true)
                 }
             }
-        case "show" :
-            if (self.interstitialAd == nil){ return result(false)}
-            self.interstitialAd.present(fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!)
-            
+        case "show":
+            if interstitialAd == nil { return result(false) }
+            interstitialAd.present(fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!)
+
         default:
             result(FlutterMethodNotImplemented)
         }
     }
-    
-    func ad(_ ad: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
-        self.channel.invokeMethod("onAdFailedToShowFullScreenContent", arguments: error.localizedDescription)
+
+    func ad(_: GADFullScreenPresentingAd, didFailToPresentFullScreenContentWithError error: Error) {
+        channel.invokeMethod("onAdFailedToShowFullScreenContent", arguments: error.localizedDescription)
         result!(false)
     }
-    
-    func adDidPresentFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        self.channel.invokeMethod("onAdShowedFullScreenContent", arguments: nil)
+
+    func adDidPresentFullScreenContent(_: GADFullScreenPresentingAd) {
+        channel.invokeMethod("onAdShowedFullScreenContent", arguments: nil)
     }
-    
-    func adDidDismissFullScreenContent(_ ad: GADFullScreenPresentingAd) {
-        self.channel.invokeMethod("onAdDismissedFullScreenContent", arguments: nil)
+
+    func adDidDismissFullScreenContent(_: GADFullScreenPresentingAd) {
+        channel.invokeMethod("onAdDismissedFullScreenContent", arguments: nil)
         result!(true)
     }
-    
 }
-

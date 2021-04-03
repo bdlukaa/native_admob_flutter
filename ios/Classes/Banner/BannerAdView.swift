@@ -1,83 +1,79 @@
 import Flutter
 import GoogleMobileAds
 
-class BannerAdView : NSObject,FlutterPlatformView {
-    
-    var data:Dictionary<String, Any>?
+class BannerAdView: NSObject, FlutterPlatformView {
+    var data: [String: Any]?
     var controller: BannerAdController
     private let messenger: FlutterBinaryMessenger
-    var result : FlutterResult?=nil
+    var result: FlutterResult?
     private var adSize: GADAdSize = kGADAdSizeBanner
-    
-    private func getAdSize(width: Float)-> GADAdSize {
+
+    private func getAdSize(width: Float) -> GADAdSize {
         return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
     }
-    
-    init(data: Dictionary<String, Any>?, messenger: FlutterBinaryMessenger) {
-        self.data=data
-        self.controller = BannerAdControllerManager.shared.getController(forID: data?["controllerId"] as? String)!
-        self.result=controller.result
+
+    init(data: [String: Any]?, messenger: FlutterBinaryMessenger) {
+        self.data = data
+        controller = BannerAdControllerManager.shared.getController(forID: data?["controllerId"] as? String)!
+        result = controller.result
         self.messenger = messenger
         super.init()
-        if let width = data?["size_width"] as! Float?, width != -1{
-            self.adSize=getAdSize(width: width)
+        if let width = data?["size_width"] as! Float?, width != -1 {
+            adSize = getAdSize(width: width)
         }
-        self.controller.loadRequested=load
-        generateAdView(data:data)
+        controller.loadRequested = load
+        generateAdView(data: data)
         load()
     }
-    
+
     private func load() {
-        let request = GADRequest()
-        if #available(iOS 13.0, *) {
-            request.scene = UIApplication.shared.keyWindow?.windowScene
-        }
+        let nonPersonalizedAds: Bool = data?["nonPersonalizedAds"] as! Bool
+        let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
         controller.bannerView.load(request)
     }
-    
-    private func generateAdView(data:Dictionary<String, Any>?) {
+
+    private func generateAdView(data: [String: Any]?) {
         controller.bannerView = GADBannerView()
         if let width = Int(data?["size_width"] as! Float) as Int?,
-           let height = Int(data?["size_height"] as! Float) as Int?, height != -1, width != -1{
-            self.controller.bannerView.adSize = GADAdSizeFromCGSize(CGSize(width: width, height: height))
+           let height = Int(data?["size_height"] as! Float) as Int?, height != -1, width != -1
+        {
+            controller.bannerView.adSize = GADAdSizeFromCGSize(CGSize(width: width, height: height))
+        } else {
+            controller.bannerView.adSize = adSize
         }
-        else{
-            self.controller.bannerView.adSize = adSize
-        }
-        controller.bannerView.rootViewController=UIApplication.shared.keyWindow?.rootViewController
+        controller.bannerView.rootViewController = UIApplication.shared.keyWindow?.rootViewController
         controller.bannerView.adUnitID = (data?["unitId"] as! String)
-        controller.bannerView.delegate=self
+        controller.bannerView.delegate = self
     }
-    
+
     func view() -> UIView {
         return controller.bannerView
     }
-    
 }
 
-extension BannerAdView : GADBannerViewDelegate {
-    func bannerViewDidReceiveAd(_ bannerView: GADBannerView) {
+extension BannerAdView: GADBannerViewDelegate {
+    func bannerViewDidReceiveAd(_: GADBannerView) {
         controller.channel.invokeMethod("onAdLoaded", arguments: controller.bannerView.adSize.size.height)
         result?(true)
     }
-    
-    private func bannerView(bannerView: GADBannerView, didFailToReceiveAdWithError error: NSError) {
+
+    private func bannerView(bannerView _: GADBannerView, didFailToReceiveAdWithError error: NSError) {
         controller.channel.invokeMethod("onAdFailedToLoad", arguments: [
             "errorCode": error.code,
-            "message": error.localizedDescription
+            "message": error.localizedDescription,
         ])
         result?(false)
     }
-    
-    func bannerViewDidRecordImpression(_ bannerView: GADBannerView){
+
+    func bannerViewDidRecordImpression(_: GADBannerView) {
         controller.channel.invokeMethod("onAdImpression", arguments: nil)
     }
-    
-    func bannerViewWillPresentScreen(_ bannerView: GADBannerView) {
+
+    func bannerViewWillPresentScreen(_: GADBannerView) {
         controller.channel.invokeMethod("onAdClicked", arguments: nil)
     }
 
-    func adViewWillLeaveApplication(_ bannerView: GADBannerView) {
+    func adViewWillLeaveApplication(_: GADBannerView) {
         controller.channel.invokeMethod("onAdLeftApplication", arguments: nil)
     }
 }
