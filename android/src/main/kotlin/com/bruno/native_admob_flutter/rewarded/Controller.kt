@@ -1,10 +1,9 @@
 package com.bruno.native_admob_flutter.rewarded
 
 import android.app.Activity
-import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
@@ -30,8 +29,8 @@ class RewardedAdController(
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
-                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")
-                RewardedAd.load(activity, unitId, NativeAdmobFlutterPlugin.createAdRequest(nonPersonalizedAds), object : RewardedAdLoadCallback() {
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
+                RewardedAd.load(activity, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : RewardedAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedAd) {
                         rewardedAd = ad
                         channel.invokeMethod("onAdLoaded", null)

@@ -1,7 +1,7 @@
 package com.bruno.native_admob_flutter.app_open
 
 import android.app.Activity
-import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
@@ -42,8 +42,8 @@ class AppOpenAdController(
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
                 val orientation: Int = call.argument<Int>("orientation")!!
-                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")
-                AppOpenAd.load(context, unitId, NativeAdmobFlutterPlugin.createAdRequest(nonPersonalizedAds), orientation, object : AppOpenAdLoadCallback() {
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
+                AppOpenAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), orientation, object : AppOpenAdLoadCallback() {
                     override fun onAppOpenAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
                         channel.invokeMethod("onAppOpenAdLoaded", null)

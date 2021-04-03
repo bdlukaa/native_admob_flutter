@@ -1,7 +1,7 @@
 package com.bruno.native_admob_flutter.interstitial
 
 import android.app.Activity
-import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -27,8 +27,8 @@ class InterstitialAdController(
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
                 val unitId = call.argument<String>("unitId")!!
-                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")
-                InterstitialAd.load(context, unitId, NativeAdmobFlutterPlugin.createAdRequest(nonPersonalizedAds), object : InterstitialAdLoadCallback() {
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
+                InterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : InterstitialAdLoadCallback() {
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         mInterstitialAd = null
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))

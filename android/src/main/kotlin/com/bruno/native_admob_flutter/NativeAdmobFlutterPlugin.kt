@@ -33,18 +33,6 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
 
     private lateinit var messenger: BinaryMessenger
 
-    companion object {
-        fun createAdRequest(nonPersonalizedAds: Boolean?) : AdRequest {
-            val builder = AdRequest.Builder()
-            if (nonPersonalizedAds == true) {
-                val extras = Bundle()
-                extras.putString("npa", "1")
-                builder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
-            }
-            return builder.build()
-        }
-    }
-
     override fun onAttachedToEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
         channel = MethodChannel(binding.binaryMessenger, "native_admob_flutter")
         channel.setMethodCallHandler(this)
