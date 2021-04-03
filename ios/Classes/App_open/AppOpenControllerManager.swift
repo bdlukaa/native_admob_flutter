@@ -2,7 +2,6 @@ import Flutter
 import GoogleMobileAds
 
 class AppOpenAdControllerManager {
-
     static let shared = AppOpenAdControllerManager()
 
     private var controllers: [AppOpenAdController] = []

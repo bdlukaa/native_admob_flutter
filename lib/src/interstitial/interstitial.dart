@@ -68,10 +68,12 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
     String? unitId,
     Duration loadTimeout = kDefaultLoadTimeout,
     Duration timeout = kDefaultAdTimeout,
+    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
   }) : super(
           unitId: unitId,
           loadTimeout: loadTimeout,
           timeout: timeout,
+          nonPersonalizedAds: nonPersonalizedAds,
         );
 
   /// Initialize the controller. This can be called only by the controller
@@ -156,6 +158,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
           this.unitId ??
           MobileAds.interstitialAdUnitId ??
           MobileAds.interstitialAdTestUnitId,
+      'nonPersonalizedAds': nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

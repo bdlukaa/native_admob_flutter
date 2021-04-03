@@ -75,10 +75,12 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
     Duration loadTimeout = kDefaultLoadTimeout,
     Duration timeout = kDefaultAdTimeout,
     String? unitId,
+    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
   }) : super(
           unitId: unitId,
           loadTimeout: loadTimeout,
           timeout: timeout,
+          nonPersonalizedAds: nonPersonalizedAds,
         );
 
   void init() {
@@ -173,6 +175,7 @@ class AppOpenAd extends LoadShowAd<FullScreenAdEvent> {
           MobileAds.appOpenAdUnitId ??
           MobileAds.appOpenAdTestUnitId,
       'orientation': orientation,
+      'nonPersonalizedAds': nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

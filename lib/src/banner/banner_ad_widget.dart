@@ -1,14 +1,13 @@
-import 'dart:io' show Platform;
 import 'dart:async';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../native_admob_flutter.dart';
 import '../platform_views.dart';
 import '../utils.dart';
 import 'controller.dart';
-
-import '../../native_admob_flutter.dart';
 
 const _viewType = 'banner_admob';
 
@@ -33,6 +32,7 @@ class BannerAd extends StatefulWidget {
     this.options = const BannerAdOptions(),
     this.delayToShow,
     this.loadTimeout = kDefaultLoadTimeout,
+    this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
     this.useHybridComposition,
   }) : super(key: key);
 
@@ -166,6 +166,10 @@ class BannerAd extends StatefulWidget {
   /// If `null`, defaults to 1 minute
   final Duration loadTimeout;
 
+  /// Whether non-personalized ads (ads that are not based on a user’s past behavior)
+  /// should be enabled.
+  final bool nonPersonalizedAds;
+
   /// Use hybrid composition in this ad. This has effect only on Android
   ///
   /// If null, defaults to `MobileAds.useHybridComposition`
@@ -264,6 +268,7 @@ class _BannerAdState extends State<BannerAd>
           'unitId': widget.unitId ?? MobileAds.bannerAdUnitId,
           'size_height': height,
           'size_width': width,
+          'nonPersonalizedAds': widget.nonPersonalizedAds,
         });
 
         Widget w;

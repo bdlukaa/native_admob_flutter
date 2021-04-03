@@ -1,10 +1,9 @@
 package com.bruno.native_admob_flutter.rewarded_interstitial
 
 import android.app.Activity
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
-import com.bruno.native_admob_flutter.rewarded.RewardedAdController
 import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
@@ -31,7 +30,8 @@ class RewardedInterstitialController(
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
-                RewardedInterstitialAd.load(context, unitId, AdRequest.Builder().build(), object : RewardedInterstitialAdLoadCallback() {
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
+                RewardedInterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
                         rewardedInterstitialAd = ad
                         channel.invokeMethod("onAdLoaded", null)

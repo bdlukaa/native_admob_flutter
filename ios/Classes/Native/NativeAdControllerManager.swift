@@ -2,7 +2,6 @@ import Flutter
 import GoogleMobileAds
 
 class NativeAdControllerManager {
-
     static let shared = NativeAdControllerManager()
 
     private var controllers: [NativeAdController] = []

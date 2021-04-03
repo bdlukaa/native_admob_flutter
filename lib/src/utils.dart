@@ -165,6 +165,7 @@ mixin AttachableMixin {
 
 const Duration kDefaultLoadTimeout = Duration(minutes: 1);
 const Duration kDefaultAdTimeout = Duration(minutes: 30);
+const bool kDefaultNonPersonalizedAds = false;
 
 abstract class LoadShowAd<T> with UniqueKeyMixin {
   @protected
@@ -224,11 +225,16 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   /// If `null`, defaults to 30 seconds
   final Duration loadTimeout;
 
+  /// Whether non-personalized ads (ads that are not based on a user’s past behavior)
+  /// should be enabled.
+  final bool nonPersonalizedAds;
+
   @mustCallSuper
   LoadShowAd({
     this.unitId,
     this.loadTimeout = kDefaultLoadTimeout,
     this.timeout = kDefaultAdTimeout,
+    this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
   }) {
     channel = MethodChannel(id);
     init();

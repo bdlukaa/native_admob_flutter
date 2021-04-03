@@ -182,10 +182,12 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
     String? unitId,
     Duration loadTimeout = kDefaultLoadTimeout,
     Duration timeout = kDefaultAdTimeout,
+    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
   }) : super(
           unitId: unitId,
           loadTimeout: loadTimeout,
           timeout: timeout,
+          nonPersonalizedAds: nonPersonalizedAds,
         );
 
   /// Initialize the ad. This can be called only by the ad
@@ -277,6 +279,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
           this.unitId ??
           MobileAds.rewardedAdUnitId ??
           MobileAds.rewardedAdTestUnitId,
+      'nonPersonalizedAds': nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

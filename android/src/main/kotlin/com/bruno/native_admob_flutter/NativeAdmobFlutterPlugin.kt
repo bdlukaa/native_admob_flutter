@@ -1,30 +1,30 @@
 package com.bruno.native_admob_flutter
 
 import android.app.Activity
-import android.content.Context
-import android.content.res.Resources
 import android.os.Build
+import android.os.Bundle
 import androidx.annotation.NonNull
 import com.bruno.native_admob_flutter.app_open.AppOpenAdControllerManager
-import com.bruno.native_admob_flutter.banner.*
+import com.bruno.native_admob_flutter.banner.BannerAdControllerManager
+import com.bruno.native_admob_flutter.banner.BannerAdViewFactory
 import com.bruno.native_admob_flutter.interstitial.InterstitialAdControllerManager
+import com.bruno.native_admob_flutter.native.NativeAdmobControllerManager
+import com.bruno.native_admob_flutter.native.NativeViewFactory
+import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
+import com.bruno.native_admob_flutter.rewarded_interstitial.RewardedInterstitialAdControllerManager
+import com.google.ads.mediation.admob.AdMobAdapter
+import com.google.android.gms.ads.AdError
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.RequestConfiguration
-
 import io.flutter.embedding.engine.plugins.FlutterPlugin
+import io.flutter.embedding.engine.plugins.activity.ActivityAware
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-
-import com.bruno.native_admob_flutter.native.*
-import com.bruno.native_admob_flutter.rewarded.RewardedAdControllerManager
-import com.bruno.native_admob_flutter.rewarded_interstitial.RewardedInterstitialAdControllerManager
-import com.google.android.gms.ads.AdError
-import com.google.android.gms.ads.AdRequest
-import io.flutter.embedding.engine.plugins.activity.ActivityAware
-import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
 
 class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler {
     private lateinit var channel: MethodChannel

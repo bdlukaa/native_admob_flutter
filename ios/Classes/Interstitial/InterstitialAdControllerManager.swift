@@ -2,7 +2,6 @@ import Flutter
 import GoogleMobileAds
 
 class InterstitialAdControllerManager {
-
     static let shared = InterstitialAdControllerManager()
 
     private var controllers: [InterstitialAdController] = []

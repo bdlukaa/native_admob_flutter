@@ -1,10 +1,7 @@
 package com.bruno.native_admob_flutter.banner
 
 import android.content.Context
-import com.bruno.native_admob_flutter.encodeError
-import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdView
-import com.google.android.gms.ads.LoadAdError
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel

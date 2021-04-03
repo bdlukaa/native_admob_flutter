@@ -1,14 +1,13 @@
 extension Int {
     func dp() -> Int {
-        if (self == -1 || self == -2) {return self}
+        if self == -1 || self == -2 { return self }
         let density = UIScreen.main.scale
         return Int(CGFloat(self) * density)
     }
-    
+
     func dpReverse() -> Int {
-        if (self == -1 || self == -2) {return self}
+        if self == -1 || self == -2 { return self }
         let density = UIScreen.main.scale
         return Int(CGFloat(self) / density)
     }
 }
-

@@ -1,6 +1,7 @@
 package com.bruno.native_admob_flutter.native
 
 import android.content.Context
+import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.nativead.NativeAd
@@ -29,8 +30,9 @@ class NativeAdmobController(
         when (call.method) {
             "loadAd" -> {
                 val unitId = call.argument<String>("unitId") ?: "ca-app-pub-3940256099942544/2247696110"
+                val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
                 val options = call.argument<Map<String, Any>>("options")
-                loadAd(unitId, options!!, result)
+                loadAd(unitId, options!!, nonPersonalizedAds, result)
             }
             "updateUI" -> {
                 val data = call.argument<Map<String, Any?>>("layout") ?: return
@@ -52,7 +54,7 @@ class NativeAdmobController(
         channel.invokeMethod("undefined", null)
     }
 
-    private fun loadAd(unitId: String, options: Map<String, Any>, result: MethodChannel.Result) {
+    private fun loadAd(unitId: String, options: Map<String, Any>, nonPersonalizedAds: Boolean, result: MethodChannel.Result) {
         channel.invokeMethod("loading", null)
         // ad options
         val adOptions = NativeAdOptions.Builder()
@@ -131,7 +133,7 @@ class NativeAdmobController(
                 })
                 .withNativeAdOptions(adOptions.build())
                 .build()
-                .loadAd(AdRequest.Builder().build())
+                .loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
     }
 
 }
