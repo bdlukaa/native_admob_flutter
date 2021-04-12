@@ -199,6 +199,7 @@ class _BannerAdState extends State<BannerAd>
     _onEventSub = controller.onEvent.listen((e) {
       final event = e.keys.first;
       final info = e.values.first;
+      // print('$event : $info');
       switch (event) {
         case BannerAdEvent.loading:
         case BannerAdEvent.loadFailed:
@@ -210,7 +211,7 @@ class _BannerAdState extends State<BannerAd>
           break;
       }
     });
-    if (!controller.isLoaded) controller.load(timeout: widget.loadTimeout);
+    // if (!controller.isLoaded) controller.load(timeout: widget.loadTimeout);
   }
 
   @override
@@ -278,12 +279,20 @@ class _BannerAdState extends State<BannerAd>
             viewType: _viewType,
             delayToShow: widget.delayToShow,
             useHybridComposition: widget.useHybridComposition,
+            onCreated: (i) {
+              if (!controller.isLoaded)
+                controller.load(timeout: widget.loadTimeout);
+            },
           );
         } else if (Platform.isIOS) {
           w = UiKitView(
             viewType: _viewType,
             creationParamsCodec: StandardMessageCodec(),
             creationParams: params,
+            onPlatformViewCreated: (i) {
+              if (!controller.isLoaded)
+                controller.load(timeout: widget.loadTimeout);
+            },
           );
         } else {
           return SizedBox();
@@ -312,15 +321,14 @@ class _BannerAdState extends State<BannerAd>
 
         w = Stack(children: [
           w,
-          () {
-            if (!controller.isLoaded) {
+          if (!controller.isLoaded)
+            () {
               if (state == BannerAdEvent.loading)
                 return widget.loading ?? SizedBox();
               if (state == BannerAdEvent.loadFailed)
                 return widget.error ?? SizedBox();
-            }
-            return SizedBox();
-          }(),
+              return SizedBox();
+            }(),
         ]);
 
         return w;

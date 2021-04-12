@@ -23,7 +23,7 @@ class BannerAdView: NSObject, FlutterPlatformView {
         }
         controller.loadRequested = load
         generateAdView(data: data)
-        load()
+        // load()
     }
 
     private func load() {
