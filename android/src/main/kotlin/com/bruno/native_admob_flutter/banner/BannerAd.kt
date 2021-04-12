@@ -34,7 +34,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         nonPersonalizedAds = data["nonPersonalizedAds"] as Boolean
         generateAdView(context, data)
         controller.loadRequested = { load(it) }
-        // load(null)
+        load(null)
     }
 
     private fun load(result: MethodChannel.Result?) {
