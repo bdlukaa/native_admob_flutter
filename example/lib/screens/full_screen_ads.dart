@@ -8,6 +8,7 @@ final interstitialVideoAd = InterstitialAd()
 final rewardedAd = RewardedAd()..load();
 
 final AppOpenAd appOpenAd = AppOpenAd()..load();
+final rewardedInterstitial = RewardedInterstitialAd()..load();
 
 class FullScreenAds extends StatefulWidget {
   const FullScreenAds({Key? key}) : super(key: key);
@@ -17,8 +18,6 @@ class FullScreenAds extends StatefulWidget {
 }
 
 class _FullScreenAdsState extends State<FullScreenAds> {
-  final rewardedInterstitial = RewardedInterstitialAd()..load();
-
   @override
   void initState() {
     if (!interstitialAd.isLoaded) interstitialAd.load();
@@ -35,12 +34,18 @@ class _FullScreenAdsState extends State<FullScreenAds> {
       }
     });
     appOpenAd.onEvent.listen((e) => print(e));
+
+    rewardedAd.onEvent.listen((e) {
+      print('rewarded event $e');
+    });
+    rewardedInterstitial.onEvent.listen((e) {
+      print('rewarded interstitial event $e');
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    print(rewardedInterstitial.isLoaded);
     return RefreshIndicator(
       onRefresh: () async {
         await interstitialAd.load();

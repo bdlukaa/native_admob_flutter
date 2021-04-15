@@ -106,18 +106,21 @@ enum RewardedAdEvent {
 
 class RewardItem {
   /// Returns the reward amount.
-  int? amount;
+  final int? amount;
 
   /// Returns the type of the reward.
-  String? type;
+  final String? type;
 
-  RewardItem({this.amount, this.type});
+  const RewardItem({this.amount, this.type});
 
   @override
   String toString() => '$amount $type';
 
   factory RewardItem.fromJson(Map j) {
-    return RewardItem(amount: j['amount'], type: j['type']);
+    return RewardItem(
+      amount: int.parse(j['amount'].toString()),
+      type: j['type'].toString(),
+    );
   }
 }
 

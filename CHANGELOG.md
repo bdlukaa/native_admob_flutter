@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.2.1] - [15/04/2021]
+
+- **FIX** `RewardedAdEvent.earnedRewarded` was never being called (Fixes [#40](https://github.com/bdlukaa/native_admob_flutter/issues/40))
+
 ## [1.2.0] - [03/04/2021]
 
 > This version was implemented by [@Skyost](https://github.com/Skyost) with [#35](https://github.com/bdlukaa/native_admob_flutter/pull/35)
