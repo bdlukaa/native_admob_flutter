@@ -17,7 +17,8 @@ const int RATING_MA = 3;
 ///   - using test devices and test ids;
 ///   - targeting the right groups of people.
 class MobileAds {
-  MobileAds._();
+  // MobileAds can not be initialized
+  const MobileAds._();
 
   // Unit ids
   static String? nativeAdUnitId;
@@ -62,8 +63,6 @@ class MobileAds {
   /// `MobileAds.initialize()`
   static bool get isInitialized => _initialized;
 
-  static bool _useHybridComposition = false;
-
   /// Check if hybrid composition is enabled on android. It's enabled by default if
   /// the android version is 19 and on iOS. Do NOT set it before `MobileAds.initialize()`.
   /// Note that on Android versions prior to Android 10 Hybrid Composition has some
@@ -79,11 +78,7 @@ class MobileAds {
   /// ```
   ///
   /// For more info on hybrid composition, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enabling-hybrid-composition-for-android)
-  static bool get useHybridComposition => _useHybridComposition;
-  static set useHybridComposition(bool? use) {
-    use ??= false;
-    _useHybridComposition = use;
-  }
+  static bool useHybridComposition = false;
 
   static int _version = 0;
 
@@ -195,16 +190,16 @@ class MobileAds {
   ///
   /// [Learn more](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enable-test-devices)
   ///
-  /// Pass null to clear the list
+  /// Pass `null` to clear the list
   static Future<void> setTestDeviceIds(List<String> ids) {
     return _pluginChannel.invokeMethod('setTestDeviceIds', {'ids': ids});
   }
 
-  /// Returns `true` if this device will receive test ads.
+  /// Returns `true` if this device will receive test ads. Always return `false` on iOS
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Initialize#enable-test-devices)
-  static Future<bool?> isTestDevice() {
-    return _pluginChannel.invokeMethod<bool>('isTestDevice');
+  static Future<bool> isTestDevice() async {
+    return (await _pluginChannel.invokeMethod<bool>('isTestDevice')) ?? false;
   }
 
   /// For purposes of the Children's Online Privacy Protection Act (COPPA),

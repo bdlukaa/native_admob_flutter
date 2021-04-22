@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.2.3] - [22/04/2021]
+
+- **FIX** **NULL-SAFETY** `MobileAds.isTestDevice` now can't return null
+- **FIX** The Banner `AdView`'s is now not disposed when `BannerAdView` is removed from the view. It's not disposed when the controller is disposed.
+
 ## [1.2.2] - [22/04/2021]
 
 - **FIX** The `NativeAd` object is not disposed when the `NativeAdView` is removed from the view. It's now disposed when the controller is disposed. (Fixes [#45](https://github.com/bdlukaa/native_admob_flutter/issues/45))

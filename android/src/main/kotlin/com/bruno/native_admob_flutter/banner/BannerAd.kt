@@ -82,7 +82,5 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         return controller.adView
     }
 
-    override fun dispose() {
-        controller.adView.destroy()
-    }
+    override fun dispose() {}
 }

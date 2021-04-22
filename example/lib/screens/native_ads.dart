@@ -24,7 +24,7 @@ class _NativeAdsState extends State<NativeAds>
   }
 
   @override
-  void dispose() { 
+  void dispose() {
     controller.dispose();
     super.dispose();
   }
