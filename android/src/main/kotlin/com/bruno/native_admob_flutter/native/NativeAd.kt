@@ -314,9 +314,7 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
         return adView
     }
 
-    override fun dispose() {
-        controller?.nativeAd?.destroy()
-    }
+    override fun dispose() {}
 
 }
 

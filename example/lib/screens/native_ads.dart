@@ -24,6 +24,12 @@ class _NativeAdsState extends State<NativeAds>
   }
 
   @override
+  void dispose() { 
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     if (child != null) return child!;

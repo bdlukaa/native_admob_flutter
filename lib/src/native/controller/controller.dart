@@ -336,6 +336,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
 
     /// The timeout of this ad. If null, defaults to 1 minute
     Duration? timeout,
+
+    /// Whether non-personalized ads (ads that are not based on a user’s past behavior) should be enabled.
+    bool? nonPersonalizedAds,
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -344,7 +347,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     isLoaded = (await channel.invokeMethod<bool>('loadAd', {
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
-      'nonPersonalizedAds': nonPersonalizedAds,
+      'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

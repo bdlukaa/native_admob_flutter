@@ -1,8 +1,13 @@
 Date format: DD/MM/YYYY
 
+## [1.2.2] - [22/04/2021]
+
+- **FIX** The `NativeAd` object is not disposed when the `NativeAdView` is removed from the view. It's now disposed when the controller is disposed. (Fixes [#45](https://github.com/bdlukaa/native_admob_flutter/issues/45))
+- **FIX** `W/StaticLayout(21479): maxLineHeight should not be -1.  maxLines:1 lineCount:1` is not logged frequently anymore. Only sometimes
+
 ## [1.2.1] - [15/04/2021]
 
-- **FIX** `RewardedAdEvent.earnedRewarded` was never being called (Fixes [#40](https://github.com/bdlukaa/native_admob_flutter/issues/40))
+- **FIX** `RewardedAdEvent.earnedRewarded` was never being called. (Fixes [#40](https://github.com/bdlukaa/native_admob_flutter/issues/40))
 
 ## [1.2.0] - [03/04/2021]
 

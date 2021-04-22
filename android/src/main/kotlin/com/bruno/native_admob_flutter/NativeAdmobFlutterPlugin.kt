@@ -54,7 +54,9 @@ class NativeAdmobFlutterPlugin : FlutterPlugin, ActivityAware, MethodCallHandler
                 result.success(null)
             }
             "disposeNativeAdController" -> {
-                NativeAdmobControllerManager.removeController(call.argument<String>("id")!!)
+                val id = call.argument<String>("id") ?: return result.success(false)
+                NativeAdmobControllerManager.getController(id)?.nativeAd?.destroy()
+                NativeAdmobControllerManager.removeController(id)
                 result.success(null)
             }
             // Banner Ads Controller
