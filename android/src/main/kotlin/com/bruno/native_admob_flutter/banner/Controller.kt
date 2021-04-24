@@ -12,7 +12,7 @@ class BannerAdController(
         val context: Context
 ) : MethodChannel.MethodCallHandler {
 
-    lateinit var adView: AdView
+    var adView: AdView? = null
 
     /// New native ad when loaded
     var loadRequested: ((MethodChannel.Result) -> Unit)? = null

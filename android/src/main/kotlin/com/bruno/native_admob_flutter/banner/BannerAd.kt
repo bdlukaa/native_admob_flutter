@@ -2,7 +2,6 @@ package com.bruno.native_admob_flutter.banner
 
 import android.content.Context
 import android.view.View
-import com.bruno.native_admob_flutter.NativeAdmobFlutterPlugin
 import com.bruno.native_admob_flutter.RequestFactory
 import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.*
@@ -38,8 +37,8 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     }
 
     private fun load(result: MethodChannel.Result?) {
-        controller.adView.loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
-        controller.adView.adListener = object : AdListener() {
+        controller.adView!!.loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
+        controller.adView!!.adListener = object : AdListener() {
             override fun onAdImpression() {
                 super.onAdImpression()
                 controller.channel.invokeMethod("onAdImpression", null)
@@ -63,7 +62,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
 
             override fun onAdLoaded() {
                 super.onAdLoaded()
-                controller.channel.invokeMethod("onAdLoaded", controller.adView.adSize.height)
+                controller.channel.invokeMethod("onAdLoaded", controller.adView!!.adSize.height)
                 result?.success(true)
             }
         }
@@ -73,13 +72,13 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
         controller.adView = AdView(context)
         val width: Int = (data!!["size_width"] as Double).toInt()
         val height: Int = (data["size_height"] as Double).toInt()
-        if (height != -1) controller.adView.adSize = AdSize(width, height)
-        else controller.adView.adSize = adSize
-        controller.adView.adUnitId = data["unitId"] as String
+        if (height != -1) controller.adView!!.adSize = AdSize(width, height)
+        else controller.adView!!.adSize = adSize
+        controller.adView!!.adUnitId = data["unitId"] as String
     }
 
     override fun getView(): View {
-        return controller.adView
+        return controller.adView!!
     }
 
     override fun dispose() {}

@@ -335,5 +335,6 @@ fun TextView.applyText(data: Map<*, *>) {
     (data["minLines"] as? Int?)?.let { view.minLines = it }
     (data["bold"] as? Boolean)?.let { if (it) view.setTypeface(view.typeface, Typeface.BOLD) }
     (data["text"] as? String)?.let { view.text = it }
+    view.lineHeight = 1
     view.ellipsize = TextUtils.TruncateAt.END
 }

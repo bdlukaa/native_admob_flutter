@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.2.4] - [24/04/2021]
+
+- **FIX** `BannerAdController` throwing an error if disposed before any ad is loaded.
+
 ## [1.2.3] - [22/04/2021]
 
 - **FIX** **NULL-SAFETY** `MobileAds.isTestDevice` now can't return null
