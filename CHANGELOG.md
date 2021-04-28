@@ -1,5 +1,11 @@
 Date format: DD/MM/YYYY
 
+## [1.3.0] - [25/04/2021]
+
+- **NEW** Native ad templates (Follows [this](https://developers.google.com/admob/android/native/templates))
+- **FIX** `NativeAd.lineHeight` is not called anymore (Fixes [this](https://github.com/bdlukaa/native_admob_flutter/issues/48))
+- **NEW** Implemented Ad keywords for Android. (Partially fixes [this](https://github.com/bdlukaa/native_admob_flutter/issues/47))
+
 ## [1.2.4] - [24/04/2021]
 
 - **FIX** `BannerAdController` throwing an error if disposed before any ad is loaded.

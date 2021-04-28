@@ -31,7 +31,8 @@ class RewardedInterstitialController(
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
-                RewardedInterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : RewardedInterstitialAdLoadCallback() {
+                val keywords = call.argument<List<String>>("keywords")!!
+                RewardedInterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
                         rewardedInterstitialAd = ad
                         channel.invokeMethod("onAdLoaded", null)

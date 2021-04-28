@@ -28,7 +28,8 @@ class InterstitialAdController(
                 channel.invokeMethod("loading", null)
                 val unitId = call.argument<String>("unitId")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
-                InterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : InterstitialAdLoadCallback() {
+                val keywords = call.argument<List<String>>("keywords")!!
+                InterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), object : InterstitialAdLoadCallback() {
                     override fun onAdFailedToLoad(error: LoadAdError) {
                         mInterstitialAd = null
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))

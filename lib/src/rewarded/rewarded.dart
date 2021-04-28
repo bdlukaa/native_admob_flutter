@@ -276,6 +276,9 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
 
     /// Whether non-personalized ads should be enabled
     bool? nonPersonalizedAds,
+
+    /// The keywords of the ad
+    List<String> keywords = const [],
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -286,6 +289,7 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
           MobileAds.rewardedAdUnitId ??
           MobileAds.rewardedAdTestUnitId,
       'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
+      'keywords': keywords,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

@@ -7,12 +7,15 @@ import com.google.android.gms.ads.AdRequest
 class RequestFactory {
 
     companion object {
-        fun createAdRequest(nonPersonalizedAds: Boolean) : AdRequest {
+        fun createAdRequest(nonPersonalizedAds: Boolean, keywords: List<String>) : AdRequest {
             val builder = AdRequest.Builder()
             if (nonPersonalizedAds) {
                 val extras = Bundle()
                 extras.putString("npa", "1")
                 builder.addNetworkExtrasBundle(AdMobAdapter::class.java, extras)
+            }
+            keywords.forEach() {
+                builder.addKeyword(it)
             }
             return builder.build()
         }

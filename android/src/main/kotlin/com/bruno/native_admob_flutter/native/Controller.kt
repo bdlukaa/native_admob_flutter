@@ -31,8 +31,9 @@ class NativeAdmobController(
             "loadAd" -> {
                 val unitId = call.argument<String>("unitId") ?: "ca-app-pub-3940256099942544/2247696110"
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
+                val keywords = call.argument<List<String>>("keywords")!!
                 val options = call.argument<Map<String, Any>>("options")
-                loadAd(unitId, options!!, nonPersonalizedAds, result)
+                loadAd(unitId, options!!, nonPersonalizedAds, keywords, result)
             }
             "updateUI" -> {
                 val data = call.argument<Map<String, Any?>>("layout") ?: return
@@ -54,7 +55,7 @@ class NativeAdmobController(
         channel.invokeMethod("undefined", null)
     }
 
-    private fun loadAd(unitId: String, options: Map<String, Any>, nonPersonalizedAds: Boolean, result: MethodChannel.Result) {
+    private fun loadAd(unitId: String, options: Map<String, Any>, nonPersonalizedAds: Boolean, keywords: List<String>, result: MethodChannel.Result) {
         channel.invokeMethod("loading", null)
         // ad options
         val adOptions = NativeAdOptions.Builder()
@@ -133,7 +134,7 @@ class NativeAdmobController(
                 })
                 .withNativeAdOptions(adOptions.build())
                 .build()
-                .loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
+                .loadAd(RequestFactory.createAdRequest(nonPersonalizedAds, keywords))
     }
 
 }

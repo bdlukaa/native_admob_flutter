@@ -339,6 +339,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
 
     /// Whether non-personalized ads (ads that are not based on a user’s past behavior) should be enabled.
     bool? nonPersonalizedAds,
+
+    /// {@macro ads.keywords}
+    List<String> keywords = const [],
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -348,6 +351,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
       'unitId': unitId,
       'options': (options ?? NativeAdOptions()).toJson(),
       'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
+      'keywords': keywords,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

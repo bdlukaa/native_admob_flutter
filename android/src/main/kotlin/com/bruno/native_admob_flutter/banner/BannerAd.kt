@@ -23,6 +23,7 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     private var controller: BannerAdController = BannerAdControllerManager.getController(data!!["controllerId"] as String)!!
     private var adSize: AdSize
     private var nonPersonalizedAds: Boolean
+    private var keywords: List<String>
 
     private fun getAdSize(context: Context, width: Float): AdSize {
         return AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(context, width.toInt())
@@ -31,13 +32,14 @@ class BannerAdView(context: Context, data: Map<String?, Any?>?) : PlatformView {
     init {
         adSize = getAdSize(controller.context, (data!!["size_width"] as Double).toFloat())
         nonPersonalizedAds = data["nonPersonalizedAds"] as Boolean
+        keywords = data["keywords"] as List<String>
         generateAdView(context, data)
         controller.loadRequested = { load(it) }
         load(null)
     }
 
     private fun load(result: MethodChannel.Result?) {
-        controller.adView!!.loadAd(RequestFactory.createAdRequest(nonPersonalizedAds))
+        controller.adView!!.loadAd(RequestFactory.createAdRequest(nonPersonalizedAds, keywords))
         controller.adView!!.adListener = object : AdListener() {
             override fun onAdImpression() {
                 super.onAdImpression()

@@ -30,7 +30,8 @@ class RewardedAdController(
                 channel.invokeMethod("loading", null)
                 val unitId: String = call.argument<String>("unitId")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
-                RewardedAd.load(activity, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), object : RewardedAdLoadCallback() {
+                val keywords = call.argument<List<String>>("keywords")!!
+                RewardedAd.load(activity, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), object : RewardedAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedAd) {
                         rewardedAd = ad
                         channel.invokeMethod("onAdLoaded", null)

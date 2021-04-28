@@ -152,6 +152,9 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
 
     /// Whether non-personalized ads should be enabled
     bool? nonPersonalizedAds,
+
+    /// The keywords of the ad
+    List<String> keywords = const [],
   }) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
@@ -162,6 +165,7 @@ class InterstitialAd extends LoadShowAd<FullScreenAdEvent> {
           MobileAds.interstitialAdUnitId ??
           MobileAds.interstitialAdTestUnitId,
       'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
+      'keywords': keywords,
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

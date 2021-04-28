@@ -36,6 +36,7 @@ class _NativeAdsState extends State<NativeAds>
     return RefreshIndicator(
       onRefresh: () async {
         setState(() => child = SizedBox());
+        // await controller.load(force: true);
         await Future.delayed(Duration(milliseconds: 20));
         setState(() => child = null);
       },
@@ -58,7 +59,8 @@ class _NativeAdsState extends State<NativeAds>
               icon: AdImageView(padding: EdgeInsets.only(left: 6)),
               headline: AdTextView(style: TextStyle(color: Colors.black)),
               advertiser: AdTextView(style: TextStyle(color: Colors.black)),
-              body: AdTextView(style: TextStyle(color: Colors.black)),
+              body: AdTextView(
+                  style: TextStyle(color: Colors.black), maxLines: 1),
               media: AdMediaView(height: 70, width: 120),
               button: AdButtonView(
                 margin: EdgeInsets.only(left: 6, right: 6),
@@ -138,6 +140,92 @@ class _NativeAdsState extends State<NativeAds>
               elevation: 18,
               elevationColor: Colors.amber,
               height: MATCH_PARENT,
+            ),
+          ),
+          SizedBox(height: 10),
+          NativeAd(
+            height: 115,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
+            buildLayout: smallAdTemplateLayoutBuilder,
+            // buildLayout: secondBuilder,
+            loading: Text('loading'),
+            error: Text('error'),
+            icon: AdImageView(size: 70),
+            headline: AdTextView(
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              maxLines: 1,
+            ),
+            body: AdTextView(style: TextStyle(color: Colors.black)),
+            advertiser: AdTextView(style: TextStyle(color: Colors.black)),
+            media: AdMediaView(height: 80, width: 120),
+            button: AdButtonView(
+              decoration: AdDecoration(backgroundColor: Colors.blue),
+              textStyle: TextStyle(color: Colors.white),
+            ),
+            attribution: AdTextView(
+              width: WRAP_CONTENT,
+              text: 'Ad',
+              decoration: AdDecoration(
+                border: BorderSide(color: Colors.green, width: 2),
+                borderRadius: AdBorderRadius.all(16.0),
+              ),
+              style: TextStyle(color: Colors.green),
+              padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
+            ),
+          ),
+          SizedBox(height: 10),
+          NativeAd(
+            height: 320,
+            unitId: MobileAds.nativeAdVideoTestUnitId,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
+            buildLayout: mediumAdTemplateLayoutBuilder,
+            // buildLayout: fullBuilder,
+            loading: Text('loading'),
+            error: Text('error'),
+            icon: AdImageView(size: 40),
+            headline: AdTextView(
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+              maxLines: 1,
+            ),
+            body:
+                AdTextView(style: TextStyle(color: Colors.black), maxLines: 1),
+            media: AdMediaView(
+              height: 170,
+              width: MATCH_PARENT,
+            ),
+            attribution: AdTextView(
+              width: WRAP_CONTENT,
+              text: 'Ad',
+              decoration: AdDecoration(
+                border: BorderSide(color: Colors.green, width: 2),
+                borderRadius: AdBorderRadius.all(16.0),
+              ),
+              style: TextStyle(color: Colors.green),
+              padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
+            ),
+            button: AdButtonView(
+              elevation: 18,
+              decoration: AdDecoration(backgroundColor: Colors.blue),
+              height: MATCH_PARENT,
+              textStyle: TextStyle(color: Colors.white),
             ),
           ),
         ],

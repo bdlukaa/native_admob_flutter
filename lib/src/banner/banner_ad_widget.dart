@@ -34,6 +34,7 @@ class BannerAd extends StatefulWidget {
     this.loadTimeout = kDefaultLoadTimeout,
     this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
     this.useHybridComposition,
+    this.keywords = const [],
   }) : super(key: key);
 
   /// The builder of the ad. The ad won't be reloaded if this changes
@@ -170,6 +171,9 @@ class BannerAd extends StatefulWidget {
   /// should be enabled.
   final bool nonPersonalizedAds;
 
+  /// {@macro ads.keywords}
+  final List<String> keywords;
+
   /// Use hybrid composition in this ad. This has effect only on Android
   ///
   /// If null, defaults to `MobileAds.useHybridComposition`
@@ -269,6 +273,7 @@ class _BannerAdState extends State<BannerAd>
           'size_height': height,
           'size_width': width,
           'nonPersonalizedAds': widget.nonPersonalizedAds,
+          'keywords': widget.keywords,
         });
 
         Widget w;

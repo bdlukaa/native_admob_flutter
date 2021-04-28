@@ -43,7 +43,8 @@ class AppOpenAdController(
                 val unitId: String = call.argument<String>("unitId")!!
                 val orientation: Int = call.argument<Int>("orientation")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
-                AppOpenAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds), orientation, object : AppOpenAdLoadCallback() {
+                val keywords = call.argument<List<String>>("keywords")!!
+                AppOpenAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), orientation, object : AppOpenAdLoadCallback() {
                     override fun onAppOpenAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
                         channel.invokeMethod("onAppOpenAdLoaded", null)

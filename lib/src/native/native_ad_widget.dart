@@ -56,7 +56,8 @@ class NativeAd extends StatefulWidget {
   final AdButtonView? button;
 
   /// The ad controller. If not specified, uses a default controller.
-  /// This can not be changed dynamically
+  ///
+  /// If changed, the ad will be reloaded with the new controller.
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-native-events)
   final NativeAdController? controller;
@@ -137,10 +138,33 @@ class NativeAd extends StatefulWidget {
 
   /// Use hybrid composition in this ad. This has effect only on Android
   ///
-  /// If null, defaults to `MobileAds.useHybridComposition`
+  /// If null, defaults to [MobileAds.useHybridComposition]
   final bool? useHybridComposition;
 
-  /// Create a `NativeAd`.
+  /// {@template ads.keywords}
+  /// The keywords used to load the ad.
+  ///
+  /// AdMob already knows a good bit about the interests of your app's
+  /// users based on which ads they've clicked on in the past. The keywords
+  /// that you add to an ad request are just one piece of the equation when
+  /// it comes time to actually pick the ad that gets shown. They're not
+  /// intended to be a strict filter.
+  ///
+  /// Instead, each time your app requests an ad, AdMob will look at all the
+  /// info it has at its disposal and choose the ad most likely to be interesting
+  /// to that user at that moment, and then serve it. The more likely the user is
+  /// to be interested in the ad, the more useful it is for them, and the more
+  /// valuable for the advertiser. That generally means happier users and more revenue
+  /// for you.
+  ///
+  /// {@endTemplate}
+  final List<String> keywords;
+
+  /// Whether non-personalized ads (ads that are not based on a user’s past behavior)
+  /// should be enabled
+  final bool? nonPersonalizedAds;
+
+  /// Creates a `NativeAd`.
   /// Uses `NativeAdView` on android and `GADNativeAd` on iOS
   ///
   /// Useful links:
@@ -174,6 +198,8 @@ class NativeAd extends StatefulWidget {
     this.delayToShow,
     this.loadTimeout,
     this.useHybridComposition,
+    this.nonPersonalizedAds,
+    this.keywords = const [],
   }) : super(key: key);
 
   @override
@@ -191,14 +217,17 @@ class _NativeAdState extends State<NativeAd>
     // reload if options changed
     if (widget.reloadWhenOptionsChange &&
         (oldWidget.options?.toString() != widget.options?.toString())) {
-      controller.load(
-        options: widget.options,
-        unitId: widget.unitId,
-        timeout: widget.loadTimeout,
-      );
+      _load();
     }
     if (layout(oldWidget).toString() != layout(widget).toString()) {
       _requestAdUIUpdate(layout(widget));
+    }
+    if (widget.controller?.id != oldWidget.controller?.id) {
+      controller = widget.controller!;
+      _onEventSub.cancel();
+      controller.attach();
+      _onEventSub = controller.onEvent.listen(_handleEvent);
+      if (!controller.isLoaded) _load();
     }
   }
 
@@ -206,40 +235,47 @@ class _NativeAdState extends State<NativeAd>
     controller.channel.invokeMethod('updateUI', {'layout': layout});
   }
 
-  StreamSubscription? _onEventSub;
+  late StreamSubscription _onEventSub;
 
   @override
   void initState() {
     super.initState();
     controller = widget.controller ?? NativeAdController();
     controller.attach();
-    _onEventSub = controller.onEvent.listen((e) {
-      final event = e.keys.first;
-      switch (event) {
-        case NativeAdEvent.loading:
-        case NativeAdEvent.loaded:
-        case NativeAdEvent.loadFailed:
-          if (mounted) setState(() => state = event);
-          break;
-        case NativeAdEvent.undefined:
-          if (mounted) setState(() {});
-          break;
-        default:
-          break;
-      }
-    });
-    if (!controller.isLoaded)
-      controller.load(
-        options: widget.options,
-        unitId: widget.unitId,
-        timeout: widget.loadTimeout,
-      );
+    _onEventSub = controller.onEvent.listen(_handleEvent);
+    if (!controller.isLoaded) _load();
+  }
+
+  void _load([bool force = false]) {
+    controller.load(
+      options: widget.options,
+      unitId: widget.unitId,
+      timeout: widget.loadTimeout,
+      nonPersonalizedAds: widget.nonPersonalizedAds,
+      keywords: widget.keywords,
+      force: force,
+    );
+  }
+
+  void _handleEvent(Map<NativeAdEvent, dynamic> e) {
+    final event = e.keys.first;
+    switch (event) {
+      case NativeAdEvent.loading:
+      case NativeAdEvent.loaded:
+      case NativeAdEvent.loadFailed:
+        if (mounted) setState(() => state = event);
+        break;
+      case NativeAdEvent.undefined:
+        if (mounted) setState(() {});
+        break;
+      default:
+        break;
+    }
   }
 
   @override
   void dispose() {
-    _onEventSub?.cancel();
-    _onEventSub = null;
+    _onEventSub.cancel();
     // dispose the controller only if the controller was
     // created by the ad.
     if (widget.controller == null)
