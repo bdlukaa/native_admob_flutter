@@ -377,4 +377,41 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
       assert(!reason.isNegative, 'You must specify a valid reason');
     return channel.invokeMethod('muteAd', {'reason': reason});
   }
+
+  Future<String?> getHeadline() async {
+    return await channel.invokeMethod('getHeadline');
+  }
+
+  Future<String?> getBody() async {
+    return await channel.invokeMethod('getBody');
+  }
+
+  Future<String?> getPrice() async {
+    return await channel.invokeMethod('getPrice');
+  }
+
+  Future<String?> getStore() async {
+    return await channel.invokeMethod('getStore');
+  }
+
+  Future<String?> getCallToAction() async {
+    return await channel.invokeMethod('getCallToAction');
+  }
+
+  Future<String?> getAdvertiser() async {
+    return await channel.invokeMethod('getAdvertiser');
+  }
+
+  Future<String?> getIconUri() async {
+    return await channel.invokeMethod('getIconUri');
+  }
+
+  Future<List<String>?> getImagesUri() async {
+    List<String>? imagesUri = await channel.invokeListMethod('getImagesUri');
+    return imagesUri;
+  }
+
+  Future<String?> getFirstImageUri() async {
+    return await channel.invokeMethod('getFirstImageUri');
+  }
 }
