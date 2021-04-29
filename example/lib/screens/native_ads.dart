@@ -14,11 +14,35 @@ class _NativeAdsState extends State<NativeAds>
 
   final controller = NativeAdController();
 
+  void printAdDetails(NativeAdController controller) async {
+    final String? headline = await controller.getHeadline();
+    final String? body = await controller.getBody();
+    final String? price = await controller.getPrice();
+    final String? store = await controller.getStore();
+    final String? callToAction = await controller.getCallToAction();
+    final String? advertiser = await controller.getAdvertiser();
+    final String? iconUri = await controller.getIconUri();
+    var imagesUri = await controller.getImagesUri();
+    final String? firstImgUri = await controller.getFirstImageUri();
+
+    print("------- NATIVE AD DETAILES: -------");
+    print(headline);
+    print(body);
+    print(price);
+    print(store);
+    print(callToAction);
+    print(advertiser);
+    print(iconUri);
+    print(imagesUri);
+    print(firstImgUri);
+  }
+
   @override
   void initState() {
     super.initState();
-    controller.load();
+    controller.load(unitId: MobileAds.nativeAdVideoTestUnitId);
     controller.onEvent.listen((event) {
+      printAdDetails(controller);
       setState(() {});
     });
   }
@@ -43,32 +67,32 @@ class _NativeAdsState extends State<NativeAds>
       child: ListView(
         padding: EdgeInsets.all(10),
         children: [
-          if (controller.isLoaded)
-            NativeAd(
-              controller: controller,
-              height: 60,
-              builder: (context, child) {
-                return Material(
-                  elevation: 8,
-                  child: child,
-                );
-              },
-              buildLayout: adBannerLayoutBuilder,
-              loading: Text('loading'),
-              error: Text('error'),
-              icon: AdImageView(padding: EdgeInsets.only(left: 6)),
-              headline: AdTextView(style: TextStyle(color: Colors.black)),
-              advertiser: AdTextView(style: TextStyle(color: Colors.black)),
-              body: AdTextView(
-                  style: TextStyle(color: Colors.black), maxLines: 1),
-              media: AdMediaView(height: 70, width: 120),
-              button: AdButtonView(
-                margin: EdgeInsets.only(left: 6, right: 6),
-                textStyle: TextStyle(color: Colors.green, fontSize: 14),
-                elevation: 18,
-                elevationColor: Colors.amber,
-              ),
+          //if (controller.isLoaded)
+          NativeAd(
+            //controller: controller,
+            height: 60,
+            builder: (context, child) {
+              return Material(
+                elevation: 8,
+                child: child,
+              );
+            },
+            buildLayout: adBannerLayoutBuilder,
+            loading: Text('loading'),
+            error: Text('error'),
+            icon: AdImageView(padding: EdgeInsets.only(left: 6)),
+            headline: AdTextView(style: TextStyle(color: Colors.black)),
+            advertiser: AdTextView(style: TextStyle(color: Colors.black)),
+            body:
+                AdTextView(style: TextStyle(color: Colors.black), maxLines: 1),
+            media: AdMediaView(height: 70, width: 120),
+            button: AdButtonView(
+              margin: EdgeInsets.only(left: 6, right: 6),
+              textStyle: TextStyle(color: Colors.green, fontSize: 14),
+              elevation: 18,
+              elevationColor: Colors.amber,
             ),
+          ),
           SizedBox(height: 10),
           NativeAd(
             height: 100,
@@ -93,7 +117,9 @@ class _NativeAdsState extends State<NativeAds>
             media: AdMediaView(height: 80, width: 120),
           ),
           SizedBox(height: 10),
+          //if (controller.isLoaded)
           NativeAd(
+            //controller: controller,
             height: 300,
             // unitId: MobileAds.nativeAdVideoTestUnitId,
             builder: (context, child) {
@@ -143,7 +169,9 @@ class _NativeAdsState extends State<NativeAds>
             ),
           ),
           SizedBox(height: 10),
+          //if (controller.isLoaded)
           NativeAd(
+            //controller: controller,
             height: 115,
             builder: (context, child) {
               return Material(
@@ -183,51 +211,53 @@ class _NativeAdsState extends State<NativeAds>
             ),
           ),
           SizedBox(height: 10),
-          NativeAd(
-            height: 320,
-            unitId: MobileAds.nativeAdVideoTestUnitId,
-            builder: (context, child) {
-              return Material(
-                elevation: 8,
-                child: child,
-              );
-            },
-            buildLayout: mediumAdTemplateLayoutBuilder,
-            // buildLayout: fullBuilder,
-            loading: Text('loading'),
-            error: Text('error'),
-            icon: AdImageView(size: 40),
-            headline: AdTextView(
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
+          if (controller.isLoaded)
+            NativeAd(
+              controller: controller,
+              height: 320,
+              unitId: MobileAds.nativeAdVideoTestUnitId,
+              builder: (context, child) {
+                return Material(
+                  elevation: 8,
+                  child: child,
+                );
+              },
+              buildLayout: mediumAdTemplateLayoutBuilder,
+              // buildLayout: fullBuilder,
+              loading: Text('loading'),
+              error: Text('error'),
+              icon: AdImageView(size: 40),
+              headline: AdTextView(
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+                maxLines: 1,
               ),
-              maxLines: 1,
-            ),
-            body:
-                AdTextView(style: TextStyle(color: Colors.black), maxLines: 1),
-            media: AdMediaView(
-              height: 170,
-              width: MATCH_PARENT,
-            ),
-            attribution: AdTextView(
-              width: WRAP_CONTENT,
-              text: 'Ad',
-              decoration: AdDecoration(
-                border: BorderSide(color: Colors.green, width: 2),
-                borderRadius: AdBorderRadius.all(16.0),
+              body: AdTextView(
+                  style: TextStyle(color: Colors.black), maxLines: 1),
+              media: AdMediaView(
+                height: 170,
+                width: MATCH_PARENT,
               ),
-              style: TextStyle(color: Colors.green),
-              padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
+              attribution: AdTextView(
+                width: WRAP_CONTENT,
+                text: 'Ad',
+                decoration: AdDecoration(
+                  border: BorderSide(color: Colors.green, width: 2),
+                  borderRadius: AdBorderRadius.all(16.0),
+                ),
+                style: TextStyle(color: Colors.green),
+                padding: EdgeInsets.symmetric(horizontal: 4.0, vertical: 1.0),
+              ),
+              button: AdButtonView(
+                elevation: 18,
+                decoration: AdDecoration(backgroundColor: Colors.blue),
+                height: MATCH_PARENT,
+                textStyle: TextStyle(color: Colors.white),
+              ),
             ),
-            button: AdButtonView(
-              elevation: 18,
-              decoration: AdDecoration(backgroundColor: Colors.blue),
-              height: MATCH_PARENT,
-              textStyle: TextStyle(color: Colors.white),
-            ),
-          ),
         ],
       ),
     );
