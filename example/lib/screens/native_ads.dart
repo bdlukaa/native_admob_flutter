@@ -25,7 +25,7 @@ class _NativeAdsState extends State<NativeAds>
     var imagesUri = await controller.getImagesUri();
     final String? firstImgUri = await controller.getFirstImageUri();
 
-    print("------- NATIVE AD DETAILES: -------");
+    print("------- NATIVE AD DETAILS: -------");
     print(headline);
     print(body);
     print(price);

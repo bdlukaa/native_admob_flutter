@@ -378,8 +378,8 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     return channel.invokeMethod('muteAd', {'reason': reason});
   }
 
-  Future<String?> getHeadline() async {
-    return await channel.invokeMethod('getHeadline');
+  Future<String?> getHeadline() {
+    return channel.invokeMethod('getHeadline');
   }
 
   Future<String?> getBody() async {
