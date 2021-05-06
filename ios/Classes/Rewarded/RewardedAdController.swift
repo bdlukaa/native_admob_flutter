@@ -47,7 +47,7 @@ class RewardedAdController: NSObject, GADFullScreenContentDelegate {
             if rewardedAd == nil { return result(false) }
             rewardedAd.present(fromRootViewController: (UIApplication.shared.keyWindow?.rootViewController)!) { () in
                 self.channel.invokeMethod("onUserEarnedReward", arguments: [
-                    "amount": self.rewardedAd.adReward.amount,
+                    "amount": self.rewardedAd.adReward.amount.doubleValue,
                     "type": self.rewardedAd.adReward.type,
                 ])
             }
