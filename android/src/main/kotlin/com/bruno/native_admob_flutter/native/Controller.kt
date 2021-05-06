@@ -47,75 +47,6 @@ class NativeAdmobController(
                     nativeAd?.muteThisAd(nativeAd!!.muteThisAdReasons[call.argument<Int>("reason")!!])
                 result.success(null)
             }
-            "getHeadline" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getHeadline())
-            }
-            "getBody" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getBody())
-            }
-            "getPrice" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getPrice())
-            }
-            "getStore" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getStore())
-            }
-            "getCallToAction" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getCallToAction())
-            }
-            "getAdvertiser" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getAdvertiser())
-            }
-            "getIconUri" -> {
-                if (nativeAd == null)
-                    result.success("loading")
-                else
-                    result.success(nativeAd!!.getIcon().getUri().toString())
-            }
-            "getImagesUri" -> {
-                if (nativeAd == null)
-                    result.success(null)
-                else {
-                    ///List<NativeAd.Image> images = nativeAd!!.getImages()
-                    ///val imagesUri: List<String> = emptyList()
-                    ///val imagesUri = mutableListOf<String>()
-                    var images = nativeAd!!.getImages()
-                    if (images == null) return result.success(null)
-                    val imagesUri: ArrayList<String> = arrayListOf()
-                    for(img in images) {
-                        imagesUri.add(img.getUri().toString())
-                    }
-                    //println(imagesUri)
-                    result.success(imagesUri)
-                }
-                    
-            }
-            "getFirstImageUri" -> {
-                if (nativeAd == null)
-                    result.success(null)
-                else {
-                    var images = nativeAd!!.getImages()
-                    if (images == null) return result.success(null)
-                    result.success(images[0].getUri().toString())
-                }
-            }
 
             else -> result.notImplemented()
         }
@@ -197,7 +128,17 @@ class NativeAdmobController(
                                         "duration" to mediaContent.duration.toDouble(),
                                         "aspectRatio" to mediaContent.aspectRatio.toDouble(),
                                         "hasVideoContent" to mediaContent.hasVideoContent()
-                                )
+                                ),
+                                "adDetails" to hashMapOf(
+                                        "headline" to nativeAd!!.getHeadline(),
+                                        "body" to nativeAd!!.getBody(),
+                                        "price" to nativeAd!!.getPrice (),
+                                        "store" to nativeAd!!.getStore(),
+                                        "callToAction" to nativeAd!!.getCallToAction(),
+                                        "advertiser" to nativeAd!!.getAdvertiser(),
+                                        "iconUri" to nativeAd!!.getIcon().getUri().toString(),
+                                        "imagesUri" to nativeAd!!.getImages()?.map { it.getUri().toString() } as List<String>,
+                                ),
                         ))
                         result.success(true)
                     }

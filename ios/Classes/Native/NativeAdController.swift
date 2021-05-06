@@ -46,62 +46,6 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
             }
             result(nil)
 
-        case "getHeadline":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.headline)
-
-        case "getBody":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.body)
-
-        case "getPrice":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.price)
-
-        case "getStore":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.store)
-
-        case "getCallToAction":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.callToAction)
-
-        case "getAdvertiser":
-            if nativeAd == nil { return result(nil) }
-            result(nativeAd?.advertiser)
-
-        case "getIconUri":
-            if nativeAd == nil { return result(nil) }
-            if let icon = nativeAd?.icon {
-                if let imageURL = icon.imageURL {
-                    return result(imageURL.absoluteString)
-                }
-            }
-            result(nil)
-
-        case "getImagesUri":
-            if nativeAd == nil { return result(nil) }
-            if let images = nativeAd?.images {
-                var urls = [String]()
-                for image in images {
-                    if let imageURL = image.imageURL {
-                        urls.append(imageURL.absoluteString)
-                    }
-                }
-                return result(urls)
-            }
-            result(nil)
-
-        case "getFirstImageUri":
-            if nativeAd == nil { return result(nil) }
-            if let images = nativeAd?.images {
-                if let imageURL = images[0].imageURL {
-                    return result(imageURL.absoluteString)
-                }
-            }
-            result(nil)
-
-
         default:
             result(FlutterMethodNotImplemented)
         }
@@ -126,6 +70,18 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
         let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
         adLoader.load(request)
     }
+    private func imagesToUrlStrigs (images: [GADNativeAdImage]?) -> [String]? {
+        if images == nil {
+            return nil
+        }
+        var urls = [String]()
+        for image in images! {
+            if let imageURL = image.imageURL {
+                urls.append(imageURL.absoluteString)
+            }
+        }
+        return urls
+    }
 
     func adLoader(_: GADAdLoader, didReceive nativeAd: GADNativeAd) {
         nativeAd.rootViewController = UIApplication.shared.keyWindow?.rootViewController
@@ -144,6 +100,16 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
                 "aspectRatio": Double(mediaContent.aspectRatio),
                 "hasVideoContent": mediaContent.hasVideoContent,
             ],
+            "adDetails" : [
+                "headline": nativeAd.headline,
+                "body": nativeAd.body,
+                "price": nativeAd.price,
+                "store": nativeAd.store,
+                "callToAction": nativeAd.callToAction,
+                "advertiser": nativeAd.advertiser,
+                "iconUri": nativeAd.icon?.imageURL?.absoluteString ?? nil,
+                "imagesUri": imagesToUrlStrigs(images: nativeAd.images)
+            ]
         ])
     }
 

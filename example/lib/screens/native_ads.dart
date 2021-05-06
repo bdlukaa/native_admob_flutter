@@ -15,26 +15,15 @@ class _NativeAdsState extends State<NativeAds>
   final controller = NativeAdController();
 
   void printAdDetails(NativeAdController controller) async {
-    final String? headline = await controller.getHeadline();
-    final String? body = await controller.getBody();
-    final String? price = await controller.getPrice();
-    final String? store = await controller.getStore();
-    final String? callToAction = await controller.getCallToAction();
-    final String? advertiser = await controller.getAdvertiser();
-    final String? iconUri = await controller.getIconUri();
-    var imagesUri = await controller.getImagesUri();
-    final String? firstImgUri = await controller.getFirstImageUri();
-
     print("------- NATIVE AD DETAILS: -------");
-    print(headline);
-    print(body);
-    print(price);
-    print(store);
-    print(callToAction);
-    print(advertiser);
-    print(iconUri);
-    print(imagesUri);
-    print(firstImgUri);
+    print(controller.headline);
+    print(controller.body);
+    print(controller.price);
+    print(controller.store);
+    print(controller.callToAction);
+    print(controller.advertiser);
+    print(controller.iconUri);
+    print(controller.imagesUri);
   }
 
   @override
@@ -42,7 +31,9 @@ class _NativeAdsState extends State<NativeAds>
     super.initState();
     controller.load(unitId: MobileAds.nativeAdVideoTestUnitId);
     controller.onEvent.listen((event) {
-      printAdDetails(controller);
+      if (event.keys.first == NativeAdEvent.loaded) {
+        printAdDetails(controller);
+      }
       setState(() {});
     });
   }

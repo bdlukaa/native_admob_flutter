@@ -209,6 +209,25 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Check if the controller is attached to a `NativeAd`
   bool get isAttached => super.isAttached;
 
+  /// Information about the NativeAd's details about
+  String? _headline;
+  String? _body;
+  String? _price;
+  String? _store;
+  String? _callToAction;
+  String? _advertiser;
+  String? _iconUri;
+  List<String>? _imagesUri;
+
+  String? get headline => _headline;
+  String? get body => _body;
+  String? get price => _price;
+  String? get store => _store;
+  String? get callToAction => _callToAction;
+  String? get advertiser => _advertiser;
+  String? get iconUri => _iconUri;
+  List<String>? get imagesUri => _imagesUri;
+
   /// Creates a new native ad controller
   NativeAdController({
     String? unitId,
@@ -297,6 +316,17 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
             case 'mediaContent':
               _mediaContent = MediaContent.fromJson(args);
               break;
+            case 'adDetails':
+              final _adDetails = (args as Map).cast<String, dynamic>();
+              _headline = _adDetails['headline'];
+              _body = _adDetails['body'];
+              _price = _adDetails['price'];
+              _store = _adDetails['store'];
+              _callToAction = _adDetails['callToAction'];
+              _advertiser = _adDetails['advertiser'];
+              _iconUri = _adDetails['iconUri'];
+              _imagesUri = List<String>.from(_adDetails['imagesUri']);
+              break;
             case 'muteThisAdInfo':
               _muteThisAdReasons =
                   (args['muteThisAdReasons'] as List).cast<String>();
@@ -376,42 +406,5 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     if (reason != null)
       assert(!reason.isNegative, 'You must specify a valid reason');
     return channel.invokeMethod('muteAd', {'reason': reason});
-  }
-
-  Future<String?> getHeadline() {
-    return channel.invokeMethod('getHeadline');
-  }
-
-  Future<String?> getBody() async {
-    return await channel.invokeMethod('getBody');
-  }
-
-  Future<String?> getPrice() async {
-    return await channel.invokeMethod('getPrice');
-  }
-
-  Future<String?> getStore() async {
-    return await channel.invokeMethod('getStore');
-  }
-
-  Future<String?> getCallToAction() async {
-    return await channel.invokeMethod('getCallToAction');
-  }
-
-  Future<String?> getAdvertiser() async {
-    return await channel.invokeMethod('getAdvertiser');
-  }
-
-  Future<String?> getIconUri() async {
-    return await channel.invokeMethod('getIconUri');
-  }
-
-  Future<List<String>?> getImagesUri() async {
-    List<String>? imagesUri = await channel.invokeListMethod('getImagesUri');
-    return imagesUri;
-  }
-
-  Future<String?> getFirstImageUri() async {
-    return await channel.invokeMethod('getFirstImageUri');
   }
 }
