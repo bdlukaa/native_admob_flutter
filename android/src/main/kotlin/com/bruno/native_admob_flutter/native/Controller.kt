@@ -47,6 +47,7 @@ class NativeAdmobController(
                     nativeAd?.muteThisAd(nativeAd!!.muteThisAdReasons[call.argument<Int>("reason")!!])
                 result.success(null)
             }
+
             else -> result.notImplemented()
         }
     }
@@ -127,7 +128,17 @@ class NativeAdmobController(
                                         "duration" to mediaContent.duration.toDouble(),
                                         "aspectRatio" to mediaContent.aspectRatio.toDouble(),
                                         "hasVideoContent" to mediaContent.hasVideoContent()
-                                )
+                                ),
+                                "adDetails" to hashMapOf(
+                                        "headline" to nativeAd!!.getHeadline(),
+                                        "body" to nativeAd!!.getBody(),
+                                        "price" to nativeAd!!.getPrice (),
+                                        "store" to nativeAd!!.getStore(),
+                                        "callToAction" to nativeAd!!.getCallToAction(),
+                                        "advertiser" to nativeAd!!.getAdvertiser(),
+                                        "iconUri" to nativeAd!!.getIcon().getUri().toString(),
+                                        "imagesUri" to nativeAd!!.getImages()?.map { it.getUri().toString() } as List<String>,
+                                ),
                         ))
                         result.success(true)
                     }

@@ -14,11 +14,28 @@ class _NativeAdsState extends State<NativeAds>
 
   final controller = NativeAdController();
 
+  void printAdDetails(NativeAdController controller) async {
+    /// Just for showcasing the ability to access
+    /// NativeAd's details via its controller.
+    print("------- NATIVE AD DETAILS: -------");
+    print(controller.headline);
+    print(controller.body);
+    print(controller.price);
+    print(controller.store);
+    print(controller.callToAction);
+    print(controller.advertiser);
+    print(controller.iconUri);
+    print(controller.imagesUri);
+  }
+
   @override
   void initState() {
     super.initState();
-    controller.load();
+    controller.load(unitId: MobileAds.nativeAdVideoTestUnitId);
     controller.onEvent.listen((event) {
+      if (event.keys.first == NativeAdEvent.loaded) {
+        printAdDetails(controller);
+      }
       setState(() {});
     });
   }

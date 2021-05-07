@@ -70,6 +70,18 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
         let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
         adLoader.load(request)
     }
+    private func imagesToUrlStrigs (images: [GADNativeAdImage]?) -> [String]? {
+        if images == nil {
+            return nil
+        }
+        var urls = [String]()
+        for image in images! {
+            if let imageURL = image.imageURL {
+                urls.append(imageURL.absoluteString)
+            }
+        }
+        return urls
+    }
 
     func adLoader(_: GADAdLoader, didReceive nativeAd: GADNativeAd) {
         nativeAd.rootViewController = UIApplication.shared.keyWindow?.rootViewController
@@ -88,6 +100,16 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
                 "aspectRatio": Double(mediaContent.aspectRatio),
                 "hasVideoContent": mediaContent.hasVideoContent,
             ],
+            "adDetails" : [
+                "headline": nativeAd.headline,
+                "body": nativeAd.body,
+                "price": nativeAd.price,
+                "store": nativeAd.store,
+                "callToAction": nativeAd.callToAction,
+                "advertiser": nativeAd.advertiser,
+                "iconUri": nativeAd.icon?.imageURL?.absoluteString ?? nil,
+                "imagesUri": imagesToUrlStrigs(images: nativeAd.images)
+            ]
         ])
     }
 
