@@ -209,7 +209,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Check if the controller is attached to a `NativeAd`
   bool get isAttached => super.isAttached;
 
-  /// Information about the NativeAd's details about
+  /// Information about the NativeAd's details
   String? _headline;
   String? _body;
   String? _price;
