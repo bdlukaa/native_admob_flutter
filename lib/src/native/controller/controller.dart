@@ -209,7 +209,6 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Check if the controller is attached to a `NativeAd`
   bool get isAttached => super.isAttached;
 
-  /// Information about the NativeAd's details
   String? _headline;
   String? _body;
   String? _price;
@@ -219,13 +218,36 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   String? _iconUri;
   List<String>? _imagesUri;
 
+  /// The title text of the ad. If [isAvailable] is true,
+  /// this is always non-null.
   String? get headline => _headline;
+
+  /// The body text of the ad. If [isAvailable] is true,
+  /// this is always non-null.
   String? get body => _body;
+
+  /// The price of the product announced on the ad. This
+  /// may be null even if [isAvailable] is true.
   String? get price => _price;
+
+  /// The store that is announcing the product on the ad.
+  /// This may be null even if [isAvailable] is true.
   String? get store => _store;
+
+  /// The text of the button. If [isAvailable] is true,
+  /// this is always non-null.
   String? get callToAction => _callToAction;
+
+  /// The advertiser that is announcing the ad. This
+  /// may be null even if [isAvailable] is true.
   String? get advertiser => _advertiser;
+
+  /// The url of the icon image. This may be null even if
+  /// [isAvailable] is true.
   String? get iconUri => _iconUri;
+
+  /// The urls of the media. If [isAvailable] is true, this
+  /// is always non-null.
   List<String>? get imagesUri => _imagesUri;
 
   /// Creates a new native ad controller
@@ -399,6 +421,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Mutes This Ad programmatically.
   ///
   /// Use `null` to Mute This Ad with default reason.
+  /// 
+  /// [reason], if non-null, mustn't be negative, otherwise an
+  /// [AssertionError] is thrown.
   ///
   /// Fore more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad)
   Future<void> muteThisAd([int? reason]) {

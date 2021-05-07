@@ -132,13 +132,13 @@ class NativeAdmobController(
                                 "adDetails" to hashMapOf(
                                         "headline" to nativeAd!!.getHeadline(),
                                         "body" to nativeAd!!.getBody(),
-                                        "price" to nativeAd!!.getPrice (),
+                                        "price" to nativeAd!!.getPrice(),
                                         "store" to nativeAd!!.getStore(),
                                         "callToAction" to nativeAd!!.getCallToAction(),
                                         "advertiser" to nativeAd!!.getAdvertiser(),
                                         "iconUri" to nativeAd!!.getIcon().getUri().toString(),
-                                        "imagesUri" to nativeAd!!.getImages()?.map { it.getUri().toString() } as List<String>,
-                                ),
+                                        "imagesUri" to nativeAd!!.getImages()?.map { it.getUri().toString() } as List<String>
+                                )
                         ))
                         result.success(true)
                     }

@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.3.1] - [07/05/2021]
+
+- **NEW** Possibility to get info about native ads using the controller ([#50](https://github.com/bdlukaa/native_admob_flutter/pull/50))
+
 ## [1.3.0] - [25/04/2021]
 
 - **NEW** Native ad templates (Follows [this](https://developers.google.com/admob/android/native/templates))
