@@ -130,14 +130,14 @@ class NativeAdmobController(
                                         "hasVideoContent" to mediaContent.hasVideoContent()
                                 ),
                                 "adDetails" to hashMapOf(
-                                        "headline" to nativeAd!!.getHeadline(),
-                                        "body" to nativeAd!!.getBody(),
-                                        "price" to nativeAd!!.getPrice(),
-                                        "store" to nativeAd!!.getStore(),
-                                        "callToAction" to nativeAd!!.getCallToAction(),
-                                        "advertiser" to nativeAd!!.getAdvertiser(),
-                                        "iconUri" to nativeAd!!.getIcon().getUri().toString(),
-                                        "imagesUri" to nativeAd!!.getImages()?.map { it.getUri().toString() } as List<String>
+                                        "headline" to nativeAd!!.headline,
+                                        "body" to nativeAd!!.body,
+                                        "price" to nativeAd!!.price,
+                                        "store" to nativeAd!!.store,
+                                        "callToAction" to nativeAd!!.callToAction,
+                                        "advertiser" to nativeAd!!.advertiser,
+                                        "iconUri" to nativeAd!!.icon?.uri?.toString(),
+                                        "imagesUri" to nativeAd!!.images?.map { it.uri.toString() }
                                 )
                         ))
                         result.success(true)

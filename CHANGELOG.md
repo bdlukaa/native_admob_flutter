@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.3.2] - [18/05/2021]
+
+- **FIX** Native ad does not assume assets are non-null anymore ([#64](https://github.com/bdlukaa/native_admob_flutter/issues/64))
+
 ## [1.3.1] - [07/05/2021]
 
 - **NEW** Possibility to get info about native ads using the controller ([#50](https://github.com/bdlukaa/native_admob_flutter/pull/50))

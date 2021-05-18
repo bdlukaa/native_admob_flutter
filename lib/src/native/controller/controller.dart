@@ -421,7 +421,7 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Mutes This Ad programmatically.
   ///
   /// Use `null` to Mute This Ad with default reason.
-  /// 
+  ///
   /// [reason], if non-null, mustn't be negative, otherwise an
   /// [AssertionError] is thrown.
   ///
