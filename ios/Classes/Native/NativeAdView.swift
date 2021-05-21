@@ -25,7 +25,7 @@ class NativeAdView: NSObject, FlutterPlatformView {
         channel = FlutterMethodChannel(name: "native_admob", binaryMessenger: messenger)
         adView = GADNativeAdView()
         super.init()
-        adView.backgroundColor = UIColor(white: 1, alpha: 0.5)
+        adView.backgroundColor = UIColor(white: 1, alpha: 0)
         let builtView = buildView(data: data!)
         adView.addSubview(builtView)
         builtView.topAnchor.constraint(equalTo: adView.topAnchor).isActive = true
