@@ -23,11 +23,19 @@ class MobileAds {
   // Unit ids
   static String? nativeAdUnitId;
   static String get nativeAdTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/2247696110'
-      : 'ca-app-pub-3940256099942544/3986624511';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/2169550261'
+          : 'ca-app-pub-3940256099942544/2247696110'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/7839791295'
+          : 'ca-app-pub-3940256099942544/3986624511';
   static String get nativeAdVideoTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1044960115'
-      : 'ca-app-pub-3940256099942544/2521693316';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/2169550261'
+          : 'ca-app-pub-3940256099942544/1044960115'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/7839791295'
+          : 'ca-app-pub-3940256099942544/2521693316';
 
   static String? bannerAdUnitId;
   static String get bannerAdTestUnitId => Platform.isAndroid
@@ -36,21 +44,37 @@ class MobileAds {
 
   static String? interstitialAdUnitId;
   static String get interstitialAdTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/1033173712'
-      : 'ca-app-pub-3940256099942544/4411468910';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/2309151062'
+          : 'ca-app-pub-3940256099942544/1033173712'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/3190099842'
+          : 'ca-app-pub-3940256099942544/4411468910';
   static String get interstitialAdVideoTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/8691691433'
-      : 'ca-app-pub-3940256099942544/5135589807';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/2309151062'
+          : 'ca-app-pub-3940256099942544/8691691433'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/3190099842'
+          : 'ca-app-pub-3940256099942544/5135589807';
 
   static String? rewardedAdUnitId;
   static String get rewardedAdTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/5224354917'
-      : 'ca-app-pub-3940256099942544/1712485313';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/6300366963'
+          : 'ca-app-pub-3940256099942544/5224354917'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/4120038133'
+          : 'ca-app-pub-3940256099942544/1712485313';
 
   static String? appOpenAdUnitId;
   static String get appOpenAdTestUnitId => Platform.isAndroid
-      ? 'ca-app-pub-3940256099942544/3419835294'
-      : 'ca-app-pub-3940256099942544/5662855259';
+      ? kReleaseMode
+          ? 'ca-app-pub-6622971522440053/5613971258'
+          : 'ca-app-pub-3940256099942544/3419835294'
+      : kReleaseMode
+          ? 'ca-app-pub-6622971522440053/4203798612'
+          : 'ca-app-pub-3940256099942544/5662855259';
 
   static String? rewardedInterstitialAdUnitId;
   static String get rewardedInterstitialAdTestUnitId => Platform.isAndroid
