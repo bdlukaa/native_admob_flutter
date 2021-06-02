@@ -30,10 +30,7 @@ class NativeAdController: NSObject, GADNativeAdLoaderDelegate {
             let unitId: String = params?["unitId"] as! String
             let nonPersonalizedAds: Bool = params?["nonPersonalizedAds"] as! Bool
             let options: [String: Any] = params?["options"] as! [String: Any]
-
             let keywords: [String] = params?["keywords"] as! [String]
-
-            
             loadAd(unitId: unitId, nonPersonalizedAds: nonPersonalizedAds, options: options, keywords: keywords, result: result)
 
         case "updateUI":
