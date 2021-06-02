@@ -28,7 +28,8 @@ class BannerAdView: NSObject, FlutterPlatformView {
 
     private func load() {
         let nonPersonalizedAds: Bool = data?["nonPersonalizedAds"] as! Bool
-        let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
+        let keywords: [String] = data?["keywords"] as! [String]
+        let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds, keywords: keywords)
         controller.bannerView.load(request)
     }
 
