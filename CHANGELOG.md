@@ -1,5 +1,10 @@
 Date format: DD/MM/YYYY
 
+## [1.3.3] - [06/06/2021]
+
+- **FIX** Removed google warning on iOS AdButtonView. ([#69](https://github.com/bdlukaa/native_admob_flutter/issues/69))
+- **NEW** Implemented ad keywords for iOS. ([#47](https://github.com/bdlukaa/native_admob_flutter/issues/47))
+
 ## [1.3.2] - [18/05/2021]
 
 - **FIX** Native ad does not assume assets are non-null anymore ([#64](https://github.com/bdlukaa/native_admob_flutter/issues/64))
@@ -26,7 +31,7 @@ Date format: DD/MM/YYYY
 ## [1.2.2] - [22/04/2021]
 
 - **FIX** The `NativeAd` object is not disposed when the `NativeAdView` is removed from the view. It's now disposed when the controller is disposed. (Fixes [#45](https://github.com/bdlukaa/native_admob_flutter/issues/45))
-- **FIX** `W/StaticLayout(21479): maxLineHeight should not be -1.  maxLines:1 lineCount:1` is not logged frequently anymore. Only sometimes
+- **FIX** `W/StaticLayout(21479): maxLineHeight should not be -1. maxLines:1 lineCount:1` is not logged frequently anymore. Only sometimes
 
 ## [1.2.1] - [15/04/2021]
 
