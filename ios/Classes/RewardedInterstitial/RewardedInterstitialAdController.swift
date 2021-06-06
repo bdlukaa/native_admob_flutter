@@ -25,7 +25,8 @@ class RewardedIntersititalAdController: NSObject, GADFullScreenContentDelegate {
             channel.invokeMethod("loading", arguments: nil)
             let unitId: String = params?["unitId"] as! String
             let nonPersonalizedAds: Bool = params?["nonPersonalizedAds"] as! Bool
-            let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds)
+            let keywords: [String] = params?["keywords"] as! [String]
+            let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds, keywords: keywords)
             GADRewardedInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad: GADRewardedInterstitialAd?, error: Error?) in
                 if error != nil {
                     self.rewardedAd = nil

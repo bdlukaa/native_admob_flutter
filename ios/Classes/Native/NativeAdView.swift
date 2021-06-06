@@ -121,6 +121,7 @@ class NativeAdView: NSObject, FlutterPlatformView {
                 subView = PaddedImageView(data: data)
             case "button_view":
                 subView = UIButton()
+                subView.isUserInteractionEnabled = false
                 (subView as! UIButton).applyText(data: data)
                 (subView as! UIButton).contentMode = .scaleAspectFit
             case .none:
