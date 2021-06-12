@@ -62,17 +62,19 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// Creates a new Rewarded Intersitital Ad
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#create-a-rewarded-ad)
-  RewardedInterstitialAd({
-    String? unitId,
-    Duration loadTimeout = kDefaultLoadTimeout,
-    Duration timeout = kDefaultAdTimeout,
-    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
-  }) : super(
-          unitId: unitId,
-          loadTimeout: loadTimeout,
-          timeout: timeout,
-          nonPersonalizedAds: nonPersonalizedAds,
-        );
+  RewardedInterstitialAd(
+      {String? unitId,
+      Duration loadTimeout = kDefaultLoadTimeout,
+      Duration timeout = kDefaultAdTimeout,
+      bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
+      ServerSideVerificationOptions? serverSideVerificationOptions =
+          kServerSideVerification})
+      : super(
+            unitId: unitId,
+            loadTimeout: loadTimeout,
+            timeout: timeout,
+            nonPersonalizedAds: nonPersonalizedAds,
+            serverSideVerificationOptions: serverSideVerificationOptions);
 
   /// Initialize the ad. This can be called only by the ad
   void init() async {
@@ -149,22 +151,26 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// ```
   ///
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#load-the-ad)
-  Future<bool> load({
-    /// The ad unit id. If null, uses [MobileAds.rewardedAdUnitId]
-    String? unitId,
+  Future<bool> load(
+      {
 
-    /// Force to load an ad even if another is already avaiable
-    bool force = false,
+      /// The ad unit id. If null, uses [MobileAds.rewardedAdUnitId]
+      String? unitId,
 
-    /// The timeout of this ad. If null, defaults to 1 minute
-    Duration? timeout,
+      /// Force to load an ad even if another is already avaiable
+      bool force = false,
 
-    /// Whether non-personalized ads should be enabled
-    bool? nonPersonalizedAds,
+      /// The timeout of this ad. If null, defaults to 1 minute
+      Duration? timeout,
 
-    /// The keywords of the ad
-    List<String> keywords = const [],
-  }) async {
+      /// Whether non-personalized ads should be enabled
+      bool? nonPersonalizedAds,
+
+      /// The keywords of the ad
+      List<String> keywords = const [],
+
+      ///SSV Info - Such as userId and customData
+      ServerSideVerificationOptions? serverSideVerificationOptions}) async {
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
@@ -175,6 +181,7 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
           MobileAds.rewardedAdTestUnitId,
       'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
       'keywords': keywords,
+      'ssv': serverSideVerificationOptions?.toJson()
     }).timeout(
       timeout ?? this.loadTimeout,
       onTimeout: () {

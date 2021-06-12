@@ -27,6 +27,11 @@ class RewardedIntersititalAdController: NSObject, GADFullScreenContentDelegate {
             let nonPersonalizedAds: Bool = params?["nonPersonalizedAds"] as! Bool
             let keywords: [String] = params?["keywords"] as! [String]
             let request: GADRequest = RequestFactory.createAdRequest(nonPersonalizedAds: nonPersonalizedAds, keywords: keywords)
+            let ssvInfo: Dictionary = params?["ssv"]
+            let userId: String? = ssvInfo?["userId"]
+            let customData: String? = ssvInfo?["customData"]
+            let ssv: GADServerSideVerificationOptions = GADServerSideVerificationOption(userIdentifier: userId, customRewardString: customData)
+
             GADRewardedInterstitialAd.load(withAdUnitID: unitId, request: request) { (ad: GADRewardedInterstitialAd?, error: Error?) in
                 if error != nil {
                     self.rewardedAd = nil
@@ -36,6 +41,7 @@ class RewardedIntersititalAdController: NSObject, GADFullScreenContentDelegate {
                     ])
                     result(false)
                 } else {
+                    ad.serverSideVerificationOptions = ssv
                     self.rewardedAd = ad
                     self.rewardedAd.fullScreenContentDelegate = self
                     self.channel.invokeMethod("onAdLoaded", arguments: nil)

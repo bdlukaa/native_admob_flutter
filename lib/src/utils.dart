@@ -166,6 +166,7 @@ mixin AttachableMixin {
 const Duration kDefaultLoadTimeout = Duration(minutes: 1);
 const Duration kDefaultAdTimeout = Duration(minutes: 30);
 const bool kDefaultNonPersonalizedAds = false;
+const ServerSideVerificationOptions? kServerSideVerification = null;
 
 abstract class LoadShowAd<T> with UniqueKeyMixin {
   @protected
@@ -229,13 +230,16 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   /// should be enabled.
   final bool nonPersonalizedAds;
 
+  ///Server Side Verification - Info such as [userId] and [customData]
+  final ServerSideVerificationOptions? serverSideVerificationOptions;
+
   @mustCallSuper
-  LoadShowAd({
-    this.unitId,
-    this.loadTimeout = kDefaultLoadTimeout,
-    this.timeout = kDefaultAdTimeout,
-    this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
-  }) {
+  LoadShowAd(
+      {this.unitId,
+      this.loadTimeout = kDefaultLoadTimeout,
+      this.timeout = kDefaultAdTimeout,
+      this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
+      this.serverSideVerificationOptions = kServerSideVerification}) {
     channel = MethodChannel(id);
     init();
   }
@@ -263,4 +267,25 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   void ensureAdAvailable() {
     assert(isAvailable, 'You can only use an available ad.');
   }
+}
+
+/// Options for RewardedAd server-side verification callbacks.
+///
+/// See https://developers.google.com/admob/ios/rewarded-video-ssv and
+/// https://developers.google.com/admob/android/rewarded-video-ssv for more
+/// information.
+class ServerSideVerificationOptions {
+  /// The user id to be used in server-to-server reward callbacks.
+  final String? userId;
+
+  /// The custom data to be used in server-to-server reward callbacks
+  final String? customData;
+
+  /// Create [ServerSideVerificationOptions] with the userId or customData.
+  ServerSideVerificationOptions({this.userId, this.customData});
+
+  Map<String, dynamic> toJson() => {
+        'userId': this.userId,
+        'customData': this.customData,
+      };
 }
