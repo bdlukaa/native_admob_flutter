@@ -8,6 +8,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
 import com.google.android.gms.ads.rewarded.RewardedAd
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 import io.flutter.plugin.common.BinaryMessenger
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
@@ -31,13 +32,25 @@ class RewardedAdController(
                 val unitId: String = call.argument<String>("unitId")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
                 val keywords = call.argument<List<String>>("keywords")!!
+                val options: ServerSideVerificationOptions.Builder = ServerSideVerificationOptions.Builder()
+                val ssv = call.argument<Map<String, Any>>("ssv")
+                if (ssv != null) {
+                    val userId = ssv["userId"] as String?
+                    val customData = ssv["customData"] as String?
+                    if (userId != null) {
+                        options.setUserId(userId)
+                    }
+                    if (customData != null) {
+                        options.setCustomData(customData)
+                    }
+                }
                 RewardedAd.load(activity, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), object : RewardedAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedAd) {
+                        ad.setServerSideVerificationOptions(options.build())
                         rewardedAd = ad
                         channel.invokeMethod("onAdLoaded", null)
                         result.success(true)
                     }
-
                     override fun onRewardedAdFailedToLoad(error: LoadAdError) {
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)

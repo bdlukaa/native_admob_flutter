@@ -6,6 +6,7 @@ import com.bruno.native_admob_flutter.encodeError
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.LoadAdError
+import com.google.android.gms.ads.rewarded.ServerSideVerificationOptions
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAd
 import com.google.android.gms.ads.rewardedinterstitial.RewardedInterstitialAdLoadCallback
 import io.flutter.plugin.common.BinaryMessenger
@@ -32,8 +33,21 @@ class RewardedInterstitialController(
                 val unitId: String = call.argument<String>("unitId")!!
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
                 val keywords = call.argument<List<String>>("keywords")!!
+                val options: ServerSideVerificationOptions.Builder = ServerSideVerificationOptions.Builder()
+                val ssv = call.argument<Map<String, Any>>("ssv")
+                if (ssv != null) {
+                    val userId = ssv["userId"] as String?
+                    val customData = ssv["customData"] as String?
+                    if (userId != null) {
+                        options.setUserId(userId)
+                    }
+                    if (customData != null) {
+                        options.setCustomData(customData)
+                    }
+                }
                 RewardedInterstitialAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), object : RewardedInterstitialAdLoadCallback() {
                     override fun onAdLoaded(ad: RewardedInterstitialAd) {
+                        ad.setServerSideVerificationOptions(options.build())
                         rewardedInterstitialAd = ad
                         channel.invokeMethod("onAdLoaded", null)
                         result.success(true)
