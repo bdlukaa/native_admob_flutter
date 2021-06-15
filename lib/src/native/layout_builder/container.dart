@@ -38,7 +38,7 @@ class AdPadding extends AdSingleChildView {
   AdPadding({
     required AdView child,
     required this.padding,
-  })   : assert(padding.isNonNegative),
+  })  : assert(padding.isNonNegative),
         super(child: child);
 
   @override

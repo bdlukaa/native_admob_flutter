@@ -69,7 +69,7 @@ class AdExpanded extends AdSingleChildView {
   AdExpanded({
     required this.flex,
     required AdView child,
-  })   : assert(flex >= 0),
+  })  : assert(flex >= 0),
         super(child: child);
 
   @override

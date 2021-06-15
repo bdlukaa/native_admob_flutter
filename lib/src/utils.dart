@@ -234,12 +234,13 @@ abstract class LoadShowAd<T> with UniqueKeyMixin {
   final ServerSideVerificationOptions? serverSideVerificationOptions;
 
   @mustCallSuper
-  LoadShowAd(
-      {this.unitId,
-      this.loadTimeout = kDefaultLoadTimeout,
-      this.timeout = kDefaultAdTimeout,
-      this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
-      this.serverSideVerificationOptions = kServerSideVerification}) {
+  LoadShowAd({
+    this.unitId,
+    this.loadTimeout = kDefaultLoadTimeout,
+    this.timeout = kDefaultAdTimeout,
+    this.nonPersonalizedAds = kDefaultNonPersonalizedAds,
+    this.serverSideVerificationOptions = kServerSideVerification,
+  }) {
     channel = MethodChannel(id);
     init();
   }

@@ -62,19 +62,20 @@ class RewardedInterstitialAd extends LoadShowAd<RewardedAdEvent> {
   /// Creates a new Rewarded Intersitital Ad
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-interstitial-ad#create-a-rewarded-ad)
-  RewardedInterstitialAd(
-      {String? unitId,
-      Duration loadTimeout = kDefaultLoadTimeout,
-      Duration timeout = kDefaultAdTimeout,
-      bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
-      ServerSideVerificationOptions? serverSideVerificationOptions =
-          kServerSideVerification})
-      : super(
-            unitId: unitId,
-            loadTimeout: loadTimeout,
-            timeout: timeout,
-            nonPersonalizedAds: nonPersonalizedAds,
-            serverSideVerificationOptions: serverSideVerificationOptions);
+  RewardedInterstitialAd({
+    String? unitId,
+    Duration loadTimeout = kDefaultLoadTimeout,
+    Duration timeout = kDefaultAdTimeout,
+    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
+    ServerSideVerificationOptions? serverSideVerificationOptions =
+        kServerSideVerification,
+  }) : super(
+          unitId: unitId,
+          loadTimeout: loadTimeout,
+          timeout: timeout,
+          nonPersonalizedAds: nonPersonalizedAds,
+          serverSideVerificationOptions: serverSideVerificationOptions,
+        );
 
   /// Initialize the ad. This can be called only by the ad
   void init() async {

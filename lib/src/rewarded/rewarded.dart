@@ -181,19 +181,20 @@ class RewardedAd extends LoadShowAd<RewardedAdEvent> {
   /// Creates a new rewarded ad
   ///
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Creating-a-rewarded-ad#create-a-rewarded-ad)
-  RewardedAd(
-      {String? unitId,
-      Duration loadTimeout = kDefaultLoadTimeout,
-      Duration timeout = kDefaultAdTimeout,
-      bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
-      ServerSideVerificationOptions? serverSideVerificationOptions =
-          kServerSideVerification})
-      : super(
-            unitId: unitId,
-            loadTimeout: loadTimeout,
-            timeout: timeout,
-            nonPersonalizedAds: nonPersonalizedAds,
-            serverSideVerificationOptions: serverSideVerificationOptions);
+  RewardedAd({
+    String? unitId,
+    Duration loadTimeout = kDefaultLoadTimeout,
+    Duration timeout = kDefaultAdTimeout,
+    bool nonPersonalizedAds = kDefaultNonPersonalizedAds,
+    ServerSideVerificationOptions? serverSideVerificationOptions =
+        kServerSideVerification,
+  }) : super(
+          unitId: unitId,
+          loadTimeout: loadTimeout,
+          timeout: timeout,
+          nonPersonalizedAds: nonPersonalizedAds,
+          serverSideVerificationOptions: serverSideVerificationOptions,
+        );
 
   /// Initialize the ad. This can be called only by the ad
   void init() async {

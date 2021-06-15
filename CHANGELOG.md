@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+## [1.4.0] - [15/06/2021]
+
+- **NEW** Implement Server-Side Verification Options ([#78](https://github.com/bdlukaa/native_admob_flutter/pull/78) by [@sageata](https://github.com/sageata))
+
 ## [1.3.3] - [06/06/2021]
 
 - **FIX** Removed google warning on iOS AdButtonView. ([#69](https://github.com/bdlukaa/native_admob_flutter/issues/69))
