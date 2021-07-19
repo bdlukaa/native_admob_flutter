@@ -106,7 +106,7 @@ enum RewardedAdEvent {
 
 class RewardItem {
   /// Returns the reward amount.
-  final int? amount;
+  final double? amount;
 
   /// Returns the type of the reward.
   final String? type;
@@ -118,7 +118,7 @@ class RewardItem {
 
   factory RewardItem.fromJson(Map j) {
     return RewardItem(
-      amount: int.parse(j['amount'].toString()),
+      amount: double.parse(j['amount'].toString()),
       type: j['type'].toString(),
     );
   }
