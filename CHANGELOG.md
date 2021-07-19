@@ -1,5 +1,9 @@
 Date format: DD/MM/YYYY
 
+# [1.4.1] - [19/07/2021]
+
+- **FIX** `RewardedAdEvent.earnedReward` never gets called on iOS ([#85](https://github.com/bdlukaa/native_admob_flutter/pull/85))
+
 ## [1.4.0] - [15/06/2021]
 
 - **NEW** Implement Server-Side Verification Options ([#78](https://github.com/bdlukaa/native_admob_flutter/pull/78) by [@sageata](https://github.com/sageata))
