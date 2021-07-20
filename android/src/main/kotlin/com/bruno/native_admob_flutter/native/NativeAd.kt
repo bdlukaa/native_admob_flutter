@@ -328,7 +328,12 @@ fun Int.dp(): Int {
 
 fun TextView.applyText(data: Map<*, *>) {
     val view = this
-    (data["textSize"] as? Double?)?.toFloat()?.also { view.textSize = it }
+
+    (data["textSize"] as? Double?)?.toFloat()?.also {
+        val textSizeUnit = data["textSizeUnit"] as? Int?
+        if (textSizeUnit != null) view.setTextSize(textSizeUnit, it)
+        else view.textSize = it
+    }
     (data["textColor"] as? String)?.let { view.setTextColor(Color.parseColor(it)) }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
         (data["letterSpacing"] as? Double)?.let { view.letterSpacing = it.toFloat() }
