@@ -1,5 +1,14 @@
 part of 'layout_builder.dart';
 
+enum AdTextSizeUnit {
+  px,
+  dip,
+  sp,
+  pt,
+  ich,
+  mm
+}
+
 class AdTextView extends AdView {
   /// The style applied to the text view.
   ///
@@ -9,6 +18,7 @@ class AdTextView extends AdView {
   /// - fontWeight (only FontWeight.bold)
   /// - letterSpacing
   final TextStyle? style;
+  final AdTextSizeUnit? textSizeUnit;
   final String? text;
 
   final int? minLines;
@@ -24,6 +34,7 @@ class AdTextView extends AdView {
     double? elevation,
     Color? elevationColor,
     // text
+    this.textSizeUnit,
     this.style,
     this.minLines,
     this.maxLines,
@@ -58,6 +69,7 @@ class AdTextView extends AdView {
       minLines: view.minLines ?? minLines,
       style: _copyStylesWithin(this.style, view.style),
       text: view.text ?? text,
+      textSizeUnit: view.textSizeUnit ?? textSizeUnit
     );
   }
 
@@ -97,6 +109,7 @@ class AdTextView extends AdView {
       'minLines': minLines ?? 1,
       'maxLines': maxLines,
       'bold': style.fontWeight == FontWeight.bold,
+      'textSizeUnit': textSizeUnit?.index,
     });
     return json;
   }
@@ -115,6 +128,7 @@ class AdButtonView extends AdTextView {
     Color? elevationColor,
     this.pressColor,
     // text
+    AdTextSizeUnit? textSizeUnit,
     int? minLines,
     int? maxLines,
     TextStyle? textStyle,
@@ -129,6 +143,7 @@ class AdButtonView extends AdTextView {
           elevation: elevation,
           elevationColor: elevationColor,
           // text
+          textSizeUnit: textSizeUnit,
           maxLines: maxLines,
           minLines: minLines,
           style: textStyle ??
@@ -156,6 +171,7 @@ class AdButtonView extends AdTextView {
       textStyle: view.style ?? style,
       text: view.text ?? text,
       pressColor: view.pressColor ?? pressColor,
+      textSizeUnit: view.textSizeUnit ?? textSizeUnit,
     );
   }
 
