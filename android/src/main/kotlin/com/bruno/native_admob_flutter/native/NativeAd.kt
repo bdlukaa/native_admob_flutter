@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.graphics.drawable.GradientDrawable.Orientation
 import android.graphics.drawable.GradientDrawable.RADIAL_GRADIENT
+import android.graphics.PorterDuff
 import android.os.Build
 import android.text.TextUtils
 import android.view.Gravity
@@ -97,6 +98,10 @@ class NativeAdPlatformView(context: Context, data: Map<String?, Any?>?) : Platfo
                 }
                 "rating_bar" -> {
                     view = RatingBar(context, null, android.R.attr.ratingBarStyleSmall)
+                    (data["starsColor"] as? String)?.let {
+                        val drawableReview = (view as RatingBar).progressDrawable
+                        drawableReview.setColorFilter(Color.parseColor(it), PorterDuff.Mode.SRC_ATOP)
+                    }
                 }
                 "button_view" -> {
                     view = Button(context)

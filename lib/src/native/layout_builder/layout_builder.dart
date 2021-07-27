@@ -191,6 +191,7 @@ class AdMediaView extends AdView {
 
 class AdRatingBarView extends AdView {
   final double? stepSize;
+  final Color? starsColor;
 
   AdRatingBarView({
     EdgeInsets? padding,
@@ -202,6 +203,7 @@ class AdRatingBarView extends AdView {
     Color? elevationColor,
     // rating
     this.stepSize,
+    this.starsColor,
   }) : super(
           viewType: 'rating_bar',
           padding: padding,
@@ -226,12 +228,16 @@ class AdRatingBarView extends AdView {
       elevation: view.elevation ?? elevation,
       elevationColor: view.elevationColor ?? elevationColor,
       stepSize: (view as AdRatingBarView).stepSize,
+      starsColor: view.starsColor ?? starsColor,
     );
   }
 
   Map<String, dynamic> toJson() {
     final json = super.toJson();
-    json.addAll({'stepSize': stepSize});
+    json.addAll({
+      'stepSize': stepSize,
+      'starsColor': starsColor?.toHex(),
+    });
     return json;
   }
 }

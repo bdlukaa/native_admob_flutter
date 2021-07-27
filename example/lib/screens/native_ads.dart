@@ -168,6 +168,7 @@ class _NativeAdsState extends State<NativeAds>
             height: MATCH_PARENT,
             textStyle: TextStyle(color: Colors.white),
           ),
+          ratingBar: AdRatingBarView(starsColor: Colors.white),
         ),
         SizedBox(height: 10),
         NativeAd(
@@ -241,6 +242,7 @@ class _NativeAdsState extends State<NativeAds>
             elevationColor: Colors.amber,
             height: MATCH_PARENT,
           ),
+          ratingBar: AdRatingBarView(starsColor: Colors.white),
         ),
       ]),
     );

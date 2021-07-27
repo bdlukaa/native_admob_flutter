@@ -4,6 +4,7 @@ Date format: DD/MM/YYYY
 
 - Upgrade Android SDK to version 20.2.0
 - Removed `onLeftApplication` event.
+- Possibility to change the RatingBar color (Fixes [#84](https://github.com/bdlukaa/native_admob_flutter/issues/84))
 
 ## [1.4.1] - [19/07/2021]
 
