@@ -14,8 +14,6 @@ import '../utils.dart';
 ///   - loading (When the ad starts loading)
 ///   - loaded (When the ad is loaded)
 ///   - loadFailed (When the ad failed to load)
-///   - leftApplication (When the user has left the app)
-///   - undefined (When an unknown event arrives)
 enum BannerAdEvent {
   /// Called when an impression is recorded for an ad.
   impression,
@@ -28,9 +26,6 @@ enum BannerAdEvent {
 
   /// Called when the ad starts loading
   loading,
-
-  /// Called when the user left the application
-  leftApplication,
 }
 
 /// The size of a [BannerAd]. It's highly recommended to use
@@ -213,9 +208,6 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
         break;
       case 'onAdImpression':
         onEventController.add({BannerAdEvent.impression: null});
-        break;
-      case 'onAdLeftApplication':
-        onEventController.add({BannerAdEvent.leftApplication: null});
         break;
       default:
         break;

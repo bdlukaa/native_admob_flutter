@@ -1,6 +1,11 @@
 Date format: DD/MM/YYYY
 
-# [1.4.1] - [19/07/2021]
+## [1.5.0] - (26/07/2021)
+
+- Upgrade Android SDK to version 20.2.0
+- Removed `onLeftApplication` event.
+
+## [1.4.1] - [19/07/2021]
 
 - **FIX** `RewardedAdEvent.earnedReward` never gets called on iOS ([#85](https://github.com/bdlukaa/native_admob_flutter/pull/85))
 

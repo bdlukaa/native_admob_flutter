@@ -28,7 +28,8 @@ class AppOpenAdController(
 
     private fun showAdIfAvailable(fullScreenContentCallback: FullScreenContentCallback) {
         if (!isShowingAd && isAdAvailable()) {
-            appOpenAd!!.show(context, fullScreenContentCallback)
+            appOpenAd!!.fullScreenContentCallback = fullScreenContentCallback
+            appOpenAd!!.show(context)
         }
     }
 
@@ -45,13 +46,13 @@ class AppOpenAdController(
                 val nonPersonalizedAds = call.argument<Boolean>("nonPersonalizedAds")!!
                 val keywords = call.argument<List<String>>("keywords")!!
                 AppOpenAd.load(context, unitId, RequestFactory.createAdRequest(nonPersonalizedAds, keywords), orientation, object : AppOpenAdLoadCallback() {
-                    override fun onAppOpenAdLoaded(ad: AppOpenAd) {
+                    override fun onAdLoaded(ad: AppOpenAd) {
                         appOpenAd = ad
                         channel.invokeMethod("onAppOpenAdLoaded", null)
                         result.success(true)
                     }
 
-                    override fun onAppOpenAdFailedToLoad(loadAdError: LoadAdError) {
+                    override fun onAdFailedToLoad(loadAdError: LoadAdError) {
                         channel.invokeMethod("onAppOpenAdFailedToLoad", encodeError(loadAdError))
                         result.success(false)
                     }

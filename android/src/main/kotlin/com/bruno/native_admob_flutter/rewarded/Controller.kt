@@ -51,7 +51,7 @@ class RewardedAdController(
                         channel.invokeMethod("onAdLoaded", null)
                         result.success(true)
                     }
-                    override fun onRewardedAdFailedToLoad(error: LoadAdError) {
+                    override fun onAdFailedToLoad(error: LoadAdError) {
                         channel.invokeMethod("onAdFailedToLoad", encodeError(error))
                         result.success(false)
                     }
