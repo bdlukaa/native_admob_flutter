@@ -172,7 +172,7 @@ class _NativeAdsState extends State<NativeAds>
         ),
         SizedBox(height: 10),
         NativeAd(
-          height: 100,
+          height: 140,
           builder: (context, child) {
             return Material(
               elevation: 8,
@@ -182,7 +182,7 @@ class _NativeAdsState extends State<NativeAds>
           buildLayout: secondBuilder,
           loading: Text('loading'),
           error: Text('error'),
-          icon: AdImageView(size: 80),
+          icon: AdImageView(size: 40),
           headline: AdTextView(
             style: TextStyle(
               fontSize: 16,
@@ -191,7 +191,7 @@ class _NativeAdsState extends State<NativeAds>
             ),
             maxLines: 1,
           ),
-          media: AdMediaView(height: 80, width: 120),
+          media: AdMediaView(height: 120, width: 120),
         ),
         SizedBox(height: 10),
         NativeAd(
@@ -307,7 +307,7 @@ AdLayoutBuilder get secondBuilder => (ratingBar, media, icon, headline,
           ),
         ),
         children: [
-          icon,
+          media,
           AdLinearLayout(
             children: [
               headline,
