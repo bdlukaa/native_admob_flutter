@@ -134,6 +134,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// For more info, read the [documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Custom-mute-this-ad#check-if-custom-mute-this-ad-is-available)
   bool get isCustomMuteThisAdEnabled => _customMuteThisAdEnabled;
 
+  /// Asynchronous task synchronous executor
+  FutureSyncExecutor _syncExecutor= FutureSyncExecutor();
+
   /// Listen to the events the controller throws
   ///
   /// Usage:
@@ -261,7 +264,9 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
   /// Initialize the controller. This can be called only by the controller
   void init() {
     channel.setMethodCallHandler(_handleMessages);
-    MobileAds.pluginChannel.invokeMethod('initNativeAdController', {'id': id});
+    _syncExecutor.exec(() async {
+      await MobileAds.pluginChannel.invokeMethod('initNativeAdController', {'id': id});
+    }, null);
   }
 
   /// Dispose the controller to free up resources.
@@ -393,21 +398,24 @@ class NativeAdController extends LoadShowAd<NativeAdEvent>
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
     unitId ??= MobileAds.nativeAdUnitId ?? MobileAds.nativeAdTestUnitId;
-    isLoaded = (await channel.invokeMethod<bool>('loadAd', {
-      'unitId': unitId,
-      'options': (options ?? NativeAdOptions()).toJson(),
-      'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
-      'keywords': keywords,
-    }).timeout(
-      timeout ?? this.loadTimeout,
-      onTimeout: () {
-        if (!onEventController.isClosed && !isLoaded)
-          onEventController.add({
-            NativeAdEvent.loadFailed: AdError.timeoutError,
-          });
-        return false;
-      },
-    ))!;
+    isLoaded = await _syncExecutor.exec(() async {
+      // Invoke the loadAd method after initializing MethodChannel
+      return await channel.invokeMethod<bool>('loadAd', {
+        'unitId': unitId,
+        'options': (options ?? NativeAdOptions()).toJson(),
+        'nonPersonalizedAds': nonPersonalizedAds ?? this.nonPersonalizedAds,
+        'keywords': keywords,
+      }).timeout(
+        timeout ?? this.loadTimeout,
+        onTimeout: () {
+          if (!onEventController.isClosed && !isLoaded)
+            onEventController.add({
+              NativeAdEvent.loadFailed: AdError.timeoutError,
+            });
+          return false;
+        },
+      );
+    }, null);
     if (isLoaded) lastLoadedTime = DateTime.now();
     return isLoaded;
   }
