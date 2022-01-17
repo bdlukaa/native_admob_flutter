@@ -155,6 +155,8 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
   /// For more info, [read the documentation](https://github.com/bdlukaa/native_admob_flutter/wiki/Using-the-controller-and-listening-to-banner-events#listening-to-events)
   Stream<Map<BannerAdEvent, dynamic>> get onEvent => super.onEvent;
 
+  FutureSyncExecutor _executor = FutureSyncExecutor();
+
   /// Creates a new native ad controller
   BannerAdController({
     Duration loadTimeout = kDefaultLoadTimeout,
@@ -167,7 +169,15 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
   /// Initialize the controller. This can be called only by the controller
   void init() {
     channel.setMethodCallHandler(_handleMessages);
-    MobileAds.pluginChannel.invokeMethod('initBannerAdController', {'id': id});
+    _executor.exec(() async {
+      await MobileAds.pluginChannel.invokeMethod('initBannerAdController', {'id': id});
+    }, null);
+  }
+
+  Future<void> waitForInitFinish() async {
+    return await _executor.exec(() {
+      return;
+    }, null);
   }
 
   /// Dispose the controller to free up resources.
@@ -203,6 +213,9 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
         });
         break;
       case 'onAdLoaded':
+        if (isLoaded) {
+          break;
+        }
         isLoaded = true;
         onEventController.add({BannerAdEvent.loaded: call.arguments});
         break;
@@ -227,16 +240,19 @@ class BannerAdController extends LoadShowAd<BannerAdEvent>
     ensureAdNotDisposed();
     assertMobileAdsIsInitialized();
     if (!debugCheckAdWillReload(isLoaded, force)) return false;
-    isLoaded = (await channel.invokeMethod<bool>('loadAd').timeout(
-      timeout ?? this.loadTimeout,
-      onTimeout: () {
-        if (!onEventController.isClosed && !isLoaded)
-          onEventController.add({
-            BannerAdEvent.loadFailed: AdError.timeoutError,
-          });
-        return false;
-      },
-    ))!;
+    isLoaded = await _executor.exec(() async {
+      return channel.invokeMethod<bool>('loadAd').timeout(
+        timeout ?? this.loadTimeout,
+        onTimeout: () {
+          if (!onEventController.isClosed && !isLoaded) {
+            onEventController.add({
+              BannerAdEvent.loadFailed: AdError.timeoutError,
+            });
+          }
+          return false;
+        },
+      );
+    }, null);
     if (isLoaded) lastLoadedTime = DateTime.now();
     return isLoaded;
   }
