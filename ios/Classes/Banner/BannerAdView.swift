@@ -6,7 +6,7 @@ class BannerAdView: NSObject, FlutterPlatformView {
     var controller: BannerAdController
     private let messenger: FlutterBinaryMessenger
     var result: FlutterResult?
-    private var adSize: GADAdSize = kGADAdSizeBanner
+    private var adSize: GADAdSize = GADAdSizeFromCGSize(CGSize(width: 320, height: 100))
 
     private func getAdSize(width: Float) -> GADAdSize {
         return GADCurrentOrientationAnchoredAdaptiveBannerAdSizeWithWidth(CGFloat(width))
