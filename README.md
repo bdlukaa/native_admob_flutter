@@ -13,17 +13,19 @@
     <a title="PRs are welcome">
       <img src="https://img.shields.io/badge/PRs-welcome-brightgreen.svg" />
     </a>
-  <div>
-  <p align="center">
-    <a title="Buy me a coffee" href="https://www.buymeacoffee.com/bdlukaa">
-      <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=&slug=bdlukaa&button_colour=FF5F5F&font_colour=ffffff&font_family=Lato&outline_colour=000000&coffee_colour=FFDD00">
-    </a>
   </p>
-
 Easy-to-make ads in Flutter with Google's AdMob SDK.\
 English | [Português](README-PT.md)
 
 </div>
+
+# ⚠️ Deprecated
+
+The project is now archived. Reasons are documented below:
+
+- **Flutter Platform Views**: This plugin will never be good enough if the flutter platform views don't work correctly: Virtual Display (`AndroidView`) should work fine, but the gestures are mapped and performed progamatically, which isn't allowed by the admob policy and can make your account be banned. Hybrid Composition, on the other hand, is unperformatic, buggy and can let to several crashes (by 03/2022) - see [open issues](https://github.com/flutter/flutter/issues?q=is%3Aopen+is%3Aissue+label%3A%22a%3A+platform-views%22+sort%3Areactions-%2B1-desc). I know that several improvements are being done to Hybrid Composition, but it's currently not usable in production;
+- **Google Mobile Ads**: This plugin uses the same native implementation (Hybrid Composition) as [google_mobile_ads](https://pub.dev/packages/google_mobile_ads) - the ads plugin maintained by the Google Ads Team themselves -, which I believe they'll be able to maintain it better than me;
+- **Poor iOS support**: ([#58](https://github.com/bdlukaa/native_admob_flutter/issues/58)) **I** don't have a macOS to be able to develop for iOS. All the current iOS implementation was done by the community itself. Hybrid Composition on iOS has the same issue as on Android - see [open issues](https://github.com/flutter/flutter/issues?q=is%3Aopen+is%3Aissue+label%3A%22a%3A+platform-views%22+sort%3Areactions-%2B1-desc+label%3Aplatform-ios) - as well, which makes your app unusable.
 
 ## Get started
 
