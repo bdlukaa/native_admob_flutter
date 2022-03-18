@@ -26,6 +26,8 @@ class BannerAdController(
             "loadAd" -> {
                 channel.invokeMethod("loading", null)
                 loadRequested?.let { it(result) }
+                // Actually, no ads will be loaded here, so return false immediately
+                result.success(false)
             }
             else -> result.notImplemented()
         }

@@ -193,6 +193,8 @@ class _BannerAdState extends State<BannerAd>
   BannerAdOptions get options => widget.options;
   StreamSubscription? _onEventSub;
 
+  late Future _initFuture;
+
   @override
   void initState() {
     super.initState();
@@ -215,6 +217,8 @@ class _BannerAdState extends State<BannerAd>
       }
     });
     if (!controller.isLoaded) controller.load(timeout: widget.loadTimeout);
+
+    _initFuture = controller.waitForInitFinish();
   }
 
   @override
@@ -257,6 +261,18 @@ class _BannerAdState extends State<BannerAd>
     assertPlatformIsSupported();
     assertVersionIsSupported();
 
+    return FutureBuilder<void>(
+        future: _initFuture,
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            return _bannerAdWidget();
+          } else {
+            return SizedBox();
+          }
+        });
+  }
+
+  Widget _bannerAdWidget() {
     return LayoutBuilder(
       builder: (context, consts) {
         double height = widget.size.size.height;
